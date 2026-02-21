@@ -1,0 +1,38 @@
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import RedirectResponse
+from app.config import get_settings
+from app.middleware.auth import AuthMiddleware
+from app.middleware.tenant import TenantMiddleware
+from app.routes import auth, dashboard
+
+
+def create_app() -> FastAPI:
+    """Application factory."""
+    settings = get_settings()
+
+    app = FastAPI(
+        title=settings.app_name,
+        debug=settings.debug,
+    )
+
+    # Mount static files
+    app.mount("/static", StaticFiles(directory="static"), name="static")
+
+    # Add middleware (order matters - add in reverse)
+    app.add_middleware(TenantMiddleware)
+    app.add_middleware(AuthMiddleware)
+
+    # Include routers
+    app.include_router(auth.router)
+    app.include_router(dashboard.router)
+
+    # Root redirect
+    @app.get("/")
+    def root():
+        return RedirectResponse(url="/auth/login")
+
+    return app
+
+
+app = create_app()

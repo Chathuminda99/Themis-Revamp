@@ -1,0 +1,33 @@
+<header class="bg-white border-b border-gray-200 px-8 py-4 flex items-center justify-between">
+    <div class="flex-1">
+        <input type="text" placeholder="Search..." class="w-64 px-4 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+    </div>
+
+    <div class="flex items-center gap-6">
+        <!-- Notifications -->
+        <button class="text-gray-600 hover:text-gray-900">
+            🔔
+        </button>
+
+        <!-- User Menu -->
+        <div x-data="{ open: false }" class="relative">
+            <button @click="open = !open" class="flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-100">
+                <span class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
+                    {% if user %}{{ user.full_name[0].upper() }}{% else %}U{% endif %}
+                </span>
+                <span class="text-sm font-medium text-gray-700">
+                    {% if user %}{{ user.full_name }}{% else %}User{% endif %}
+                </span>
+            </button>
+
+            <div x-show="open" @click.outside="open = false" class="absolute right-0 mt-2 w-48 bg-white rounded shadow-lg border border-gray-200 z-50">
+                <a href="#" class="block px-4 py-2 hover:bg-gray-100 text-sm">Profile</a>
+                <a href="#" class="block px-4 py-2 hover:bg-gray-100 text-sm">Settings</a>
+                <hr>
+                <form method="POST" action="/auth/logout" class="w-full">
+                    <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm">Logout</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</header>
