@@ -33,31 +33,6 @@ async def list_projects(request: Request, db: Session = Depends(get_db)):
     )
 
 
-@router.get("/{project_id}", response_class=HTMLResponse)
-async def detail_project(
-    project_id: str, request: Request, db: Session = Depends(get_db)
-):
-    """Show project detail page."""
-    user = getattr(request.state, "user", None)
-    if not user:
-        return RedirectResponse(url="/auth/login", status_code=302)
-
-    repo = ProjectRepository(db)
-    project = repo.get_by_id_with_details(user.tenant_id, project_id)
-
-    if not project:
-        return RedirectResponse(url="/projects", status_code=302)
-
-    return templates.TemplateResponse(
-        "projects/detail.html",
-        {
-            "request": request,
-            "user": user,
-            "project": project,
-        },
-    )
-
-
 @router.get("/new", response_class=HTMLResponse)
 async def new_project_form(request: Request, db: Session = Depends(get_db)):
     """Show new project form modal."""
@@ -213,3 +188,28 @@ async def delete_project(
     if success:
         return HTMLResponse("")  # Empty response for successful delete
     return RedirectResponse(url="/projects", status_code=302)
+
+
+@router.get("/{project_id}", response_class=HTMLResponse)
+async def detail_project(
+    project_id: str, request: Request, db: Session = Depends(get_db)
+):
+    """Show project detail page."""
+    user = getattr(request.state, "user", None)
+    if not user:
+        return RedirectResponse(url="/auth/login", status_code=302)
+
+    repo = ProjectRepository(db)
+    project = repo.get_by_id_with_details(user.tenant_id, project_id)
+
+    if not project:
+        return RedirectResponse(url="/projects", status_code=302)
+
+    return templates.TemplateResponse(
+        "projects/detail.html",
+        {
+            "request": request,
+            "user": user,
+            "project": project,
+        },
+    )

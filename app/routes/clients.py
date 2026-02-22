@@ -33,31 +33,6 @@ async def list_clients(request: Request, db: Session = Depends(get_db)):
     )
 
 
-@router.get("/{client_id}", response_class=HTMLResponse)
-async def detail_client(
-    client_id: str, request: Request, db: Session = Depends(get_db)
-):
-    """Show client detail page."""
-    user = getattr(request.state, "user", None)
-    if not user:
-        return RedirectResponse(url="/auth/login", status_code=302)
-
-    repo = ClientRepository(db)
-    client = repo.get_by_id(user.tenant_id, client_id)
-
-    if not client:
-        return RedirectResponse(url="/clients", status_code=302)
-
-    return templates.TemplateResponse(
-        "clients/detail.html",
-        {
-            "request": request,
-            "user": user,
-            "client": client,
-        },
-    )
-
-
 @router.get("/new", response_class=HTMLResponse)
 async def new_client_form(request: Request, db: Session = Depends(get_db)):
     """Show new client form modal."""
@@ -203,5 +178,30 @@ async def search_clients(
             "user": user,
             "results": results,
             "query": q,
+        },
+    )
+
+
+@router.get("/{client_id}", response_class=HTMLResponse)
+async def detail_client(
+    client_id: str, request: Request, db: Session = Depends(get_db)
+):
+    """Show client detail page."""
+    user = getattr(request.state, "user", None)
+    if not user:
+        return RedirectResponse(url="/auth/login", status_code=302)
+
+    repo = ClientRepository(db)
+    client = repo.get_by_id(user.tenant_id, client_id)
+
+    if not client:
+        return RedirectResponse(url="/clients", status_code=302)
+
+    return templates.TemplateResponse(
+        "clients/detail.html",
+        {
+            "request": request,
+            "user": user,
+            "client": client,
         },
     )
