@@ -1,6 +1,6 @@
 import uuid
 from sqlalchemy import String, Text, ForeignKey, Integer
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.base import BaseModel, TimestampMixin
 
 
@@ -15,6 +15,11 @@ class Framework(BaseModel, TimestampMixin):
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str] = mapped_column(Text, nullable=True)
     version: Mapped[str] = mapped_column(String(50), nullable=True)
+
+    # Relationships
+    sections: Mapped[list["FrameworkSection"]] = relationship(
+        back_populates="framework", cascade="all, delete-orphan"
+    )
 
 
 class FrameworkSection(BaseModel, TimestampMixin):
@@ -32,6 +37,12 @@ class FrameworkSection(BaseModel, TimestampMixin):
     description: Mapped[str] = mapped_column(Text, nullable=True)
     order: Mapped[int] = mapped_column(Integer, default=0)
 
+    # Relationships
+    framework: Mapped["Framework"] = relationship(back_populates="sections")
+    controls: Mapped[list["FrameworkControl"]] = relationship(
+        back_populates="section", cascade="all, delete-orphan"
+    )
+
 
 class FrameworkControl(BaseModel, TimestampMixin):
     """Individual control within a framework section."""
@@ -45,6 +56,9 @@ class FrameworkControl(BaseModel, TimestampMixin):
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str] = mapped_column(Text, nullable=True)
     implementation_guidance: Mapped[str] = mapped_column(Text, nullable=True)
+
+    # Relationships
+    section: Mapped["FrameworkSection"] = relationship(back_populates="controls")
 
 
 class ChecklistItem(BaseModel, TimestampMixin):

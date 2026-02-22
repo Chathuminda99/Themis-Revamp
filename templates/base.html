@@ -9,7 +9,7 @@
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
 <body class="bg-gray-50">
-    <div class="flex h-screen">
+    <div class="flex h-screen" x-data="{}">
         <!-- Sidebar -->
         {% include "components/sidebar.html" %}
 
@@ -23,7 +23,31 @@
                 {% block content %}{% endblock %}
             </main>
         </div>
+
+        <!-- Modal Overlay -->
+        <div
+          x-data="{ show: false }"
+          x-show="show"
+          x-cloak
+          @keydown.escape.window="show = false"
+          class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+          @click.self="show = false"
+        >
+          <div class="bg-white rounded-xl shadow-xl w-full max-w-lg mx-4 p-6">
+            <div id="modal-body"></div>
+          </div>
+        </div>
     </div>
+
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.store('modal', {
+                open: false,
+                show() { this.open = true; },
+                hide() { this.open = false; }
+            })
+        })
+    </script>
 
     {% block scripts %}{% endblock %}
 </body>

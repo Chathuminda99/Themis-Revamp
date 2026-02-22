@@ -1,0 +1,31 @@
+<tr class="hover:bg-gray-50">
+  <td class="px-6 py-4 text-sm text-gray-900">
+    <a href="/clients/{{ client.id }}" class="text-blue-600 hover:text-blue-900 font-medium">
+      {{ client.name }}
+    </a>
+  </td>
+  <td class="px-6 py-4 text-sm text-gray-600">{{ client.industry or "-" }}</td>
+  <td class="px-6 py-4 text-sm text-gray-600">{{ client.contact_name or "-" }}</td>
+  <td class="px-6 py-4 text-sm text-gray-600">{{ client.contact_email or "-" }}</td>
+  <td class="px-6 py-4 text-sm">
+    <div class="flex gap-2">
+      <button
+        hx-get="/clients/{{ client.id }}/edit"
+        hx-target="#modal-body"
+        @click="$store.modal.show()"
+        class="text-blue-600 hover:text-blue-900"
+      >
+        Edit
+      </button>
+      <button
+        hx-delete="/clients/{{ client.id }}"
+        hx-confirm="Are you sure?"
+        hx-target="closest tr"
+        hx-swap="outerHTML swap:1s"
+        class="text-red-600 hover:text-red-900"
+      >
+        Delete
+      </button>
+    </div>
+  </td>
+</tr>

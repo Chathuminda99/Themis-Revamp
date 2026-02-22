@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="px-8 py-8">
+  <div class="mb-8 flex items-center justify-between">
+    <h1 class="text-3xl font-bold text-gray-900">Clients</h1>
+    <button
+      class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+      hx-get="/clients/new"
+      hx-target="#modal-body"
+      @click="$store.modal.show()"
+    >
+      + New Client
+    </button>
+  </div>
+
+  <div class="bg-white rounded-lg shadow overflow-hidden">
+    <table class="w-full">
+      <thead class="bg-gray-50 border-b border-gray-200">
+        <tr>
+          <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Name</th>
+          <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Industry</th>
+          <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Contact</th>
+          <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Email</th>
+          <th class="px-6 py-4 text-left text-sm font-semibold text-gray-900">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="clients-table" class="divide-y divide-gray-200">
+        {% for client in clients %}
+          {% include "clients/_row.html" %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="px-8 py-8">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">{{ framework.name }}</h1>
+    {% if framework.version %}
+    <p class="text-gray-600 mt-2">Version: {{ framework.version }}</p>
+    {% endif %}
+    {% if framework.description %}
+    <p class="text-gray-700 mt-4">{{ framework.description }}</p>
+    {% endif %}
+  </div>
+
+  <div class="bg-white rounded-lg shadow">
+    <div class="p-6">
+      <h2 class="text-xl font-semibold text-gray-900 mb-6">Sections & Controls</h2>
+
+      {% if framework.sections %}
+      <div class="space-y-4">
+        {% for section in framework.sections %}
+        <div class="border border-gray-200 rounded-lg p-4">
+          <div class="flex items-start justify-between">
+            <div class="flex-1">
+              <h3 class="text-lg font-semibold text-gray-900">{{ section.name }}</h3>
+              {% if section.description %}
+              <p class="text-gray-600 text-sm mt-1">{{ section.description }}</p>
+              {% endif %}
+            </div>
+          </div>
+
+          {% if section.controls %}
+          <div class="mt-4 ml-4 space-y-3">
+            {% for control in section.controls %}
+            <div class="bg-gray-50 rounded p-3 border-l-4 border-blue-500">
+              <div class="font-medium text-gray-900">
+                <span class="text-blue-600">{{ control.control_id }}</span> — {{ control.name }}
+              </div>
+              {% if control.description %}
+              <p class="text-sm text-gray-600 mt-2">{{ control.description }}</p>
+              {% endif %}
+              {% if control.implementation_guidance %}
+              <p class="text-sm text-gray-700 mt-2">
+                <strong>Guidance:</strong> {{ control.implementation_guidance }}
+              </p>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="text-gray-600">No sections defined for this framework.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

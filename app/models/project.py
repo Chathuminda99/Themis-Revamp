@@ -1,7 +1,7 @@
 import uuid
 from enum import Enum
 from sqlalchemy import String, Text, Enum as SQLEnum, ForeignKey, Integer
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.base import BaseModel, TimestampMixin
 
 
@@ -43,6 +43,10 @@ class Project(BaseModel, TimestampMixin):
     status: Mapped[ProjectStatus] = mapped_column(
         SQLEnum(ProjectStatus), nullable=False, default=ProjectStatus.DRAFT
     )
+
+    # Relationships
+    client: Mapped["Client"] = relationship()
+    framework: Mapped["Framework"] = relationship()
 
 
 class ProjectMember(BaseModel, TimestampMixin):

@@ -1,0 +1,65 @@
+"""Project repository with filtering and relationships."""
+
+from typing import List
+from uuid import UUID
+from sqlalchemy.orm import Session, joinedload
+from sqlalchemy import and_
+from app.models.project import Project, ProjectStatus
+from app.models.client import Client
+from app.models.framework import Framework
+from app.repositories.base import BaseRepository
+
+
+class ProjectRepository(BaseRepository[Project]):
+    """Repository for Project model with filtering and relationships."""
+
+    model = Project
+
+    def __init__(self, db: Session):
+        """Initialize project repository."""
+        super().__init__(db)
+
+    def get_all_with_details(self, tenant_id: UUID) -> List[Project]:
+        """Get all projects for a tenant with eager-loaded client and framework."""
+        return self.db.query(Project).filter(
+            Project.tenant_id == tenant_id
+        ).options(
+            joinedload(Project.client),
+            joinedload(Project.framework)
+        ).all()
+
+    def get_by_id_with_details(
+        self, tenant_id: UUID, id: UUID
+    ) -> Project | None:
+        """Get a project by ID with client and framework details."""
+        return self.db.query(Project).filter(
+            and_(Project.id == id, Project.tenant_id == tenant_id)
+        ).options(
+            joinedload(Project.client),
+            joinedload(Project.framework)
+        ).first()
+
+    def get_by_status(
+        self, tenant_id: UUID, status: ProjectStatus
+    ) -> List[Project]:
+        """Get projects filtered by status."""
+        return self.db.query(Project).filter(
+            and_(
+                Project.tenant_id == tenant_id,
+                Project.status == status
+            )
+        ).options(
+            joinedload(Project.client),
+            joinedload(Project.framework)
+        ).all()
+
+    def get_by_client(self, tenant_id: UUID, client_id: UUID) -> List[Project]:
+        """Get projects for a specific client."""
+        return self.db.query(Project).filter(
+            and_(
+                Project.tenant_id == tenant_id,
+                Project.client_id == client_id
+            )
+        ).options(
+            joinedload(Project.framework)
+        ).all()

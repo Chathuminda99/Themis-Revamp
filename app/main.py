@@ -4,7 +4,7 @@ from fastapi.responses import RedirectResponse
 from app.config import get_settings
 from app.middleware.auth import AuthMiddleware
 from app.middleware.tenant import TenantMiddleware
-from app.routes import auth, dashboard
+from app.routes import auth, dashboard, clients, frameworks, projects
 
 
 def create_app() -> FastAPI:
@@ -26,6 +26,9 @@ def create_app() -> FastAPI:
     # Include routers
     app.include_router(auth.router)
     app.include_router(dashboard.router)
+    app.include_router(clients.router)
+    app.include_router(frameworks.router)
+    app.include_router(projects.router)
 
     # Root redirect
     @app.get("/")
