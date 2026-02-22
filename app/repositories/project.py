@@ -63,3 +63,32 @@ class ProjectRepository(BaseRepository[Project]):
         ).options(
             joinedload(Project.framework)
         ).all()
+
+    def filter_projects(
+        self,
+        tenant_id: UUID,
+        status: ProjectStatus | None = None,
+        client_id: UUID | None = None,
+        framework_id: UUID | None = None,
+        search: str | None = None,
+    ) -> List[Project]:
+        """Filter projects by optional criteria."""
+        query = self.db.query(Project).filter(Project.tenant_id == tenant_id)
+
+        if status:
+            query = query.filter(Project.status == status)
+
+        if client_id:
+            query = query.filter(Project.client_id == client_id)
+
+        if framework_id:
+            query = query.filter(Project.framework_id == framework_id)
+
+        if search and search.strip():
+            search_term = f"%{search.lower()}%"
+            query = query.filter(Project.name.ilike(search_term))
+
+        return query.options(
+            joinedload(Project.client),
+            joinedload(Project.framework),
+        ).all()

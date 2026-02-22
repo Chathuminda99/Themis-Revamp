@@ -14,14 +14,41 @@ templates = Jinja2Templates(directory="templates")
 
 
 @router.get("", response_class=HTMLResponse)
-async def list_clients(request: Request, db: Session = Depends(get_db)):
-    """List all clients for the authenticated tenant."""
+async def list_clients(
+    request: Request, db: Session = Depends(get_db), industry: str | None = None, q: str | None = None
+):
+    """List all clients for the authenticated tenant with optional filtering."""
     user = getattr(request.state, "user", None)
     if not user:
         return RedirectResponse(url="/auth/login", status_code=302)
 
     repo = ClientRepository(db)
-    clients = repo.get_all(user.tenant_id)
+
+    # Use filter_clients with optional criteria
+    clients = repo.filter_clients(user.tenant_id, industry=industry, search=q)
+
+    # Check if this is an HTMX request (filter update)
+    is_htmx = request.headers.get("HX-Request") == "true"
+
+    if is_htmx:
+        # Return just the table rows
+        return templates.TemplateResponse(
+            "clients/_clients_table.html",
+            {
+                "request": request,
+                "user": user,
+                "clients": clients,
+            },
+        )
+
+    # Get distinct industries for filter dropdown
+    distinct_industries = repo.get_distinct_industries(user.tenant_id)
+
+    # Build active_filters dict for form pre-population
+    active_filters = {
+        "industry": industry or "",
+        "q": q or "",
+    }
 
     return templates.TemplateResponse(
         "clients/list.html",
@@ -29,6 +56,8 @@ async def list_clients(request: Request, db: Session = Depends(get_db)):
             "request": request,
             "user": user,
             "clients": clients,
+            "distinct_industries": distinct_industries,
+            "active_filters": active_filters,
         },
     )
 
@@ -71,31 +100,6 @@ async def create_client(request: Request, db: Session = Depends(get_db)):
 
     return templates.TemplateResponse(
         "clients/_row.html",
-        {
-            "request": request,
-            "user": user,
-            "client": client,
-        },
-    )
-
-
-@router.get("/{client_id}/edit", response_class=HTMLResponse)
-async def edit_client_form(
-    client_id: str, request: Request, db: Session = Depends(get_db)
-):
-    """Show edit client form modal."""
-    user = getattr(request.state, "user", None)
-    if not user:
-        return RedirectResponse(url="/auth/login", status_code=302)
-
-    repo = ClientRepository(db)
-    client = repo.get_by_id(user.tenant_id, client_id)
-
-    if not client:
-        return RedirectResponse(url="/clients", status_code=302)
-
-    return templates.TemplateResponse(
-        "clients/_form.html",
         {
             "request": request,
             "user": user,
@@ -158,18 +162,15 @@ async def delete_client(
 
 @router.get("/search", response_class=HTMLResponse)
 async def search_clients(
-    q: str = "", request: Request = None, db: Session = Depends(get_db)
+    request: Request, db: Session = Depends(get_db), q: str = ""
 ):
     """Search clients for autocomplete (HTMX endpoint)."""
-    if not request:
-        return HTMLResponse("")
-
     user = getattr(request.state, "user", None)
     if not user:
         return HTMLResponse("")
 
     repo = ClientRepository(db)
-    results = repo.search(user.tenant_id, q) if q else []
+    results = repo.search(user.tenant_id, q) if q.strip() else []
 
     return templates.TemplateResponse(
         "clients/_search_results.html",
@@ -178,6 +179,31 @@ async def search_clients(
             "user": user,
             "results": results,
             "query": q,
+        },
+    )
+
+
+@router.get("/{client_id}/edit", response_class=HTMLResponse)
+async def edit_client_form_detail(
+    client_id: str, request: Request, db: Session = Depends(get_db)
+):
+    """Show edit client form modal."""
+    user = getattr(request.state, "user", None)
+    if not user:
+        return RedirectResponse(url="/auth/login", status_code=302)
+
+    repo = ClientRepository(db)
+    client = repo.get_by_id(user.tenant_id, client_id)
+
+    if not client:
+        return RedirectResponse(url="/clients", status_code=302)
+
+    return templates.TemplateResponse(
+        "clients/_form.html",
+        {
+            "request": request,
+            "user": user,
+            "client": client,
         },
     )
 

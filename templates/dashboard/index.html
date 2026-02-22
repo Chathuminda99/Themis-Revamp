@@ -1,86 +1,246 @@
 {% extends "base.html" %}
 
-{% block title %}Dashboard - Themis{% endblock %}
+{% block title %}Overview - Themis Platform Core{% endblock %}
 
 {% block content %}
-<div class="p-8">
+<div class="max-w-7xl mx-auto animate-fade-in-up">
     <!-- Welcome Section -->
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Welcome back, {{ user.full_name }}!</h1>
-        <p class="text-gray-600 mt-2">Here's a quick overview of your compliance status.</p>
+    <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+            <h1 class="text-3xl md:text-4xl font-bold text-white tracking-tight">Overview</h1>
+            <p class="text-slate-400 mt-2 text-sm md:text-base">Welcome back, <span
+                    class="text-slate-200 font-medium">{{ user.full_name }}</span>. Here's what's happening today.</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <button
+                class="px-4 py-2 bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 rounded-lg text-sm font-medium text-slate-200 transition-all duration-200 flex items-center gap-2 backdrop-blur-sm">
+                <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                Export Report
+            </button>
+        </div>
     </div>
 
     <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-10">
         <!-- Card: Total Projects -->
-        <div class="bg-white rounded-lg shadow p-6">
-            <div class="flex items-center justify-between">
+        <div
+            class="relative group rounded-2xl bg-slate-900/40 backdrop-blur-md border border-slate-800/60 p-6 overflow-hidden hover:border-cyan-500/30 transition-all duration-300">
+            <div
+                class="absolute top-0 right-0 p-4 opacity-10 transform translate-x-4 -translate-y-4 group-hover:scale-110 group-hover:opacity-20 transition-all duration-500 text-cyan-400">
+                <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z" />
+                </svg>
+            </div>
+            <div class="relative z-10 flex items-start justify-between">
                 <div>
-                    <p class="text-gray-600 text-sm font-medium">Total Projects</p>
-                    <p class="text-3xl font-bold text-gray-900 mt-2">{{ stats.total_projects }}</p>
+                    <p class="text-slate-400 text-sm font-medium uppercase tracking-wider">Total Projects</p>
+                    <p class="text-4xl font-bold text-white mt-3">{{ stats.total_projects }}</p>
                 </div>
-                <div class="text-4xl text-blue-500">📁</div>
+                <div class="p-3 bg-cyan-500/10 rounded-xl border border-cyan-500/20 text-cyan-400">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                    </svg>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center text-xs text-slate-400 font-medium">
+                <span class="text-emerald-400 flex items-center mr-2"><svg class="w-3 h-3 mr-0.5" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                    </svg>12%</span>
+                vs last month
             </div>
         </div>
 
         <!-- Card: Active Projects -->
-        <div class="bg-white rounded-lg shadow p-6">
-            <div class="flex items-center justify-between">
+        <div
+            class="relative group rounded-2xl bg-slate-900/40 backdrop-blur-md border border-slate-800/60 p-6 overflow-hidden hover:border-emerald-500/30 transition-all duration-300">
+            <div
+                class="absolute top-0 right-0 p-4 opacity-10 transform translate-x-4 -translate-y-4 group-hover:scale-110 group-hover:opacity-20 transition-all duration-500 text-emerald-400">
+                <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z" />
+                </svg>
+            </div>
+            <div class="relative z-10 flex items-start justify-between">
                 <div>
-                    <p class="text-gray-600 text-sm font-medium">Active Projects</p>
-                    <p class="text-3xl font-bold text-gray-900 mt-2">{{ stats.active_projects }}</p>
+                    <p class="text-slate-400 text-sm font-medium uppercase tracking-wider">Active Projects</p>
+                    <p class="text-4xl font-bold text-white mt-3">{{ stats.active_projects }}</p>
                 </div>
-                <div class="text-4xl text-green-500">▶️</div>
+                <div class="p-3 bg-emerald-500/10 rounded-xl border border-emerald-500/20 text-emerald-400">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center text-xs text-slate-400 font-medium">
+                <span class="text-emerald-400 flex items-center mr-2"><svg class="w-3 h-3 mr-0.5" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                    </svg>4</span>
+                new this week
             </div>
         </div>
 
         <!-- Card: Completed Assessments -->
-        <div class="bg-white rounded-lg shadow p-6">
-            <div class="flex items-center justify-between">
+        <div
+            class="relative group rounded-2xl bg-slate-900/40 backdrop-blur-md border border-slate-800/60 p-6 overflow-hidden hover:border-indigo-500/30 transition-all duration-300">
+            <div
+                class="absolute top-0 right-0 p-4 opacity-10 transform translate-x-4 -translate-y-4 group-hover:scale-110 group-hover:opacity-20 transition-all duration-500 text-indigo-400">
+                <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                </svg>
+            </div>
+            <div class="relative z-10 flex items-start justify-between">
                 <div>
-                    <p class="text-gray-600 text-sm font-medium">Completed</p>
-                    <p class="text-3xl font-bold text-gray-900 mt-2">{{ stats.completed_assessments }}</p>
+                    <p class="text-slate-400 text-sm font-medium uppercase tracking-wider">Completed</p>
+                    <p class="text-4xl font-bold text-white mt-3">{{ stats.completed_assessments }}</p>
                 </div>
-                <div class="text-4xl text-purple-500">✅</div>
+                <div class="p-3 bg-indigo-500/10 rounded-xl border border-indigo-500/20 text-indigo-400">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center text-xs text-slate-400 font-medium">
+                <span class="text-indigo-400 flex items-center mr-2"><svg class="w-3 h-3 mr-0.5" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                    </svg>8</span>
+                recently finished
             </div>
         </div>
 
         <!-- Card: Pending Responses -->
-        <div class="bg-white rounded-lg shadow p-6">
-            <div class="flex items-center justify-between">
+        <div
+            class="relative group rounded-2xl bg-slate-900/40 backdrop-blur-md border border-slate-800/60 p-6 overflow-hidden hover:border-amber-500/30 transition-all duration-300">
+            <div
+                class="absolute top-0 right-0 p-4 opacity-10 transform translate-x-4 -translate-y-4 group-hover:scale-110 group-hover:opacity-20 transition-all duration-500 text-amber-500">
+                <svg class="w-24 h-24" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" />
+                </svg>
+            </div>
+            <div class="relative z-10 flex items-start justify-between">
                 <div>
-                    <p class="text-gray-600 text-sm font-medium">Pending</p>
-                    <p class="text-3xl font-bold text-gray-900 mt-2">{{ stats.pending_responses }}</p>
+                    <p class="text-slate-400 text-sm font-medium uppercase tracking-wider">Pending</p>
+                    <p class="text-4xl font-bold text-white mt-3">{{ stats.pending_responses }}</p>
                 </div>
-                <div class="text-4xl text-orange-500">⏳</div>
+                <div class="p-3 bg-amber-500/10 rounded-xl border border-amber-500/20 text-amber-400">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center text-xs text-slate-400 font-medium">
+                <span class="text-red-400 flex items-center mr-2"><svg class="w-3 h-3 mr-0.5" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                    </svg>2</span>
+                requiring attention
             </div>
         </div>
     </div>
 
-    <!-- Placeholder Sections -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Recent Activity -->
-        <div class="lg:col-span-2 bg-white rounded-lg shadow p-6">
-            <h2 class="text-lg font-bold text-gray-900 mb-4">Recent Activity</h2>
-            <div class="text-center py-8 text-gray-500">
-                <p>No recent activity yet.</p>
-                <p class="text-sm mt-2">Projects and assessments will appear here.</p>
+    <!-- Main Content Sections -->
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8">
+        <!-- Recent Activity Chart/List -->
+        <div
+            class="xl:col-span-2 rounded-2xl bg-slate-900/40 backdrop-blur-md border border-slate-800/60 p-6 flex flex-col">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-lg font-bold text-white tracking-wide">Activity Diagnostics</h2>
+                <button class="text-sm font-medium text-cyan-400 hover:text-cyan-300 transition-colors">View All
+                    &rarr;</button>
+            </div>
+            <div
+                class="flex-1 flex flex-col items-center justify-center py-12 text-center border-2 border-dashed border-slate-800 rounded-xl bg-slate-800/20">
+                <div class="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center mb-4 text-slate-500">
+                    <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                </div>
+                <h3 class="text-slate-300 font-medium mb-1">Awaiting Telemetry</h3>
+                <p class="text-sm text-slate-500 max-w-sm">No recent activity detected. Connect projects and wait for
+                    assessments to populate diagnostics.</p>
             </div>
         </div>
 
-        <!-- Quick Actions -->
-        <div class="bg-white rounded-lg shadow p-6">
-            <h2 class="text-lg font-bold text-gray-900 mb-4">Quick Actions</h2>
-            <div class="space-y-3">
-                <button class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm font-medium transition">
-                    New Project
+        <!-- Quick Actions Panel -->
+        <div
+            class="rounded-2xl bg-slate-900/40 backdrop-blur-md border border-slate-800/60 p-6 flex flex-col relative overflow-hidden">
+            <!-- decorative background elements -->
+            <div class="absolute top-0 right-0 -mr-16 -mt-16 w-32 h-32 rounded-full bg-indigo-500/10 blur-2xl"></div>
+            <div class="absolute bottom-0 left-0 -ml-16 -mb-16 w-32 h-32 rounded-full bg-cyan-500/10 blur-2xl"></div>
+
+            <h2 class="text-lg font-bold text-white tracking-wide mb-6 relative z-10">Quick Actions</h2>
+            <div class="space-y-4 relative z-10">
+                <button
+                    class="w-full relative group overflow-hidden rounded-xl p-[1px] transition-all duration-300 hover:scale-[1.02]"
+                    hx-get="/projects/new" hx-target="#modal-body" @click="$store.modal.show()">
+                    <span
+                        class="absolute inset-0 bg-gradient-to-r from-cyan-500 to-indigo-500 opacity-80 group-hover:opacity-100 transition-opacity"></span>
+                    <div
+                        class="relative w-full px-4 py-3 bg-slate-900 rounded-[11px] flex items-center justify-center gap-2 text-sm font-bold text-white transition-all group-hover:bg-slate-900/80">
+                        <svg class="w-5 h-5 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        Initialize Project
+                    </div>
                 </button>
-                <button class="w-full px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-900 rounded text-sm font-medium transition">
-                    View Reports
-                </button>
-                <button class="w-full px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-900 rounded text-sm font-medium transition">
-                    Manage Frameworks
-                </button>
+
+                <a href="/projects"
+                    class="block w-full group overflow-hidden rounded-xl p-[1px] bg-slate-800 hover:bg-gradient-to-r hover:from-slate-700 hover:to-slate-600 transition-all duration-300 border border-slate-700 hover:border-transparent">
+                    <div
+                        class="w-full px-4 py-3 rounded-[11px] flex items-center justify-center gap-2 text-sm font-medium text-slate-300 group-hover:text-white transition-all">
+                        <svg class="w-4 h-4 text-slate-400 group-hover:text-slate-300" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                        Browse Repository
+                    </div>
+                </a>
+
+                <a href="/frameworks"
+                    class="block w-full group overflow-hidden rounded-xl p-[1px] bg-slate-800 hover:bg-gradient-to-r hover:from-slate-700 hover:to-slate-600 transition-all duration-300 border border-slate-700 hover:border-transparent">
+                    <div
+                        class="w-full px-4 py-3 rounded-[11px] flex items-center justify-center gap-2 text-sm font-medium text-slate-300 group-hover:text-white transition-all">
+                        <svg class="w-4 h-4 text-slate-400 group-hover:text-slate-300" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        Configuration
+                    </div>
+                </a>
+            </div>
+
+            <div class="mt-auto pt-8">
+                <div class="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-sm">
+                    <div class="flex items-center gap-2 text-indigo-300 font-semibold mb-1">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        System Status
+                    </div>
+                    <p class="text-slate-400 text-xs">All API services operational. Syncing in real-time.</p>
+                </div>
             </div>
         </div>
     </div>

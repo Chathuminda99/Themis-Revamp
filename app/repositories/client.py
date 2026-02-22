@@ -34,3 +34,31 @@ class ClientRepository(BaseRepository[Client]):
                 ),
             )
         ).all()
+
+    def filter_clients(
+        self, tenant_id: UUID, industry: str | None = None, search: str | None = None
+    ) -> List[Client]:
+        """Filter clients by optional industry and search term."""
+        query = self.db.query(Client).filter(Client.tenant_id == tenant_id)
+
+        if industry and industry.strip():
+            query = query.filter(Client.industry.ilike(industry))
+
+        if search and search.strip():
+            search_term = f"%{search.lower()}%"
+            query = query.filter(
+                or_(
+                    Client.name.ilike(search_term),
+                    Client.contact_name.ilike(search_term),
+                    Client.contact_email.ilike(search_term),
+                )
+            )
+
+        return query.all()
+
+    def get_distinct_industries(self, tenant_id: UUID) -> List[str]:
+        """Get distinct industries for a tenant, ordered alphabetically."""
+        results = self.db.query(Client.industry).filter(
+            and_(Client.tenant_id == tenant_id, Client.industry.isnot(None))
+        ).distinct().order_by(Client.industry).all()
+        return [row[0] for row in results if row[0]]

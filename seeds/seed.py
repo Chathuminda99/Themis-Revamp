@@ -120,12 +120,13 @@ def seed_database():
             beta_id = beta.id if beta else None
             print("✓ Clients already exist")
 
-        # Check if frameworks exist
-        existing_frameworks = db.query(Framework).filter(
-            Framework.tenant_id == tenant_id
-        ).count()
+        # Check if PCI DSS exists specifically
+        pci_exists = db.query(Framework).filter(
+            Framework.tenant_id == tenant_id,
+            Framework.name == "PCI DSS V4.0.1"
+        ).first()
 
-        if existing_frameworks == 0:
+        if not pci_exists:
             # Create ISO 27001 framework
             iso_id = uuid.uuid4()
             iso = Framework(
@@ -247,6 +248,224 @@ def seed_database():
             db.commit()
             soc2_framework_id = soc2_id
             print("✓ Created SOC 2 Type II framework with sections and controls")
+
+            # Create PCI DSS V4.0.1 framework
+            pci_id = uuid.uuid4()
+            pci = Framework(
+                id=pci_id,
+                tenant_id=tenant_id,
+                name="PCI DSS V4.0.1",
+                description="Payment Card Industry Data Security Standard",
+                version="4.0.1",
+            )
+            db.add(pci)
+            db.flush()
+
+            # PCI DSS Section 1: Build and Maintain a Secure Network
+            pci_goal1_id = uuid.uuid4()
+            pci_goal1 = FrameworkSection(
+                id=pci_goal1_id,
+                framework_id=pci_id,
+                parent_section_id=None,
+                name="Goal 1: Build and Maintain a Secure Network",
+                description="Foundational requirements to establish secure network architecture",
+                order=1,
+            )
+            db.add(pci_goal1)
+            db.flush()
+
+            # Requirement 1: Network segmentation
+            pci_req1 = FrameworkControl(
+                id=uuid.uuid4(),
+                framework_section_id=pci_goal1_id,
+                control_id="1.1",
+                name="Establish and enforce network segmentation",
+                description="Implement network segmentation to isolate cardholder data environments",
+                implementation_guidance="Deploy firewalls and VLANs to separate CDE from guest networks",
+            )
+            # Requirement 2: Firewall rules
+            pci_req2 = FrameworkControl(
+                id=uuid.uuid4(),
+                framework_section_id=pci_goal1_id,
+                control_id="1.2",
+                name="Document and implement firewall rules",
+                description="Establish and maintain firewall rules that specify authorized traffic",
+                implementation_guidance="Create and maintain firewall rule sets with clear business justification",
+            )
+            db.add_all([pci_req1, pci_req2])
+            db.flush()
+
+            # PCI DSS Section 2: Protect Cardholder Data
+            pci_goal2_id = uuid.uuid4()
+            pci_goal2 = FrameworkSection(
+                id=pci_goal2_id,
+                framework_id=pci_id,
+                parent_section_id=None,
+                name="Goal 2: Protect Cardholder Data",
+                description="Requirements to protect stored and transmitted cardholder data",
+                order=2,
+            )
+            db.add(pci_goal2)
+            db.flush()
+
+            # Requirement 3: Encryption at rest
+            pci_req3 = FrameworkControl(
+                id=uuid.uuid4(),
+                framework_section_id=pci_goal2_id,
+                control_id="2.1",
+                name="Render Primary Account Numbers (PAN) unreadable",
+                description="Encrypt cardholder data at rest using strong cryptography",
+                implementation_guidance="Use AES-256 or equivalent encryption for stored cardholder data",
+            )
+            # Requirement 4: Encryption in transit
+            pci_req4 = FrameworkControl(
+                id=uuid.uuid4(),
+                framework_section_id=pci_goal2_id,
+                control_id="2.2",
+                name="Encrypt cardholder data in transit",
+                description="Protect cardholder data with encryption during transmission",
+                implementation_guidance="Use TLS 1.2 or higher for all cardholder data transmissions",
+            )
+            db.add_all([pci_req3, pci_req4])
+            db.flush()
+
+            # PCI DSS Section 3: Maintain a Vulnerability Management Program
+            pci_goal3_id = uuid.uuid4()
+            pci_goal3 = FrameworkSection(
+                id=pci_goal3_id,
+                framework_id=pci_id,
+                parent_section_id=None,
+                name="Goal 3: Maintain a Vulnerability Management Program",
+                description="Requirements for vulnerability identification and remediation",
+                order=3,
+            )
+            db.add(pci_goal3)
+            db.flush()
+
+            # Requirement 5: Vulnerability scans
+            pci_req5 = FrameworkControl(
+                id=uuid.uuid4(),
+                framework_section_id=pci_goal3_id,
+                control_id="3.1",
+                name="Conduct regular vulnerability scans",
+                description="Perform quarterly vulnerability scans on all in-scope systems",
+                implementation_guidance="Use approved vulnerability scanning tools; remediate findings within SLA",
+            )
+            # Requirement 6: Patch management
+            pci_req6 = FrameworkControl(
+                id=uuid.uuid4(),
+                framework_section_id=pci_goal3_id,
+                control_id="3.2",
+                name="Maintain a patching process",
+                description="Implement a documented process to manage security patches",
+                implementation_guidance="Test patches in non-production before deployment within 30 days",
+            )
+            db.add_all([pci_req5, pci_req6])
+            db.flush()
+
+            # PCI DSS Section 4: Implement Strong Access Control Measures
+            pci_goal4_id = uuid.uuid4()
+            pci_goal4 = FrameworkSection(
+                id=pci_goal4_id,
+                framework_id=pci_id,
+                parent_section_id=None,
+                name="Goal 4: Implement Strong Access Control Measures",
+                description="Requirements for user authentication and authorization",
+                order=4,
+            )
+            db.add(pci_goal4)
+            db.flush()
+
+            # Requirement 7: Access control
+            pci_req7 = FrameworkControl(
+                id=uuid.uuid4(),
+                framework_section_id=pci_goal4_id,
+                control_id="4.1",
+                name="Restrict access to cardholder data",
+                description="Implement role-based access control (RBAC) for CDE systems",
+                implementation_guidance="Follow principle of least privilege; document all access",
+            )
+            # Requirement 8: Authentication
+            pci_req8 = FrameworkControl(
+                id=uuid.uuid4(),
+                framework_section_id=pci_goal4_id,
+                control_id="4.2",
+                name="Ensure user authentication",
+                description="Implement multi-factor authentication for administrative access",
+                implementation_guidance="Require MFA for all CDE access; use strong passwords with complexity rules",
+            )
+            db.add_all([pci_req7, pci_req8])
+            db.flush()
+
+            # PCI DSS Section 5: Regularly Monitor and Test Networks
+            pci_goal5_id = uuid.uuid4()
+            pci_goal5 = FrameworkSection(
+                id=pci_goal5_id,
+                framework_id=pci_id,
+                parent_section_id=None,
+                name="Goal 5: Regularly Monitor and Test Networks",
+                description="Requirements for continuous monitoring and testing",
+                order=5,
+            )
+            db.add(pci_goal5)
+            db.flush()
+
+            # Requirement 9: Logging and monitoring
+            pci_req9 = FrameworkControl(
+                id=uuid.uuid4(),
+                framework_section_id=pci_goal5_id,
+                control_id="5.1",
+                name="Implement logging and monitoring",
+                description="Log all access to cardholder data and monitor for anomalies",
+                implementation_guidance="Collect logs centrally; retain for minimum 3 months (1 year archived)",
+            )
+            # Requirement 10: Penetration testing
+            pci_req10 = FrameworkControl(
+                id=uuid.uuid4(),
+                framework_section_id=pci_goal5_id,
+                control_id="5.2",
+                name="Conduct annual penetration testing",
+                description="Perform penetration testing to identify vulnerabilities",
+                implementation_guidance="Engage qualified security firm; remediate findings by agreed timeline",
+            )
+            db.add_all([pci_req9, pci_req10])
+            db.flush()
+
+            # PCI DSS Section 6: Maintain an Information Security Policy
+            pci_goal6_id = uuid.uuid4()
+            pci_goal6 = FrameworkSection(
+                id=pci_goal6_id,
+                framework_id=pci_id,
+                parent_section_id=None,
+                name="Goal 6: Maintain an Information Security Policy",
+                description="Requirements for security policies and programs",
+                order=6,
+            )
+            db.add(pci_goal6)
+            db.flush()
+
+            # Requirement 11: Security policy
+            pci_req11 = FrameworkControl(
+                id=uuid.uuid4(),
+                framework_section_id=pci_goal6_id,
+                control_id="6.1",
+                name="Maintain security policies and procedures",
+                description="Document and enforce information security policies",
+                implementation_guidance="Create policies covering all PCI DSS 12 requirements; review annually",
+            )
+            # Requirement 12: Awareness training
+            pci_req12 = FrameworkControl(
+                id=uuid.uuid4(),
+                framework_section_id=pci_goal6_id,
+                control_id="6.2",
+                name="Provide security awareness training",
+                description="Train all personnel on security policies and practices",
+                implementation_guidance="Conduct annual training for all staff; document attendance",
+            )
+            db.add_all([pci_req11, pci_req12])
+            db.commit()
+            pci_framework_id = pci_id
+            print("✓ Created PCI DSS V4.0.1 framework with 6 goals and 12 requirements")
         else:
             iso_framework = db.query(Framework).filter(
                 Framework.tenant_id == tenant_id,
@@ -256,8 +475,13 @@ def seed_database():
                 Framework.tenant_id == tenant_id,
                 Framework.name == "SOC 2 Type II"
             ).first()
+            pci_framework = db.query(Framework).filter(
+                Framework.tenant_id == tenant_id,
+                Framework.name == "PCI DSS V4.0.1"
+            ).first()
             iso_framework_id = iso_framework.id if iso_framework else None
             soc2_framework_id = soc2_framework.id if soc2_framework else None
+            pci_framework_id = pci_framework.id if pci_framework else None
             print("✓ Frameworks already exist")
 
         # Check if projects exist

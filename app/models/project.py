@@ -82,6 +82,9 @@ class ProjectResponse(BaseModel, TimestampMixin):
         ForeignKey("users.id"), nullable=True
     )
 
+    # Relationships
+    control: Mapped["FrameworkControl"] = relationship()
+
 
 class ProjectEvidenceFile(BaseModel, TimestampMixin):
     """Evidence file attachment for a project response."""

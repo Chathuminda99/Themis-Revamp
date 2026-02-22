@@ -5,7 +5,12 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models import ProjectStatus
-from app.repositories import ProjectRepository, ClientRepository, FrameworkRepository
+from app.repositories import (
+    ProjectRepository,
+    ClientRepository,
+    FrameworkRepository,
+    ProjectResponseRepository,
+)
 
 router = APIRouter(tags=["dashboard"])
 templates = Jinja2Templates(directory="templates")
@@ -23,16 +28,18 @@ async def dashboard(request: Request, db: Session = Depends(get_db)):
     project_repo = ProjectRepository(db)
     client_repo = ClientRepository(db)
     framework_repo = FrameworkRepository(db)
+    response_repo = ProjectResponseRepository(db)
 
     all_projects = project_repo.get_all(user.tenant_id)
     active_projects = project_repo.get_by_status(user.tenant_id, ProjectStatus.IN_PROGRESS)
     completed_projects = project_repo.get_by_status(user.tenant_id, ProjectStatus.COMPLETED)
+    pending_responses = response_repo.count_pending_for_tenant(user.tenant_id)
 
     stats = {
         "total_projects": len(all_projects),
         "active_projects": len(active_projects),
         "completed_assessments": len(completed_projects),
-        "pending_responses": 0,  # TODO: Calculate from project_responses
+        "pending_responses": pending_responses,
         "total_clients": len(client_repo.get_all(user.tenant_id)),
         "total_frameworks": len(framework_repo.get_all(user.tenant_id)),
     }
