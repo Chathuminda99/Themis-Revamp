@@ -1,5 +1,6 @@
 import uuid
 from sqlalchemy import String, Text, ForeignKey, Integer
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.base import BaseModel, TimestampMixin
 
@@ -56,6 +57,10 @@ class FrameworkControl(BaseModel, TimestampMixin):
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str] = mapped_column(Text, nullable=True)
     implementation_guidance: Mapped[str] = mapped_column(Text, nullable=True)
+    requirements_text: Mapped[str] = mapped_column(Text, nullable=True)
+    testing_procedures_text: Mapped[str] = mapped_column(Text, nullable=True)
+    workflow_definition: Mapped[dict] = mapped_column(JSONB, nullable=True)
+    assessment_checklist: Mapped[dict] = mapped_column(JSONB, nullable=True)
 
     # Relationships
     section: Mapped["FrameworkSection"] = relationship(back_populates="controls")

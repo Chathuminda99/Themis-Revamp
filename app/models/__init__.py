@@ -16,6 +16,7 @@ from app.models.project import (
     ProjectStatus,
     ResponseStatus,
 )
+from app.models.workflow import WorkflowExecution, WorkflowExecutionStatus
 
 __all__ = [
     "BaseModel",
@@ -34,4 +35,6 @@ __all__ = [
     "ProjectEvidenceFile",
     "ProjectStatus",
     "ResponseStatus",
+    "WorkflowExecution",
+    "WorkflowExecutionStatus",
 ]

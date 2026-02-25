@@ -8,12 +8,15 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import Project, ProjectStatus
 from app.models.project import ResponseStatus
+from app.models.workflow import WorkflowExecutionStatus
 from app.repositories import (
     ProjectRepository,
     ClientRepository,
     FrameworkRepository,
     ProjectResponseRepository,
+    WorkflowExecutionRepository,
 )
+from app.services import workflow_engine
 
 router = APIRouter(prefix="/projects", tags=["projects"])
 templates = Jinja2Templates(directory="templates")
@@ -422,6 +425,382 @@ async def save_control_response(
             "project": project,
             "control": control,
             "responses": {str(control.id): response_repo.get_by_control(project.id, control.id)},
+        },
+    )
+
+
+def _find_control(framework, control_id: str):
+    """Find a control in a framework by its UUID string."""
+    if not framework:
+        return None
+    for section in framework.sections:
+        for ctrl in section.controls:
+            if str(ctrl.id) == control_id:
+                return ctrl
+    return None
+
+
+@router.get("/{project_id}/controls/{control_id}/assessment", response_class=HTMLResponse)
+async def get_control_assessment(
+    project_id: str, control_id: str, request: Request, db: Session = Depends(get_db)
+):
+    """Show the assessment checklist panel for a control."""
+    user = getattr(request.state, "user", None)
+    if not user:
+        return RedirectResponse(url="/auth/login", status_code=302)
+
+    repo = ProjectRepository(db)
+    project = repo.get_by_id_with_details(user.tenant_id, project_id)
+    if not project:
+        return RedirectResponse(url="/projects", status_code=302)
+
+    framework_repo = FrameworkRepository(db)
+    framework = framework_repo.get_by_id_with_sections(user.tenant_id, project.framework_id)
+    control = _find_control(framework, control_id)
+    if not control or not control.assessment_checklist:
+        return RedirectResponse(url=f"/projects/{project_id}", status_code=302)
+
+    # Get existing response for the control
+    response_repo = ProjectResponseRepository(db)
+    response = response_repo.get_by_control(project.id, control.id)
+
+    return templates.TemplateResponse(
+        "projects/_control_assessment.html",
+        {
+            "request": request,
+            "user": user,
+            "project": project,
+            "control": control,
+            "checklist": control.assessment_checklist,
+            "response": response,
+        },
+    )
+
+
+@router.post("/{project_id}/controls/{control_id}/assessment", response_class=HTMLResponse)
+async def submit_assessment_choice(
+    project_id: str, control_id: str, request: Request, db: Session = Depends(get_db)
+):
+    """Submit an assessment scenario choice and save the response."""
+    user = getattr(request.state, "user", None)
+    if not user:
+        return RedirectResponse(url="/auth/login", status_code=302)
+
+    repo = ProjectRepository(db)
+    project = repo.get_by_id_with_details(user.tenant_id, project_id)
+    if not project:
+        return RedirectResponse(url="/projects", status_code=302)
+
+    framework_repo = FrameworkRepository(db)
+    framework = framework_repo.get_by_id_with_sections(user.tenant_id, project.framework_id)
+    control = _find_control(framework, control_id)
+    if not control or not control.assessment_checklist:
+        return RedirectResponse(url=f"/projects/{project_id}", status_code=302)
+
+    form_data = await request.form()
+    scenario_id = form_data.get("scenario_id", "")
+
+    # Find the selected scenario
+    scenarios = control.assessment_checklist.get("scenarios", [])
+    selected_scenario = None
+    for scenario in scenarios:
+        if scenario.get("id") == scenario_id:
+            selected_scenario = scenario
+            break
+
+    if not selected_scenario:
+        return RedirectResponse(url=f"/projects/{project_id}", status_code=302)
+
+    # Build response text from scenario
+    response_text = f"Assessment Result: {selected_scenario.get('label')}\n\nRecommendation:\n{selected_scenario.get('recommendation')}"
+
+    # Extract finding type to determine status
+    finding_type = selected_scenario.get("finding_type", "observation")
+    if finding_type == "pass":
+        status = ResponseStatus.APPROVED
+    elif finding_type == "fail":
+        status = ResponseStatus.REJECTED
+    else:  # observation
+        status = ResponseStatus.SUBMITTED
+
+    # Save the response
+    response_repo = ProjectResponseRepository(db)
+    response_repo.upsert(project.id, control.id, response_text, status)
+
+    # Return the updated row
+    all_responses = response_repo.get_for_project(project.id)
+    responses_dict = {str(resp.framework_control_id): resp for resp in all_responses}
+
+    return templates.TemplateResponse(
+        "projects/_control_row.html",
+        {
+            "request": request,
+            "user": user,
+            "project": project,
+            "control": control,
+            "responses": responses_dict,
+        },
+    )
+
+
+@router.get("/{project_id}/controls/{control_id}/workflow", response_class=HTMLResponse)
+async def get_control_workflow(
+    project_id: str, control_id: str, request: Request, db: Session = Depends(get_db)
+):
+    """Show the workflow panel for a control (static text + decision tree)."""
+    user = getattr(request.state, "user", None)
+    if not user:
+        return RedirectResponse(url="/auth/login", status_code=302)
+
+    repo = ProjectRepository(db)
+    project = repo.get_by_id_with_details(user.tenant_id, project_id)
+    if not project:
+        return RedirectResponse(url="/projects", status_code=302)
+
+    framework_repo = FrameworkRepository(db)
+    framework = framework_repo.get_by_id_with_sections(user.tenant_id, project.framework_id)
+    control = _find_control(framework, control_id)
+    if not control:
+        return RedirectResponse(url=f"/projects/{project_id}", status_code=302)
+
+    workflow_def = control.workflow_definition
+    if not workflow_def:
+        # No workflow — fall back to plain response form
+        return RedirectResponse(
+            url=f"/projects/{project_id}/controls/{control_id}/response", status_code=302
+        )
+
+    # Get or create execution
+    wf_repo = WorkflowExecutionRepository(db)
+    execution = wf_repo.get_or_create(project.id, control.id)
+
+    # Compute current state
+    answers = execution.answers or {}
+    current_node_id = workflow_engine.get_current_node_id(workflow_def, answers)
+    current_node = workflow_engine.get_node(workflow_def, current_node_id)
+    breadcrumbs = workflow_engine.build_breadcrumb_trail(workflow_def, answers)
+
+    # If current node is terminal, extract finding
+    finding = None
+    if current_node and workflow_engine.is_terminal(current_node):
+        finding = workflow_engine.get_terminal_finding(current_node)
+
+    # Get existing response for the free-text form
+    response_repo = ProjectResponseRepository(db)
+    response = response_repo.get_by_control(project.id, control.id)
+
+    return templates.TemplateResponse(
+        "projects/_control_workflow.html",
+        {
+            "request": request,
+            "user": user,
+            "project": project,
+            "control": control,
+            "execution": execution,
+            "workflow_def": workflow_def,
+            "current_node_id": current_node_id,
+            "current_node": current_node,
+            "breadcrumbs": breadcrumbs,
+            "finding": finding,
+            "response": response,
+        },
+    )
+
+
+@router.post(
+    "/{project_id}/controls/{control_id}/workflow/answer", response_class=HTMLResponse
+)
+async def submit_workflow_answer(
+    project_id: str, control_id: str, request: Request, db: Session = Depends(get_db)
+):
+    """Process a workflow answer and return the next step."""
+    user = getattr(request.state, "user", None)
+    if not user:
+        return RedirectResponse(url="/auth/login", status_code=302)
+
+    repo = ProjectRepository(db)
+    project = repo.get_by_id_with_details(user.tenant_id, project_id)
+    if not project:
+        return RedirectResponse(url="/projects", status_code=302)
+
+    framework_repo = FrameworkRepository(db)
+    framework = framework_repo.get_by_id_with_sections(user.tenant_id, project.framework_id)
+    control = _find_control(framework, control_id)
+    if not control or not control.workflow_definition:
+        return RedirectResponse(url=f"/projects/{project_id}", status_code=302)
+
+    workflow_def = control.workflow_definition
+    form_data = await request.form()
+    node_id = form_data.get("node_id", "")
+    node = workflow_engine.get_node(workflow_def, node_id)
+
+    if not node:
+        return RedirectResponse(url=f"/projects/{project_id}", status_code=302)
+
+    # Extract answer based on input type
+    input_type = node.get("input_type", "text")
+    if input_type == "select":
+        answer = form_data.get("answer", "")
+    elif input_type == "group":
+        answer = {}
+        for field_def in node.get("fields", []):
+            field_name = field_def.get("name")
+            answer[field_name] = form_data.get(field_name, "")
+    else:
+        answer = form_data.get("answer", "")
+
+    # Resolve next node
+    next_node_id = workflow_engine.resolve_next_node(workflow_def, node_id, answer)
+    next_node = workflow_engine.get_node(workflow_def, next_node_id) if next_node_id else None
+
+    # Determine status and finding
+    finding = None
+    generated_finding = None
+    status = WorkflowExecutionStatus.IN_PROGRESS
+    if next_node and workflow_engine.is_terminal(next_node):
+        status = WorkflowExecutionStatus.COMPLETED
+        finding = workflow_engine.get_terminal_finding(next_node)
+        generated_finding = f"[{finding['finding_type'].upper()}] {finding['title']}\n\n{finding['recommendation']}"
+
+    # Save the answer
+    wf_repo = WorkflowExecutionRepository(db)
+    execution = wf_repo.upsert_answer(
+        project.id,
+        control.id,
+        node_id,
+        answer,
+        current_node_id=next_node_id,
+        status=status,
+        generated_finding=generated_finding,
+    )
+
+    # Build updated breadcrumbs
+    breadcrumbs = workflow_engine.build_breadcrumb_trail(workflow_def, execution.answers)
+
+    # Get existing response for the free-text form
+    response_repo = ProjectResponseRepository(db)
+    response = response_repo.get_by_control(project.id, control.id)
+
+    return templates.TemplateResponse(
+        "projects/_workflow_step.html",
+        {
+            "request": request,
+            "user": user,
+            "project": project,
+            "control": control,
+            "execution": execution,
+            "workflow_def": workflow_def,
+            "current_node_id": next_node_id,
+            "current_node": next_node,
+            "breadcrumbs": breadcrumbs,
+            "finding": finding,
+            "response": response,
+        },
+    )
+
+
+@router.post(
+    "/{project_id}/controls/{control_id}/workflow/reset", response_class=HTMLResponse
+)
+async def reset_workflow(
+    project_id: str, control_id: str, request: Request, db: Session = Depends(get_db)
+):
+    """Reset a workflow execution back to the first step."""
+    user = getattr(request.state, "user", None)
+    if not user:
+        return RedirectResponse(url="/auth/login", status_code=302)
+
+    repo = ProjectRepository(db)
+    project = repo.get_by_id_with_details(user.tenant_id, project_id)
+    if not project:
+        return RedirectResponse(url="/projects", status_code=302)
+
+    framework_repo = FrameworkRepository(db)
+    framework = framework_repo.get_by_id_with_sections(user.tenant_id, project.framework_id)
+    control = _find_control(framework, control_id)
+    if not control or not control.workflow_definition:
+        return RedirectResponse(url=f"/projects/{project_id}", status_code=302)
+
+    workflow_def = control.workflow_definition
+    wf_repo = WorkflowExecutionRepository(db)
+    execution = wf_repo.reset(project.id, control.id)
+
+    root_id = workflow_engine.get_root_node_id(workflow_def)
+    root_node = workflow_engine.get_node(workflow_def, root_id)
+
+    response_repo = ProjectResponseRepository(db)
+    response = response_repo.get_by_control(project.id, control.id)
+
+    return templates.TemplateResponse(
+        "projects/_workflow_step.html",
+        {
+            "request": request,
+            "user": user,
+            "project": project,
+            "control": control,
+            "execution": execution,
+            "workflow_def": workflow_def,
+            "current_node_id": root_id,
+            "current_node": root_node,
+            "breadcrumbs": [],
+            "finding": None,
+            "response": response,
+        },
+    )
+
+
+@router.get(
+    "/{project_id}/controls/{control_id}/workflow/step", response_class=HTMLResponse
+)
+async def get_workflow_step(
+    project_id: str, control_id: str, request: Request, db: Session = Depends(get_db)
+):
+    """Get the current workflow step (for refreshing)."""
+    user = getattr(request.state, "user", None)
+    if not user:
+        return RedirectResponse(url="/auth/login", status_code=302)
+
+    repo = ProjectRepository(db)
+    project = repo.get_by_id_with_details(user.tenant_id, project_id)
+    if not project:
+        return RedirectResponse(url="/projects", status_code=302)
+
+    framework_repo = FrameworkRepository(db)
+    framework = framework_repo.get_by_id_with_sections(user.tenant_id, project.framework_id)
+    control = _find_control(framework, control_id)
+    if not control or not control.workflow_definition:
+        return RedirectResponse(url=f"/projects/{project_id}", status_code=302)
+
+    workflow_def = control.workflow_definition
+    wf_repo = WorkflowExecutionRepository(db)
+    execution = wf_repo.get_or_create(project.id, control.id)
+
+    answers = execution.answers or {}
+    current_node_id = workflow_engine.get_current_node_id(workflow_def, answers)
+    current_node = workflow_engine.get_node(workflow_def, current_node_id)
+    breadcrumbs = workflow_engine.build_breadcrumb_trail(workflow_def, answers)
+
+    finding = None
+    if current_node and workflow_engine.is_terminal(current_node):
+        finding = workflow_engine.get_terminal_finding(current_node)
+
+    response_repo = ProjectResponseRepository(db)
+    response = response_repo.get_by_control(project.id, control.id)
+
+    return templates.TemplateResponse(
+        "projects/_workflow_step.html",
+        {
+            "request": request,
+            "user": user,
+            "project": project,
+            "control": control,
+            "execution": execution,
+            "workflow_def": workflow_def,
+            "current_node_id": current_node_id,
+            "current_node": current_node,
+            "breadcrumbs": breadcrumbs,
+            "finding": finding,
+            "response": response,
         },
     )
 

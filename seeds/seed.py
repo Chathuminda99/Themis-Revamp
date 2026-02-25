@@ -261,211 +261,241 @@ def seed_database():
             db.add(pci)
             db.flush()
 
-            # PCI DSS Section 1: Build and Maintain a Secure Network
-            pci_goal1_id = uuid.uuid4()
-            pci_goal1 = FrameworkSection(
-                id=pci_goal1_id,
+            # Requirement 2: Apply Secure Configurations to All System Components
+            pci_req2_id = uuid.uuid4()
+            pci_req2 = FrameworkSection(
+                id=pci_req2_id,
                 framework_id=pci_id,
                 parent_section_id=None,
-                name="Goal 1: Build and Maintain a Secure Network",
-                description="Foundational requirements to establish secure network architecture",
+                name="Requirement 2: Apply Secure Configurations to All System Components",
+                description="Malicious individuals, both external and internal to an entity, often use default passwords and other vendor default settings to compromise systems. These passwords and settings are well known and are easily determined via public information.",
                 order=1,
             )
-            db.add(pci_goal1)
+            db.add(pci_req2)
             db.flush()
 
-            # Requirement 1: Network segmentation
-            pci_req1 = FrameworkControl(
-                id=uuid.uuid4(),
-                framework_section_id=pci_goal1_id,
-                control_id="1.1",
-                name="Establish and enforce network segmentation",
-                description="Implement network segmentation to isolate cardholder data environments",
-                implementation_guidance="Deploy firewalls and VLANs to separate CDE from guest networks",
-            )
-            # Requirement 2: Firewall rules
-            pci_req2 = FrameworkControl(
-                id=uuid.uuid4(),
-                framework_section_id=pci_goal1_id,
-                control_id="1.2",
-                name="Document and implement firewall rules",
-                description="Establish and maintain firewall rules that specify authorized traffic",
-                implementation_guidance="Create and maintain firewall rule sets with clear business justification",
-            )
-            db.add_all([pci_req1, pci_req2])
-            db.flush()
-
-            # PCI DSS Section 2: Protect Cardholder Data
-            pci_goal2_id = uuid.uuid4()
-            pci_goal2 = FrameworkSection(
-                id=pci_goal2_id,
+            # Sub-section 2.2: System Components Are Configured and Managed Securely
+            pci_req2_2_id = uuid.uuid4()
+            pci_req2_2 = FrameworkSection(
+                id=pci_req2_2_id,
                 framework_id=pci_id,
-                parent_section_id=None,
-                name="Goal 2: Protect Cardholder Data",
-                description="Requirements to protect stored and transmitted cardholder data",
-                order=2,
+                parent_section_id=pci_req2_id,
+                name="2.2 System Components Are Configured and Managed Securely",
+                description="System configuration standards are developed, implemented, and managed to cover all system components.",
+                order=1,
             )
-            db.add(pci_goal2)
+            db.add(pci_req2_2)
             db.flush()
 
-            # Requirement 3: Encryption at rest
-            pci_req3 = FrameworkControl(
-                id=uuid.uuid4(),
-                framework_section_id=pci_goal2_id,
-                control_id="2.1",
-                name="Render Primary Account Numbers (PAN) unreadable",
-                description="Encrypt cardholder data at rest using strong cryptography",
-                implementation_guidance="Use AES-256 or equivalent encryption for stored cardholder data",
-            )
-            # Requirement 4: Encryption in transit
-            pci_req4 = FrameworkControl(
-                id=uuid.uuid4(),
-                framework_section_id=pci_goal2_id,
-                control_id="2.2",
-                name="Encrypt cardholder data in transit",
-                description="Protect cardholder data with encryption during transmission",
-                implementation_guidance="Use TLS 1.2 or higher for all cardholder data transmissions",
-            )
-            db.add_all([pci_req3, pci_req4])
-            db.flush()
+            # Assessment checklist for 2.2.2 (predefined scenario-based assessment)
+            assessment_checklist_222 = {
+                "type": "checklist",
+                "scenarios": [
+                    {
+                        "id": "scenario_1",
+                        "label": "No default accounts present on system",
+                        "finding_type": "pass",
+                        "recommendation": "No vendor default accounts were identified on this system component. This control requirement is satisfied. No further action is required.",
+                    },
+                    {
+                        "id": "scenario_2",
+                        "label": "Default accounts not in use - accounts properly disabled/removed",
+                        "finding_type": "pass",
+                        "recommendation": "Vendor default accounts exist but are not in use and have been properly disabled or removed from the system. This control is satisfied. Continue monitoring to ensure accounts remain disabled.",
+                    },
+                    {
+                        "id": "scenario_3",
+                        "label": "Default accounts not in use - accounts NOT disabled/removed",
+                        "finding_type": "fail",
+                        "recommendation": "FINDING: Vendor default accounts are present and not in use, but have NOT been disabled or removed. This is a control violation per PCI DSS 2.2.2. REMEDIATION REQUIRED: Immediately disable or remove all vendor default accounts. Verify in system logs and configuration files that accounts are no longer accessible.",
+                    },
+                    {
+                        "id": "scenario_4",
+                        "label": "Default accounts in use - password changed & meets complexity requirements",
+                        "finding_type": "observation",
+                        "recommendation": "Vendor default accounts are in use with changed passwords that meet complexity requirements. While this satisfies the technical requirement, BEST PRACTICE RECOMMENDATION: Consider replacing vendor default accounts with unique named accounts specific to your organization. This improves audit trail clarity and accountability. Document the business justification for continued use of vendor defaults.",
+                    },
+                    {
+                        "id": "scenario_5",
+                        "label": "Default accounts in use - password changed but does NOT meet complexity",
+                        "finding_type": "fail",
+                        "recommendation": "FINDING: Vendor default accounts are in use with changed passwords, but passwords do NOT meet organizational complexity requirements (per PCI DSS 8.3.6). This is a control violation. REMEDIATION REQUIRED: Update all vendor default account passwords to meet minimum complexity requirements (min 7 characters, including uppercase, lowercase, numbers, special characters). Document the change in the access control log.",
+                    },
+                    {
+                        "id": "scenario_6",
+                        "label": "Default accounts in use - passwords NOT changed from vendor default",
+                        "finding_type": "fail",
+                        "recommendation": "CRITICAL FINDING: Vendor default accounts are actively in use with vendor-supplied default passwords still in place. This is a CRITICAL security vulnerability per PCI DSS 2.2.2. IMMEDIATE REMEDIATION REQUIRED: Change all vendor default account passwords before any further use. Use strong, complex passwords (min 7 characters with uppercase, lowercase, numbers, special chars). Document changes in access control system. If this account cannot be secured, disable it immediately.",
+                    },
+                ],
+            }
 
-            # PCI DSS Section 3: Maintain a Vulnerability Management Program
-            pci_goal3_id = uuid.uuid4()
-            pci_goal3 = FrameworkSection(
-                id=pci_goal3_id,
-                framework_id=pci_id,
-                parent_section_id=None,
-                name="Goal 3: Maintain a Vulnerability Management Program",
-                description="Requirements for vulnerability identification and remediation",
-                order=3,
-            )
-            db.add(pci_goal3)
-            db.flush()
+            # Workflow definition for 2.2.2 (kept for reference/future use with guided assessment)
+            workflow_222 = {
+                "version": "1.0",
+                "root_node_id": "q1",
+                "nodes": {
+                    "q1": {
+                        "type": "question",
+                        "prompt": "Do vendor default accounts exist on the system component?",
+                        "input_type": "select",
+                        "options": [
+                            {"value": "yes", "label": "Yes", "next_node_id": "q2"},
+                            {"value": "no", "label": "No", "next_node_id": "t_pass_no_defaults"},
+                        ],
+                    },
+                    "t_pass_no_defaults": {
+                        "type": "terminal",
+                        "finding_type": "pass",
+                        "title": "No Vendor Default Accounts Present",
+                        "recommendation": "No vendor default accounts were identified on the system component. This control is satisfied — no further action is required.",
+                    },
+                    "q2": {
+                        "type": "question",
+                        "prompt": "Are the vendor default accounts currently in use?",
+                        "input_type": "select",
+                        "options": [
+                            {"value": "in_use", "label": "Yes, in use", "next_node_id": "q3_password"},
+                            {"value": "not_in_use", "label": "No, not in use", "next_node_id": "q_disabled"},
+                        ],
+                    },
+                    "q_disabled": {
+                        "type": "question",
+                        "prompt": "Have the unused vendor default accounts been disabled or removed?",
+                        "input_type": "select",
+                        "options": [
+                            {"value": "yes", "label": "Yes, disabled/removed", "next_node_id": "t_pass_disabled"},
+                            {"value": "no", "label": "No, still active", "next_node_id": "t_fail_not_disabled"},
+                        ],
+                    },
+                    "t_pass_disabled": {
+                        "type": "terminal",
+                        "finding_type": "pass",
+                        "title": "Unused Default Accounts Properly Disabled",
+                        "recommendation": "Vendor default accounts are not in use and have been disabled or removed. This control is satisfied.",
+                    },
+                    "t_fail_not_disabled": {
+                        "type": "terminal",
+                        "finding_type": "fail",
+                        "title": "Unused Default Accounts Not Disabled",
+                        "recommendation": "Vendor default accounts exist and are not in use, but have NOT been disabled or removed. Per PCI DSS 2.2.2, unused vendor default accounts must be removed or disabled. Immediate remediation is required.",
+                    },
+                    "q3_password": {
+                        "type": "question",
+                        "prompt": "Has the default password been changed from the vendor-supplied default?",
+                        "input_type": "select",
+                        "options": [
+                            {"value": "yes", "label": "Yes, password changed", "next_node_id": "q4_password_detail"},
+                            {"value": "no", "label": "No, still default", "next_node_id": "t_fail_default_password"},
+                        ],
+                    },
+                    "t_fail_default_password": {
+                        "type": "terminal",
+                        "finding_type": "fail",
+                        "title": "Default Password Not Changed",
+                        "recommendation": "A vendor default account is actively in use with the vendor-supplied default password still in place. This is a critical finding. Per PCI DSS 2.2.2, all vendor-supplied default passwords must be changed before a system is installed on the network. Change the password immediately to meet complexity requirements.",
+                    },
+                    "q4_password_detail": {
+                        "type": "question",
+                        "prompt": "Provide details about the password configuration:",
+                        "input_type": "group",
+                        "fields": [
+                            {
+                                "name": "password_policy",
+                                "label": "Password Policy Compliance",
+                                "input_type": "select",
+                                "options": [
+                                    {"value": "compliant", "label": "Meets complexity requirements"},
+                                    {"value": "non_compliant", "label": "Does not meet complexity requirements"},
+                                ],
+                            },
+                            {
+                                "name": "last_change_date",
+                                "label": "Last Password Change Date",
+                                "input_type": "date",
+                            },
+                            {
+                                "name": "notes",
+                                "label": "Observations",
+                                "input_type": "textarea",
+                            },
+                        ],
+                        "next_node_rules": [
+                            {
+                                "condition": {"field": "password_policy", "op": "eq", "value": "compliant"},
+                                "next_node_id": "t_observation_in_use",
+                            },
+                            {
+                                "condition": {"field": "password_policy", "op": "eq", "value": "non_compliant"},
+                                "next_node_id": "t_fail_weak_password",
+                            },
+                        ],
+                        "default_next_node_id": "t_observation_in_use",
+                    },
+                    "t_observation_in_use": {
+                        "type": "terminal",
+                        "finding_type": "observation",
+                        "title": "Default Account In Use With Changed Password",
+                        "recommendation": "A vendor default account is in use but the password has been changed and meets complexity requirements. While the control requirement is technically met, best practice recommends creating unique named accounts instead of relying on vendor defaults. Consider replacing this account with a unique named account for improved audit trail and accountability.",
+                    },
+                    "t_fail_weak_password": {
+                        "type": "terminal",
+                        "finding_type": "fail",
+                        "title": "Password Does Not Meet Complexity Requirements",
+                        "recommendation": "The vendor default account password has been changed but does not meet the organization's password complexity requirements. Per PCI DSS 2.2.2, passwords for vendor default accounts must be changed per Requirement 8.3.6. Update the password to meet complexity requirements immediately.",
+                    },
+                },
+            }
 
-            # Requirement 5: Vulnerability scans
-            pci_req5 = FrameworkControl(
+            # Control 2.2.2: Vendor default accounts managed
+            pci_ctrl_222 = FrameworkControl(
                 id=uuid.uuid4(),
-                framework_section_id=pci_goal3_id,
-                control_id="3.1",
-                name="Conduct regular vulnerability scans",
-                description="Perform quarterly vulnerability scans on all in-scope systems",
-                implementation_guidance="Use approved vulnerability scanning tools; remediate findings within SLA",
+                framework_section_id=pci_req2_2_id,
+                control_id="2.2.2",
+                name="Vendor default accounts are managed",
+                description="If the vendor default account(s) will be used, the default password is changed per Requirement 8.3.6. If the vendor default account(s) will not be used, the account is removed or disabled.",
+                requirements_text=(
+                    "If the vendor default account(s) will be used, the default password is changed "
+                    "per Requirement 8.3.6.\n\n"
+                    "If the vendor default account(s) will not be used, the account is removed or disabled."
+                ),
+                testing_procedures_text=(
+                    "2.2.2.a: Examine system configuration standards to verify they include managing "
+                    "vendor default accounts in accordance with all elements specified in this requirement.\n\n"
+                    "2.2.2.b: Examine vendor documentation and observe a system administrator logging on "
+                    "using vendor default accounts to verify accounts are implemented in accordance with "
+                    "all elements specified in this requirement.\n\n"
+                    "2.2.2.c: Interview personnel and examine system configurations to verify that all "
+                    "vendor defaults have been changed in accordance with all elements specified in this requirement."
+                ),
+                implementation_guidance=(
+                    "Changing vendor defaults — including default passwords and removing/disabling "
+                    "unnecessary default accounts — is one of the most important steps in securing "
+                    "an environment."
+                ),
+                assessment_checklist=assessment_checklist_222,
             )
-            # Requirement 6: Patch management
-            pci_req6 = FrameworkControl(
-                id=uuid.uuid4(),
-                framework_section_id=pci_goal3_id,
-                control_id="3.2",
-                name="Maintain a patching process",
-                description="Implement a documented process to manage security patches",
-                implementation_guidance="Test patches in non-production before deployment within 30 days",
-            )
-            db.add_all([pci_req5, pci_req6])
-            db.flush()
 
-            # PCI DSS Section 4: Implement Strong Access Control Measures
-            pci_goal4_id = uuid.uuid4()
-            pci_goal4 = FrameworkSection(
-                id=pci_goal4_id,
-                framework_id=pci_id,
-                parent_section_id=None,
-                name="Goal 4: Implement Strong Access Control Measures",
-                description="Requirements for user authentication and authorization",
-                order=4,
+            # A few more controls in 2.2 without workflows for variety
+            pci_ctrl_221 = FrameworkControl(
+                id=uuid.uuid4(),
+                framework_section_id=pci_req2_2_id,
+                control_id="2.2.1",
+                name="System configuration standards are developed and maintained",
+                description="Configuration standards are developed, implemented, and maintained to cover all system components, address all known security vulnerabilities, and be consistent with industry-accepted system hardening standards.",
             )
-            db.add(pci_goal4)
-            db.flush()
+            pci_ctrl_223 = FrameworkControl(
+                id=uuid.uuid4(),
+                framework_section_id=pci_req2_2_id,
+                control_id="2.2.3",
+                name="Primary functions requiring different security levels are managed",
+                description="Primary functions requiring different security levels are managed by ensuring only one primary function exists on a system component, or that primary functions with differing security levels that exist on the same system component are isolated.",
+            )
 
-            # Requirement 7: Access control
-            pci_req7 = FrameworkControl(
-                id=uuid.uuid4(),
-                framework_section_id=pci_goal4_id,
-                control_id="4.1",
-                name="Restrict access to cardholder data",
-                description="Implement role-based access control (RBAC) for CDE systems",
-                implementation_guidance="Follow principle of least privilege; document all access",
-            )
-            # Requirement 8: Authentication
-            pci_req8 = FrameworkControl(
-                id=uuid.uuid4(),
-                framework_section_id=pci_goal4_id,
-                control_id="4.2",
-                name="Ensure user authentication",
-                description="Implement multi-factor authentication for administrative access",
-                implementation_guidance="Require MFA for all CDE access; use strong passwords with complexity rules",
-            )
-            db.add_all([pci_req7, pci_req8])
-            db.flush()
-
-            # PCI DSS Section 5: Regularly Monitor and Test Networks
-            pci_goal5_id = uuid.uuid4()
-            pci_goal5 = FrameworkSection(
-                id=pci_goal5_id,
-                framework_id=pci_id,
-                parent_section_id=None,
-                name="Goal 5: Regularly Monitor and Test Networks",
-                description="Requirements for continuous monitoring and testing",
-                order=5,
-            )
-            db.add(pci_goal5)
-            db.flush()
-
-            # Requirement 9: Logging and monitoring
-            pci_req9 = FrameworkControl(
-                id=uuid.uuid4(),
-                framework_section_id=pci_goal5_id,
-                control_id="5.1",
-                name="Implement logging and monitoring",
-                description="Log all access to cardholder data and monitor for anomalies",
-                implementation_guidance="Collect logs centrally; retain for minimum 3 months (1 year archived)",
-            )
-            # Requirement 10: Penetration testing
-            pci_req10 = FrameworkControl(
-                id=uuid.uuid4(),
-                framework_section_id=pci_goal5_id,
-                control_id="5.2",
-                name="Conduct annual penetration testing",
-                description="Perform penetration testing to identify vulnerabilities",
-                implementation_guidance="Engage qualified security firm; remediate findings by agreed timeline",
-            )
-            db.add_all([pci_req9, pci_req10])
-            db.flush()
-
-            # PCI DSS Section 6: Maintain an Information Security Policy
-            pci_goal6_id = uuid.uuid4()
-            pci_goal6 = FrameworkSection(
-                id=pci_goal6_id,
-                framework_id=pci_id,
-                parent_section_id=None,
-                name="Goal 6: Maintain an Information Security Policy",
-                description="Requirements for security policies and programs",
-                order=6,
-            )
-            db.add(pci_goal6)
-            db.flush()
-
-            # Requirement 11: Security policy
-            pci_req11 = FrameworkControl(
-                id=uuid.uuid4(),
-                framework_section_id=pci_goal6_id,
-                control_id="6.1",
-                name="Maintain security policies and procedures",
-                description="Document and enforce information security policies",
-                implementation_guidance="Create policies covering all PCI DSS 12 requirements; review annually",
-            )
-            # Requirement 12: Awareness training
-            pci_req12 = FrameworkControl(
-                id=uuid.uuid4(),
-                framework_section_id=pci_goal6_id,
-                control_id="6.2",
-                name="Provide security awareness training",
-                description="Train all personnel on security policies and practices",
-                implementation_guidance="Conduct annual training for all staff; document attendance",
-            )
-            db.add_all([pci_req11, pci_req12])
+            db.add_all([pci_ctrl_221, pci_ctrl_222, pci_ctrl_223])
             db.commit()
             pci_framework_id = pci_id
-            print("✓ Created PCI DSS V4.0.1 framework with 6 goals and 12 requirements")
+            print("✓ Created PCI DSS V4.0.1 framework with Requirement 2.2 and workflow for 2.2.2")
         else:
             iso_framework = db.query(Framework).filter(
                 Framework.tenant_id == tenant_id,
