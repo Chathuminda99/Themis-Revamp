@@ -18,23 +18,34 @@
             </p>
         </div>
 
-        <div
-            class="bg-white dark:bg-slate-900 p-1.5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 flex items-center">
-            <select name="status" form="control-form" class="bg-transparent border-none text-sm font-bold focus:ring-0 outline-none
-          {% if response and response.status.value == 'approved' %} text-green-500
-          {% elif response and response.status.value == 'rejected' %} text-red-500
-          {% elif response and response.status.value == 'not_applicable' %} text-slate-400
-          {% else %} text-amber-500 {% endif %}">
-                <option class="text-slate-900 font-medium" value="in_progress" {% if not response or
-                    response.status.value not in ['approved', 'rejected' , 'not_applicable' ] %}selected{% endif %}>In
-                    Progress</option>
-                <option class="text-slate-900 font-medium" value="approved" {% if response and
-                    response.status.value=='approved' %}selected{% endif %}>Compliant</option>
-                <option class="text-slate-900 font-medium" value="rejected" {% if response and
-                    response.status.value=='rejected' %}selected{% endif %}>Non-Compliant</option>
-                <option class="text-slate-900 font-medium" value="not_applicable" {% if response and
-                    response.status.value=='not_applicable' %}selected{% endif %}>N/A</option>
-            </select>
+        <div class="flex flex-wrap items-center gap-3">
+            {% if control.assessment_checklist %}
+            <button type="button"
+                hx-get="/projects/{{ project.id }}/controls/{{ control.id }}/assessment"
+                hx-target="#control-details" hx-swap="innerHTML"
+                class="px-5 py-2.5 text-sm font-bold text-white bg-primary hover:bg-primary/90 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-primary/50 shadow-sm flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">fact_check</span>
+                Assess
+            </button>
+            {% endif %}
+            <div
+                class="bg-white dark:bg-slate-900 p-1.5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 flex items-center">
+                <select name="status" form="control-form" class="bg-transparent border-none text-sm font-bold focus:ring-0 outline-none
+              {% if response and response.status.value == 'approved' %} text-green-500
+              {% elif response and response.status.value == 'rejected' %} text-red-500
+              {% elif response and response.status.value == 'not_applicable' %} text-slate-400
+              {% else %} text-amber-500 {% endif %}">
+                    <option class="text-slate-900 font-medium" value="in_progress" {% if not response or
+                        response.status.value not in ['approved', 'rejected' , 'not_applicable' ] %}selected{% endif %}>In
+                        Progress</option>
+                    <option class="text-slate-900 font-medium" value="approved" {% if response and
+                        response.status.value=='approved' %}selected{% endif %}>Compliant</option>
+                    <option class="text-slate-900 font-medium" value="rejected" {% if response and
+                        response.status.value=='rejected' %}selected{% endif %}>Non-Compliant</option>
+                    <option class="text-slate-900 font-medium" value="not_applicable" {% if response and
+                        response.status.value=='not_applicable' %}selected{% endif %}>N/A</option>
+                </select>
+            </div>
         </div>
     </div>
 </div>

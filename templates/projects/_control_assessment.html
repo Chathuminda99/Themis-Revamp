@@ -1,45 +1,40 @@
 <tr id="control-{{ control.id }}"
-  class="bg-blue-50/50 border-l-2 border-blue-500 shadow-[inset_0_1px_3px_rgba(0,0,0,0.05)]">
+  class="bg-primary/5 dark:bg-primary/10 border-l-2 border-primary shadow-[inset_0_1px_3px_rgba(0,0,0,0.02)]">
   <td colspan="4" class="px-6 py-6">
     <div class="space-y-5 flex flex-col max-w-5xl mx-auto">
       <!-- Control Header -->
       <div>
-        <h3 class="font-bold text-slate-900 tracking-wide flex items-start gap-3">
-          <span class="px-2.5 py-1 rounded bg-slate-200 border border-slate-300 text-slate-700 text-xs font-mono flex-shrink-0">{{
-            control.control_id }}</span>
-          <span class="break-words">{{ control.name }}</span>
-        </h3>
+        <div class="flex items-start gap-3 mb-3">
+          <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">fact_check</span>
+          <div class="flex-1">
+            <h3 class="font-bold text-slate-900 dark:text-white tracking-wide break-words text-base">{{ control.name }}</h3>
+            <span class="inline-block mt-2 px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold font-mono">{{ control.control_id }}</span>
+          </div>
+        </div>
         {% if control.description %}
-        <p class="text-sm text-slate-600 mt-3 leading-relaxed border-l-2 border-slate-300 pl-4 ml-1 break-words">
-          {{ control.description }}</p>
+        <p class="text-sm text-slate-600 dark:text-slate-400 mt-3 leading-relaxed border-l-2 border-primary/30 pl-4 ml-1 break-words">{{ control.description }}</p>
         {% endif %}
       </div>
 
       <!-- Static Text Panels -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {% if control.requirements_text %}
-        <div class="rounded-lg border border-amber-200 bg-amber-50 p-4 overflow-hidden">
-          <h4 class="text-xs font-semibold text-amber-800 uppercase tracking-wider mb-2 flex items-center gap-1.5 flex-shrink-0">
-            <svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
+        <div class="rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 p-4 overflow-hidden">
+          <h4 class="text-xs font-semibold text-amber-800 dark:text-amber-300 uppercase tracking-wider mb-2 flex items-center gap-1.5 flex-shrink-0">
+            <span class="material-symbols-outlined text-[16px] flex-shrink-0">description</span>
             Requirements
           </h4>
-          <p class="text-sm text-amber-900 leading-relaxed whitespace-pre-wrap break-words max-h-64 overflow-y-auto">{{ control.requirements_text }}</p>
+          <p class="text-sm text-amber-900 dark:text-amber-100 leading-relaxed whitespace-pre-wrap break-words max-h-64 overflow-y-auto">{{ control.requirements_text }}</p>
         </div>
         {% endif %}
 
         {% if control.testing_procedures_text %}
-        <div class="rounded-lg border border-sky-200 bg-sky-50 p-4 overflow-hidden">
-          <h4 class="text-xs font-semibold text-sky-800 uppercase tracking-wider mb-2 flex items-center gap-1.5 flex-shrink-0">
-            <svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-            </svg>
+        <div class="rounded-lg border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 p-4 overflow-hidden">
+          <h4 class="text-xs font-semibold text-blue-800 dark:text-blue-300 uppercase tracking-wider mb-2 flex items-center gap-1.5 flex-shrink-0">
+            <span class="material-symbols-outlined text-[16px] flex-shrink-0">assignment_turned_in</span>
             Testing Procedures
           </h4>
-          <p class="text-sm text-sky-900 leading-relaxed whitespace-pre-wrap break-words max-h-64 overflow-y-auto">{{ control.testing_procedures_text }}</p>
+          <p class="text-sm text-blue-900 dark:text-blue-100 leading-relaxed whitespace-pre-wrap break-words max-h-64 overflow-y-auto">{{ control.testing_procedures_text }}</p>
         </div>
         {% endif %}
       </div>
@@ -47,61 +42,59 @@
       <!-- Assessment Checklist -->
       <form hx-post="/projects/{{ project.id }}/controls/{{ control.id }}/assessment"
         hx-target="#control-{{ control.id }}" hx-swap="outerHTML"
-        class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+        class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
         <div class="space-y-5">
           <div>
             <label for="scenario-{{ control.id }}"
-              class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-2">
-              <svg class="w-4 h-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+              class="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-3">
+              <span class="material-symbols-outlined text-[16px] text-primary">list_check</span>
               Select Assessment Scenario
             </label>
             <div class="relative w-full">
               <select id="scenario-{{ control.id }}" name="scenario_id" required
-                class="w-full appearance-none px-4 py-3 bg-slate-50 border border-slate-200 text-slate-900 rounded-lg hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-colors sm:text-sm font-medium break-words">
+                class="w-full appearance-none px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-lg hover:border-slate-300 dark:hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors sm:text-sm font-medium break-words">
                 <option value="">-- Choose a scenario --</option>
                 {% for scenario in checklist.scenarios %}
                 <option value="{{ scenario.id }}" data-finding="{{ scenario.finding_type }}" data-label="{{ scenario.label }}" class="break-words">
                   {% if scenario.finding_type == 'pass' %}
-                    ✅
+                    ✓ PASS
                   {% elif scenario.finding_type == 'fail' %}
-                    ❌
+                    ✗ FAIL
                   {% elif scenario.finding_type == 'observation' %}
-                    ⚠️
+                    ⓘ OBSERVATION
                   {% endif %}
-                  {{ scenario.label }}
+                  — {{ scenario.label }}
                 </option>
                 {% endfor %}
               </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
-                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400 dark:text-slate-500">
+                <span class="material-symbols-outlined">expand_more</span>
               </div>
             </div>
           </div>
 
           <!-- Preview Recommendation (populated on selection) -->
           <div id="scenario-preview-{{ control.id }}" class="hidden">
-            <div class="rounded-lg border border-slate-200 bg-slate-50 p-4 overflow-hidden">
-              <h5 class="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2 break-words">
+            <div class="rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-4 overflow-hidden">
+              <h5 class="text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2 break-words flex items-center gap-2">
+                <span class="material-symbols-outlined text-[16px] text-primary">lightbulb</span>
                 Recommendation:
               </h5>
-              <p id="scenario-recommendation-{{ control.id }}" class="text-sm text-slate-700 leading-relaxed break-words whitespace-pre-wrap">
+              <p id="scenario-recommendation-{{ control.id }}" class="text-sm text-slate-700 dark:text-slate-300 leading-relaxed break-words whitespace-pre-wrap">
               </p>
             </div>
           </div>
 
-          <div class="flex gap-3 justify-end pt-5 border-t border-slate-200 mt-4">
+          <div class="flex gap-3 justify-end pt-5 border-t border-slate-200 dark:border-slate-700 mt-4">
             <button type="button" hx-get="/projects/{{ project.id }}/controls/{{ control.id }}/row"
               hx-target="#control-{{ control.id }}" hx-swap="outerHTML"
-              class="px-5 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 hover:text-slate-900 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-slate-500/50 shadow-sm">
+              class="px-5 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-slate-500/50 shadow-sm flex items-center gap-2">
+              <span class="material-symbols-outlined text-[18px]">close</span>
               Cancel
             </button>
             <button type="submit"
-              class="px-5 py-2.5 text-sm font-bold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500/50 shadow-sm">
+              class="px-5 py-2.5 text-sm font-bold text-white bg-primary hover:bg-primary/90 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-primary/50 shadow-sm flex items-center gap-2">
+              <span class="material-symbols-outlined text-[18px]">done</span>
               Submit Assessment
             </button>
           </div>
