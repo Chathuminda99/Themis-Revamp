@@ -1,45 +1,47 @@
-<form hx-post="{% if project %}/projects/{{ project.id }}{% else %}/projects{% endif %}" hx-target="#projects-table"
-  hx-swap="beforeend"
+<form hx-post="{% if project %}/projects/{{ project.id }}{% else %}/projects{% endif %}" {% if project
+  %}hx-target="#project-row-{{ project.id }}" hx-swap="outerHTML" {% else %}hx-target="#projects-table"
+  hx-swap="beforeend" {% endif %}
   @submit="if (htmx.config.refreshOnHistoryMiss) htmx.ajax('GET', '/projects', {target: '#projects-table', swap: 'innerHTML'}); $store.modal.hide()">
   <div class="mb-6">
-    <h2 class="text-2xl font-bold text-white tracking-tight">{% if project %}Update Project{% else %}New Project{% endif
+    <h2 class="text-2xl font-bold text-slate-900 tracking-tight">{% if project %}Update Project{% else %}New Project{%
+      endif
       %}</h2>
-    <p class="text-slate-400 text-sm mt-1">Fill in the details below to {% if project %}update the{% else %}create a
+    <p class="text-slate-500 text-sm mt-1">Fill in the details below to {% if project %}update the{% else %}create a
       new{% endif %} project.</p>
   </div>
   <div class="space-y-5">
     <div>
-      <label for="name" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Project Name
+      <label for="name" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Project Name
         *</label>
       <input type="text" id="name" name="name" value="{{ project.name if project else '' }}" required
-        class="w-full px-4 py-2.5 bg-slate-800/50 border border-slate-700/60 text-slate-200 placeholder-slate-500 rounded-lg hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-colors sm:text-sm" />
+        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 rounded-lg hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-colors sm:text-sm" />
     </div>
 
     <div>
-      <label for="client_id" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Client
+      <label for="client_id" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Client
         *</label>
       <div class="relative group">
         <input type="hidden" id="client_id" name="client_id" value="{{ project.client_id if project else '' }}"
           required />
         <input type="text" id="client_search" name="q" placeholder="Start typing client name..."
           value="{% if project and project.client %}{{ project.client.name }}{% endif %}" autocomplete="off"
-          class="w-full px-4 py-2.5 bg-slate-800/50 border border-slate-700/60 text-slate-200 placeholder-slate-500 rounded-lg hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-colors sm:text-sm"
+          class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 rounded-lg hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-colors sm:text-sm"
           hx-get="/clients/search" hx-trigger="keyup changed delay:300ms" hx-target="#client-suggestions"
           hx-swap="innerHTML" />
       </div>
-      <div id="client-suggestions" class="mt-2 text-sm text-slate-300"></div>
+      <div id="client-suggestions" class="mt-2 text-sm text-slate-600"></div>
     </div>
 
     <div>
       <label for="framework_id"
-        class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Framework *</label>
+        class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Framework *</label>
       <div class="relative">
         <select id="framework_id" name="framework_id" required
-          class="w-full appearance-none px-4 py-2.5 bg-slate-800/50 border border-slate-700/60 text-slate-200 rounded-lg hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-colors sm:text-sm">
-          <option value="" class="bg-slate-800">Select a framework...</option>
+          class="w-full appearance-none px-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-900 rounded-lg hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-colors sm:text-sm">
+          <option value="" class="bg-white text-slate-500">Select a framework...</option>
           {% for framework in frameworks %}
-          <option value="{{ framework.id }}" class="bg-slate-800" {% if project and project.framework_id==framework.id
-            %}selected{% endif %}>
+          <option value="{{ framework.id }}" class="bg-white text-slate-900" {% if project and
+            project.framework_id==framework.id %}selected{% endif %}>
             {{ framework.name }}
           </option>
           {% endfor %}
@@ -54,18 +56,18 @@
 
     <div>
       <label for="status"
-        class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Status</label>
+        class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Status</label>
       <div class="relative">
         <select id="status" name="status"
-          class="w-full appearance-none px-4 py-2.5 bg-slate-800/50 border border-slate-700/60 text-slate-200 rounded-lg hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-colors sm:text-sm">
-          <option value="draft" class="bg-slate-800" {% if project and project.status.value=='draft' %}selected{% endif
-            %}>Draft</option>
-          <option value="in_progress" class="bg-slate-800" {% if project and project.status.value=='in_progress'
-            %}selected{% endif %}>In Progress</option>
-          <option value="completed" class="bg-slate-800" {% if project and project.status.value=='completed'
+          class="w-full appearance-none px-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-900 rounded-lg hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-colors sm:text-sm">
+          <option value="draft" class="bg-white text-slate-900" {% if project and project.status.value=='draft'
+            %}selected{% endif %}>Draft</option>
+          <option value="in_progress" class="bg-white text-slate-900" {% if project and
+            project.status.value=='in_progress' %}selected{% endif %}>In Progress</option>
+          <option value="completed" class="bg-white text-slate-900" {% if project and project.status.value=='completed'
             %}selected{% endif %}>Completed</option>
-          <option value="archived" class="bg-slate-800" {% if project and project.status.value=='archived' %}selected{%
-            endif %}>Archived</option>
+          <option value="archived" class="bg-white text-slate-900" {% if project and project.status.value=='archived'
+            %}selected{% endif %}>Archived</option>
         </select>
         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
           <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -77,18 +79,18 @@
 
     <div>
       <label for="description"
-        class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Description</label>
+        class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Description</label>
       <textarea id="description" name="description" rows="4"
-        class="w-full px-4 py-2.5 bg-slate-800/50 border border-slate-700/60 text-slate-200 placeholder-slate-500 rounded-lg hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-colors sm:text-sm">{{ project.description if project else '' }}</textarea>
+        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 rounded-lg hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-colors sm:text-sm">{{ project.description if project else '' }}</textarea>
     </div>
 
-    <div class="flex gap-4 justify-end pt-6 border-t border-slate-800/60 mt-6">
+    <div class="flex gap-4 justify-end pt-6 border-t border-slate-200 mt-6">
       <button type="button" @click="$store.modal.hide()"
-        class="px-5 py-2.5 text-sm font-medium text-slate-300 bg-slate-800 hover:bg-slate-700 hover:text-white rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-slate-500/50">
+        class="px-5 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 hover:text-slate-900 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-slate-500/50 shadow-sm">
         Cancel
       </button>
       <button type="submit"
-        class="px-5 py-2.5 text-sm font-bold text-white bg-gradient-to-r from-cyan-500 to-indigo-500 rounded-lg hover:from-cyan-400 hover:to-indigo-400 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500/50 shadow-lg shadow-indigo-500/20">
+        class="px-5 py-2.5 text-sm font-bold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500/50 shadow-sm">
         {% if project %}Update{% else %}Create{% endif %} Project
       </button>
     </div>

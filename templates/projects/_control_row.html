@@ -1,33 +1,33 @@
-<tr id="control-{{ control.id }}" class="hover:bg-slate-800/50 transition-colors group">
-  <td class="px-6 py-4 text-sm font-medium text-slate-300">{{ control.identifier }}</td>
-  <td class="px-6 py-4 text-sm text-white font-medium">{{ control.name }}</td>
-  <td class="px-6 py-4 text-sm text-slate-400">
+<tr id="control-{{ control.id }}" class="hover:bg-slate-50 transition-colors group">
+  <td class="px-6 py-4 text-sm font-medium text-slate-600">{{ control.identifier }}</td>
+  <td class="px-6 py-4 text-sm text-slate-900 font-medium">{{ control.name }}</td>
+  <td class="px-6 py-4 text-sm text-slate-500">
     {% set response = responses.get(control.id|string) %}
     {% if response %}
     <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border
         {% if response.status.value == 'not_started' %}
-          bg-slate-800/80 text-slate-400 border-slate-700/50
+          bg-slate-100 text-slate-600 border-slate-200
         {% elif response.status.value == 'in_progress' %}
-          bg-indigo-500/10 text-indigo-400 border-indigo-500/30
+          bg-indigo-50 text-indigo-700 border-indigo-200
         {% elif response.status.value == 'submitted' %}
-          bg-blue-500/10 text-blue-400 border-blue-500/30
+          bg-blue-50 text-blue-700 border-blue-200
         {% elif response.status.value == 'approved' %}
-          bg-emerald-500/10 text-emerald-400 border-emerald-500/30
+          bg-emerald-50 text-emerald-700 border-emerald-200
         {% elif response.status.value == 'rejected' %}
-          bg-rose-500/10 text-rose-400 border-rose-500/30
+          bg-rose-50 text-rose-700 border-rose-200
         {% endif %}
       ">
       {% if response.status.value == 'in_progress' %}<span
-        class="w-1.5 h-1.5 rounded-full bg-indigo-400 mr-1.5 animate-pulse"></span>
-      {% elif response.status.value == 'submitted' %}<span class="w-1.5 h-1.5 rounded-full bg-blue-400 mr-1.5"></span>
-      {% elif response.status.value == 'approved' %}<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5"></span>
-      {% elif response.status.value == 'rejected' %}<span class="w-1.5 h-1.5 rounded-full bg-rose-400 mr-1.5"></span>
+        class="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-1.5 animate-pulse"></span>
+      {% elif response.status.value == 'submitted' %}<span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-1.5"></span>
+      {% elif response.status.value == 'approved' %}<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span>
+      {% elif response.status.value == 'rejected' %}<span class="w-1.5 h-1.5 rounded-full bg-rose-500 mr-1.5"></span>
       {% else %}<span class="w-1.5 h-1.5 rounded-full bg-slate-500 mr-1.5"></span>{% endif %}
       {{ response.status.value|replace('_', ' ')|title }}
     </span>
     {% else %}
     <span
-      class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border bg-slate-800/80 text-slate-400 border-slate-700/50">
+      class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border bg-slate-100 text-slate-600 border-slate-200">
       <span class="w-1.5 h-1.5 rounded-full bg-slate-500 mr-1.5"></span>
       Not Started
     </span>
@@ -36,7 +36,7 @@
   <td class="px-6 py-4 text-sm text-right">
     <button hx-get="/projects/{{ project.id }}/controls/{{ control.id }}/response" hx-target="#control-{{ control.id }}"
       hx-swap="outerHTML"
-      class="text-cyan-400 hover:text-cyan-300 font-medium transition-colors opacity-80 group-hover:opacity-100 flex items-center justify-end gap-1 ml-auto">
+      class="text-blue-600 hover:text-blue-700 font-medium transition-colors opacity-80 group-hover:opacity-100 flex items-center justify-end gap-1 ml-auto">
       <span>Respond</span>
       <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

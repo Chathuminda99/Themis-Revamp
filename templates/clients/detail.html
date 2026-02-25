@@ -4,68 +4,62 @@
 <div class="px-8 py-8">
   <div class="mb-8 flex items-center justify-between">
     <div>
-      <h1 class="text-3xl font-bold text-gray-900">{{ client.name }}</h1>
-      <p class="text-gray-600 mt-2">Client Profile</p>
+      <h1 class="text-3xl font-bold text-slate-900">{{ client.name }}</h1>
+      <p class="text-slate-500 mt-2">Client Profile</p>
     </div>
     <div class="flex gap-4">
-      <button
-        hx-get="/clients/{{ client.id }}/edit"
-        hx-target="#modal-body"
-        @click="$store.modal.show()"
-        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
-      >
+      <button hx-get="/clients/{{ client.id }}/edit" hx-target="#modal-body" @click="$store.modal.show()"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
         Edit
       </button>
-      <button
-        hx-delete="/clients/{{ client.id }}"
-        hx-confirm="Are you sure you want to delete this client?"
-        hx-redirect="/clients"
-        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg"
-      >
+      <button hx-delete="/clients/{{ client.id }}" hx-confirm="Are you sure you want to delete this client?"
+        hx-redirect="/clients" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg">
         Delete
       </button>
     </div>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-    <div class="bg-white rounded-lg shadow p-6">
-      <h2 class="text-lg font-semibold text-gray-900 mb-6">Details</h2>
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+      <h2 class="text-lg font-semibold text-slate-900 mb-6">Details</h2>
       <dl class="space-y-6">
         <div>
-          <dt class="text-sm font-medium text-gray-600">Name</dt>
-          <dd class="mt-1 text-lg text-gray-900">{{ client.name }}</dd>
+          <dt class="text-sm font-medium text-slate-500">Name</dt>
+          <dd class="mt-1 text-lg text-slate-900">{{ client.name }}</dd>
         </div>
         <div>
-          <dt class="text-sm font-medium text-gray-600">Industry</dt>
-          <dd class="mt-1 text-lg text-gray-900">{{ client.industry or "-" }}</dd>
+          <dt class="text-sm font-medium text-slate-500">Industry</dt>
+          <dd class="mt-1 text-lg text-slate-900">{{ client.industry or "-" }}</dd>
         </div>
         <div>
-          <dt class="text-sm font-medium text-gray-600">Contact Name</dt>
-          <dd class="mt-1 text-lg text-gray-900">{{ client.contact_name or "-" }}</dd>
+          <dt class="text-sm font-medium text-slate-500">Contact Name</dt>
+          <dd class="mt-1 text-lg text-slate-900">{{ client.contact_name or "-" }}</dd>
         </div>
         <div>
-          <dt class="text-sm font-medium text-gray-600">Contact Email</dt>
-          <dd class="mt-1 text-lg text-gray-900">{{ client.contact_email or "-" }}</dd>
+          <dt class="text-sm font-medium text-slate-500">Contact Email</dt>
+          <dd class="mt-1 text-lg text-slate-900">{{ client.contact_email or "-" }}</dd>
         </div>
       </dl>
     </div>
 
-    <div class="bg-white rounded-lg shadow p-6">
-      <h2 class="text-lg font-semibold text-gray-900 mb-6">Notes</h2>
-      <p class="text-gray-700 whitespace-pre-wrap">{{ client.notes or "No notes added" }}</p>
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+      <h2 class="text-lg font-semibold text-slate-900 mb-6">Notes</h2>
+      <p class="text-slate-700 whitespace-pre-wrap">{{ client.notes or "No notes added" }}</p>
     </div>
   </div>
 
-  <div class="mt-8 bg-white rounded-lg shadow p-6">
-    <h2 class="text-lg font-semibold text-gray-900 mb-6">Metadata</h2>
+  <div class="mt-8 bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+    <h2 class="text-lg font-semibold text-slate-900 mb-6">Metadata</h2>
     <dl class="grid grid-cols-2 gap-8">
       <div>
-        <dt class="text-sm font-medium text-gray-600">Created</dt>
-        <dd class="mt-1 text-gray-900">{{ client.created_at.strftime('%Y-%m-%d %H:%M') if client.created_at else "-" }}</dd>
+        <dt class="text-sm font-medium text-slate-500">Created</dt>
+        <dd class="mt-1 text-slate-900">{{ client.created_at.strftime('%Y-%m-%d %H:%M') if client.created_at else "-" }}
+        </dd>
       </div>
       <div>
-        <dt class="text-sm font-medium text-gray-600">Last Updated</dt>
-        <dd class="mt-1 text-gray-900">{{ client.updated_at.strftime('%Y-%m-%d %H:%M') if client.updated_at else "-" }}</dd>
+        <dt class="text-sm font-medium text-slate-500">Last Updated</dt>
+        <dd class="mt-1 text-slate-900">{{ client.updated_at.strftime('%Y-%m-%d %H:%M') if client.updated_at else "-" }}
+        </dd>
       </div>
     </dl>
   </div>
