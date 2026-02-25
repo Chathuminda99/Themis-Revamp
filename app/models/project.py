@@ -38,6 +38,9 @@ class Project(BaseModel, TimestampMixin):
     framework_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("frameworks.id"), nullable=False
     )
+    parent_project_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("projects.id"), nullable=True
+    )
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str] = mapped_column(Text, nullable=True)
     status: Mapped[ProjectStatus] = mapped_column(
@@ -47,6 +50,18 @@ class Project(BaseModel, TimestampMixin):
     # Relationships
     client: Mapped["Client"] = relationship()
     framework: Mapped["Framework"] = relationship()
+    segments: Mapped[list["Project"]] = relationship(
+        "Project",
+        foreign_keys=[parent_project_id],
+        back_populates="parent_project",
+        cascade="all, delete-orphan",
+    )
+    parent_project: Mapped["Project | None"] = relationship(
+        "Project",
+        foreign_keys=[parent_project_id],
+        back_populates="segments",
+        remote_side="Project.id",
+    )
 
 
 class ProjectMember(BaseModel, TimestampMixin):
@@ -75,6 +90,9 @@ class ProjectResponse(BaseModel, TimestampMixin):
         ForeignKey("framework_controls.id"), nullable=False
     )
     response_text: Mapped[str] = mapped_column(Text, nullable=True)
+    finding: Mapped[str] = mapped_column(Text, nullable=True)
+    recommendation: Mapped[str] = mapped_column(Text, nullable=True)
+    auditor_notes: Mapped[str] = mapped_column(Text, nullable=True)
     status: Mapped[ResponseStatus] = mapped_column(
         SQLEnum(ResponseStatus), nullable=False, default=ResponseStatus.NOT_STARTED
     )

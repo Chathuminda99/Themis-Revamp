@@ -110,7 +110,7 @@ async def new_project_form(request: Request, db: Session = Depends(get_db)):
     frameworks = framework_repo.get_all(user.tenant_id)
 
     return templates.TemplateResponse(
-        "projects/_form.html",
+        "projects/new.html",
         {
             "request": request,
             "user": user,
@@ -158,14 +158,7 @@ async def create_project(request: Request, db: Session = Depends(get_db)):
     # Refresh to get related objects
     db.refresh(project, ["client", "framework"])
 
-    return templates.TemplateResponse(
-        "projects/_row.html",
-        {
-            "request": request,
-            "user": user,
-            "project": project,
-        },
-    )
+    return RedirectResponse(url=f"/projects/{project.id}", status_code=303)
 
 
 @router.get("/{project_id}/edit", response_class=HTMLResponse)
@@ -269,6 +262,86 @@ async def delete_project(
     if success:
         return HTMLResponse("")  # Empty response for successful delete
     return RedirectResponse(url="/projects", status_code=302)
+
+
+@router.get("/{project_id}/segments/new", response_class=HTMLResponse)
+async def new_segment_form(
+    project_id: str, request: Request, db: Session = Depends(get_db)
+):
+    """Show new segment form modal."""
+    user = getattr(request.state, "user", None)
+    if not user:
+        return RedirectResponse(url="/auth/login", status_code=302)
+
+    repo = ProjectRepository(db)
+    project = repo.get_by_id_with_details(user.tenant_id, project_id)
+
+    if not project:
+        return RedirectResponse(url="/projects", status_code=302)
+
+    return templates.TemplateResponse(
+        "projects/_segment_form.html",
+        {
+            "request": request,
+            "user": user,
+            "project": project,
+        },
+    )
+
+
+@router.post("/{project_id}/segments", response_class=HTMLResponse)
+async def create_segment(
+    project_id: str, request: Request, db: Session = Depends(get_db)
+):
+    """Create a new segment under a project."""
+    user = getattr(request.state, "user", None)
+    if not user:
+        return RedirectResponse(url="/auth/login", status_code=302)
+
+    repo = ProjectRepository(db)
+    project = repo.get_by_id_with_details(user.tenant_id, project_id)
+
+    if not project:
+        return RedirectResponse(url="/projects", status_code=302)
+
+    form_data = await request.form()
+    name = (form_data.get("name") or "").strip()
+    description = form_data.get("description", "")
+
+    if not name:
+        return RedirectResponse(url=f"/projects/{project_id}", status_code=302)
+
+    segment = repo.create_segment(user.tenant_id, project_id, name, description)
+
+    return templates.TemplateResponse(
+        "projects/_segment_row.html",
+        {
+            "request": request,
+            "user": user,
+            "parent_project": project,
+            "segment": segment,
+            "total_controls": 0,
+            "responded_count": 0,
+            "progress_pct": 0,
+        },
+    )
+
+
+@router.delete("/{project_id}/segments/{segment_id}", response_class=HTMLResponse)
+async def delete_segment(
+    project_id: str, segment_id: str, request: Request, db: Session = Depends(get_db)
+):
+    """Delete a segment (sub-project)."""
+    user = getattr(request.state, "user", None)
+    if not user:
+        return RedirectResponse(url="/auth/login", status_code=302)
+
+    repo = ProjectRepository(db)
+    success = repo.delete(user.tenant_id, segment_id)
+
+    if success:
+        return HTMLResponse("")  # Empty response for successful delete
+    return RedirectResponse(url=f"/projects/{project_id}", status_code=302)
 
 
 @router.get("/{project_id}/controls/{control_id}/row", response_class=HTMLResponse)
@@ -387,6 +460,9 @@ async def save_control_response(
 
     form_data = await request.form()
     response_text = form_data.get("response_text")
+    finding = form_data.get("finding")
+    recommendation = form_data.get("recommendation")
+    auditor_notes = form_data.get("auditor_notes")
     status_value = form_data.get("status", ResponseStatus.NOT_STARTED.value)
 
     try:
@@ -396,7 +472,15 @@ async def save_control_response(
 
     # Upsert the response
     response_repo = ProjectResponseRepository(db)
-    response_repo.upsert(project.id, control_id, response_text, status)
+    response_repo.upsert(
+        project.id,
+        control_id,
+        response_text,
+        status,
+        finding=finding,
+        recommendation=recommendation,
+        auditor_notes=auditor_notes,
+    )
 
     # Load framework with sections and controls to get the control
     framework_repo = FrameworkRepository(db)
@@ -809,7 +893,7 @@ async def get_workflow_step(
 async def detail_project(
     project_id: str, request: Request, db: Session = Depends(get_db)
 ):
-    """Show project detail page."""
+    """Show project detail page (parent with segments or segment with controls)."""
     user = getattr(request.state, "user", None)
     if not user:
         return RedirectResponse(url="/auth/login", status_code=302)
@@ -820,37 +904,199 @@ async def detail_project(
     if not project:
         return RedirectResponse(url="/projects", status_code=302)
 
-    # Load framework with sections and controls
+    # Check if this is a parent project with segments
+    if project.segments:
+        # Parent project view: show segments
+        segments = repo.get_children(user.tenant_id, project.id)
+
+        # Calculate progress for each segment
+        segments_with_progress = []
+        response_repo = ProjectResponseRepository(db)
+        framework_repo = FrameworkRepository(db)
+
+        for segment in segments:
+            framework = framework_repo.get_by_id_with_sections(
+                user.tenant_id, segment.framework_id
+            )
+            all_responses = response_repo.get_for_project(segment.id)
+
+            total_controls = 0
+            responded_count = 0
+            if framework:
+                for section in framework.sections:
+                    total_controls += len(section.controls)
+                    for control in section.controls:
+                        if any(r.framework_control_id == control.id for r in all_responses):
+                            responded_count += 1
+
+            progress_pct = (
+                (responded_count / total_controls * 100)
+                if total_controls > 0
+                else 0
+            )
+            segments_with_progress.append(
+                {
+                    "segment": segment,
+                    "total_controls": total_controls,
+                    "responded_count": responded_count,
+                    "progress_pct": progress_pct,
+                }
+            )
+
+        return templates.TemplateResponse(
+            "projects/detail_parent.html",
+            {
+                "request": request,
+                "user": user,
+                "project": project,
+                "segments_with_progress": segments_with_progress,
+            },
+        )
+    else:
+        # Segment (or standalone project) view: show controls
+        # Load framework with sections and controls
+        framework_repo = FrameworkRepository(db)
+        framework = framework_repo.get_by_id_with_sections(user.tenant_id, project.framework_id)
+
+        # Load all responses for the project
+        response_repo = ProjectResponseRepository(db)
+        all_responses = response_repo.get_for_project(project.id)
+        responses_dict = {str(resp.framework_control_id): resp for resp in all_responses}
+
+        # Calculate progress
+        total_controls = 0
+        responded_count = 0
+        if framework:
+            for section in framework.sections:
+                total_controls += len(section.controls)
+                for control in section.controls:
+                    if str(control.id) in responses_dict:
+                        responded_count += 1
+
+        progress_pct = (responded_count / total_controls * 100) if total_controls > 0 else 0
+
+        return templates.TemplateResponse(
+            "projects/detail.html",
+            {
+                "request": request,
+                "user": user,
+                "project": project,
+                "framework": framework,
+                "responses": responses_dict,
+                "progress_pct": progress_pct,
+                "responded_count": responded_count,
+                "total_controls": total_controls,
+            },
+        )
+
+
+@router.get("/{project_id}/controls/{control_id}/details", response_class=HTMLResponse)
+async def get_control_details(
+    project_id: str, control_id: str, request: Request, db: Session = Depends(get_db)
+):
+    """Show control details in the master-detail view."""
+    user = getattr(request.state, "user", None)
+    if not user:
+        return RedirectResponse(url="/auth/login", status_code=302)
+
+    repo = ProjectRepository(db)
+    project = repo.get_by_id_with_details(user.tenant_id, project_id)
+    if not project:
+        return HTMLResponse(content="Project not found", status_code=404)
+
     framework_repo = FrameworkRepository(db)
     framework = framework_repo.get_by_id_with_sections(user.tenant_id, project.framework_id)
-
-    # Load all responses for the project
-    response_repo = ProjectResponseRepository(db)
-    all_responses = response_repo.get_for_project(project.id)
-    responses_dict = {str(resp.framework_control_id): resp for resp in all_responses}
-
-    # Calculate progress
-    total_controls = 0
-    responded_count = 0
+    
+    control = None
+    section_name = "Section"
     if framework:
         for section in framework.sections:
-            total_controls += len(section.controls)
-            for control in section.controls:
-                if str(control.id) in responses_dict:
-                    responded_count += 1
+            for ctrl in section.controls:
+                if str(ctrl.id) == control_id:
+                    control = ctrl
+                    section_name = section.name
+                    break
+            if control:
+                break
 
-    progress_pct = (responded_count / total_controls * 100) if total_controls > 0 else 0
+    if not control:
+        return HTMLResponse(content="Control not found", status_code=404)
+
+    response_repo = ProjectResponseRepository(db)
+    response = response_repo.get_by_control(project.id, control.id)
 
     return templates.TemplateResponse(
-        "projects/detail.html",
+        "projects/_control_detail.html",
         {
             "request": request,
             "user": user,
             "project": project,
-            "framework": framework,
-            "responses": responses_dict,
-            "progress_pct": progress_pct,
-            "responded_count": responded_count,
-            "total_controls": total_controls,
+            "control": control,
+            "section_name": section_name,
+            "response": response,
+            "saved": False,
         },
     )
+
+
+@router.post("/{project_id}/controls/{control_id}/details", response_class=HTMLResponse)
+async def save_control_details(
+    project_id: str, control_id: str, request: Request, db: Session = Depends(get_db)
+):
+    """Save control response details from the master-detail form."""
+    user = getattr(request.state, "user", None)
+    if not user:
+        return RedirectResponse(url="/auth/login", status_code=302)
+
+    repo = ProjectRepository(db)
+    project = repo.get_by_id_with_details(user.tenant_id, project_id)
+    if not project:
+        return HTMLResponse(content="Project not found", status_code=404)
+
+    form_data = await request.form()
+    response_text = form_data.get("response_text", "")
+    status_value = form_data.get("status", ResponseStatus.IN_PROGRESS.value)
+    
+    try:
+        status = ResponseStatus(status_value)
+    except ValueError:
+        status = ResponseStatus.IN_PROGRESS
+
+    response_repo = ProjectResponseRepository(db)
+    response_repo.upsert(
+        project.id,
+        control_id,
+        response_text,  # Maps to Observation text area
+        status,
+    )
+
+    framework_repo = FrameworkRepository(db)
+    framework = framework_repo.get_by_id_with_sections(user.tenant_id, project.framework_id)
+    
+    control = None
+    section_name = "Section"
+    if framework:
+        for section in framework.sections:
+            for ctrl in section.controls:
+                if str(ctrl.id) == control_id:
+                    control = ctrl
+                    section_name = section.name
+                    break
+            if control:
+                break
+
+    response = response_repo.get_by_control(project.id, control.id)
+
+    return templates.TemplateResponse(
+        "projects/_control_detail.html",
+        {
+            "request": request,
+            "user": user,
+            "project": project,
+            "control": control,
+            "section_name": section_name,
+            "response": response,
+            "saved": True,
+        },
+    )
+

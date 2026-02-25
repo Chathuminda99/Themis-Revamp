@@ -43,6 +43,9 @@ class ProjectResponseRepository(BaseRepository[ProjectResponse]):
         control_id: UUID,
         response_text: str | None = None,
         status: ResponseStatus = ResponseStatus.NOT_STARTED,
+        finding: str | None = None,
+        recommendation: str | None = None,
+        auditor_notes: str | None = None,
     ) -> ProjectResponse:
         """Create or update a response for a control."""
         response = self.get_by_control(project_id, control_id)
@@ -50,6 +53,9 @@ class ProjectResponseRepository(BaseRepository[ProjectResponse]):
         if response:
             response.response_text = response_text
             response.status = status
+            response.finding = finding
+            response.recommendation = recommendation
+            response.auditor_notes = auditor_notes
             self.db.commit()
             self.db.refresh(response)
         else:
@@ -58,6 +64,9 @@ class ProjectResponseRepository(BaseRepository[ProjectResponse]):
                 framework_control_id=control_id,
                 response_text=response_text,
                 status=status,
+                finding=finding,
+                recommendation=recommendation,
+                auditor_notes=auditor_notes,
             )
             self.db.add(response)
             self.db.commit()

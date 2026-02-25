@@ -1,34 +1,32 @@
-<tr id="control-{{ control.id }}" class="hover:bg-slate-50 transition-colors group">
-  <td class="px-6 py-4 text-sm font-medium text-slate-600">{{ control.control_id }}</td>
-  <td class="px-6 py-4 text-sm text-slate-900 font-medium">{{ control.name }}</td>
-  <td class="px-6 py-4 text-sm text-slate-500">
+<tr id="control-{{ control.id }}" class="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group border-b border-slate-200 dark:border-slate-800">
+  <td class="px-6 py-4 text-sm font-medium text-slate-600 dark:text-slate-400 break-words font-mono">{{ control.control_id }}</td>
+  <td class="px-6 py-4 text-sm text-slate-900 dark:text-white font-medium break-words">{{ control.name }}</td>
+  <td class="px-6 py-4 text-sm text-slate-500 dark:text-slate-400">
     {% set response = responses.get(control.id|string) %}
     {% if response %}
     <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border
         {% if response.status.value == 'not_started' %}
-          bg-slate-100 text-slate-600 border-slate-200
+          bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700
         {% elif response.status.value == 'in_progress' %}
-          bg-indigo-50 text-indigo-700 border-indigo-200
+          bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800
         {% elif response.status.value == 'submitted' %}
-          bg-blue-50 text-blue-700 border-blue-200
+          bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800
         {% elif response.status.value == 'approved' %}
-          bg-emerald-50 text-emerald-700 border-emerald-200
+          bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800
         {% elif response.status.value == 'rejected' %}
-          bg-rose-50 text-rose-700 border-rose-200
+          bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800
         {% endif %}
       ">
-      {% if response.status.value == 'in_progress' %}<span
-        class="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-1.5 animate-pulse"></span>
-      {% elif response.status.value == 'submitted' %}<span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-1.5"></span>
-      {% elif response.status.value == 'approved' %}<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span>
-      {% elif response.status.value == 'rejected' %}<span class="w-1.5 h-1.5 rounded-full bg-rose-500 mr-1.5"></span>
-      {% else %}<span class="w-1.5 h-1.5 rounded-full bg-slate-500 mr-1.5"></span>{% endif %}
+      {% if response.status.value == 'in_progress' %}<span class="w-1.5 h-1.5 rounded-full bg-blue-500 dark:bg-blue-400 mr-1.5 animate-pulse"></span>
+      {% elif response.status.value == 'submitted' %}<span class="w-1.5 h-1.5 rounded-full bg-amber-500 dark:bg-amber-400 mr-1.5"></span>
+      {% elif response.status.value == 'approved' %}<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 mr-1.5"></span>
+      {% elif response.status.value == 'rejected' %}<span class="w-1.5 h-1.5 rounded-full bg-red-500 dark:bg-red-400 mr-1.5"></span>
+      {% else %}<span class="w-1.5 h-1.5 rounded-full bg-slate-500 dark:bg-slate-400 mr-1.5"></span>{% endif %}
       {{ response.status.value|replace('_', ' ')|title }}
     </span>
     {% else %}
-    <span
-      class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border bg-slate-100 text-slate-600 border-slate-200">
-      <span class="w-1.5 h-1.5 rounded-full bg-slate-500 mr-1.5"></span>
+    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700">
+      <span class="w-1.5 h-1.5 rounded-full bg-slate-500 dark:bg-slate-400 mr-1.5"></span>
       Not Started
     </span>
     {% endif %}
@@ -37,32 +35,23 @@
     {% if control.assessment_checklist %}
     <button hx-get="/projects/{{ project.id }}/controls/{{ control.id }}/assessment" hx-target="#control-{{ control.id }}"
       hx-swap="outerHTML"
-      class="text-blue-600 hover:text-blue-700 font-medium transition-colors opacity-80 group-hover:opacity-100 flex items-center justify-end gap-1 ml-auto">
+      class="text-primary hover:opacity-80 font-medium transition-colors opacity-80 group-hover:opacity-100 flex items-center justify-end gap-1 ml-auto">
       <span>Assess</span>
-      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
+      <span class="material-symbols-outlined text-[18px]">fact_check</span>
     </button>
     {% elif control.workflow_definition %}
     <button hx-get="/projects/{{ project.id }}/controls/{{ control.id }}/workflow" hx-target="#control-{{ control.id }}"
       hx-swap="outerHTML"
-      class="text-blue-600 hover:text-blue-700 font-medium transition-colors opacity-80 group-hover:opacity-100 flex items-center justify-end gap-1 ml-auto">
-      <span>Respond</span>
-      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M9 5l7 7-7 7" />
-      </svg>
+      class="text-primary hover:opacity-80 font-medium transition-colors opacity-80 group-hover:opacity-100 flex items-center justify-end gap-1 ml-auto">
+      <span>Workflow</span>
+      <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
     </button>
     {% else %}
     <button hx-get="/projects/{{ project.id }}/controls/{{ control.id }}/response" hx-target="#control-{{ control.id }}"
       hx-swap="outerHTML"
-      class="text-blue-600 hover:text-blue-700 font-medium transition-colors opacity-80 group-hover:opacity-100 flex items-center justify-end gap-1 ml-auto">
+      class="text-primary hover:opacity-80 font-medium transition-colors opacity-80 group-hover:opacity-100 flex items-center justify-end gap-1 ml-auto">
       <span>Respond</span>
-      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-      </svg>
+      <span class="material-symbols-outlined text-[18px]">edit</span>
     </button>
     {% endif %}
   </td>

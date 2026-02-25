@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+
+{% block title %}AuditPro - {{ project.name }}{% endblock %}
+
+{% block content %}
+<div class="px-4 py-6 md:px-8 md:py-8 max-w-7xl mx-auto animate-fade-in-up">
+  <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div>
+      <h1 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight">{{ project.name }}</h1>
+      <p class="text-slate-500 dark:text-slate-400 mt-2 text-sm md:text-base">Audit project with segments for focused assessment</p>
+    </div>
+    <div class="flex flex-wrap items-center gap-3">
+      <button hx-get="/projects/{{ project.id }}/edit" hx-target="#modal-body" @click="$store.modal.show()"
+        class="px-5 py-2.5 text-sm font-bold text-white bg-primary hover:bg-primary/90 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-primary/50 shadow-sm flex items-center gap-2">
+        <span class="material-symbols-outlined text-[18px]">edit</span>
+        Edit Project
+      </button>
+      <button hx-delete="/projects/{{ project.id }}"
+        hx-confirm="Are you sure you want to delete this project? This action cannot be undone." hx-redirect="/projects"
+        class="px-5 py-2.5 text-sm font-bold text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-red-200 dark:hover:border-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-red-500/50 flex items-center gap-2">
+        <span class="material-symbols-outlined text-[18px]">delete</span>
+        Delete
+      </button>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm p-6 relative overflow-hidden group">
+      <div class="absolute -right-6 -top-6 w-24 h-24 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-colors"></div>
+      <div class="flex items-center gap-2 mb-3">
+        <span class="material-symbols-outlined text-primary text-[24px]">business</span>
+        <h3 class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Client</h3>
+      </div>
+      <p class="text-2xl font-bold text-slate-900 dark:text-white">
+        {% if project.client %}
+        <a href="/clients/{{ project.client.id }}" class="text-primary hover:opacity-80 transition-opacity">
+          {{ project.client.name }}
+        </a>
+        {% else %}
+        <span class="text-slate-400">-</span>
+        {% endif %}
+      </p>
+    </div>
+
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm p-6 relative overflow-hidden group">
+      <div class="absolute -right-6 -top-6 w-24 h-24 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-colors"></div>
+      <div class="flex items-center gap-2 mb-3">
+        <span class="material-symbols-outlined text-primary text-[24px]">account_tree</span>
+        <h3 class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Framework</h3>
+      </div>
+      <p class="text-2xl font-bold text-slate-900 dark:text-white">
+        {% if project.framework %}
+        <a href="/frameworks/{{ project.framework.id }}" class="text-primary hover:opacity-80 transition-opacity">
+          {{ project.framework.name }}
+        </a>
+        {% else %}
+        <span class="text-slate-400">-</span>
+        {% endif %}
+      </p>
+    </div>
+
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm p-6 relative overflow-hidden group">
+      <div class="absolute -right-6 -top-6 w-24 h-24 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-colors"></div>
+      <div class="flex items-center gap-2 mb-3">
+        <span class="material-symbols-outlined text-primary text-[24px]">flag</span>
+        <h3 class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</h3>
+      </div>
+      <div class="mt-1">
+        <span class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-semibold border
+          {% if project.status.value == 'draft' %}
+            bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700
+          {% elif project.status.value == 'in_progress' %}
+            bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800
+          {% elif project.status.value == 'completed' %}
+            bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800
+          {% else %}
+            bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700
+          {% endif %}
+        ">
+          {% if project.status.value == 'in_progress' %}<span class="w-2 h-2 rounded-full bg-blue-500 dark:bg-blue-400 mr-2.5 animate-pulse"></span>
+          {% elif project.status.value == 'completed' %}<span class="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400 mr-2.5"></span>
+          {% elif project.status.value == 'draft' %}<span class="w-2 h-2 rounded-full bg-slate-500 dark:bg-slate-400 mr-2.5"></span>{% endif %}
+          {{ project.status.value|replace('_', ' ')|title }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+    <div class="lg:col-span-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm p-6">
+      <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-4 border-b border-slate-200 dark:border-slate-800 pb-3 flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">description</span>
+        Description
+      </h2>
+      <p class="text-slate-700 dark:text-slate-300 whitespace-pre-wrap leading-relaxed">{{ project.description or "No description provided" }}</p>
+    </div>
+
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm p-6 flex flex-col justify-center">
+      <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-4 border-b border-slate-200 dark:border-slate-800 pb-3 flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">analytics</span>
+        Overview
+      </h2>
+      <div class="mb-4">
+        <div class="flex items-end justify-between mb-3 shadow-sm border border-slate-200 dark:border-slate-700 rounded-xl p-4 bg-slate-50 dark:bg-slate-800">
+          <div>
+            <span class="block text-3xl font-bold text-slate-900 dark:text-white">{{ segments_with_progress|length }}</span>
+            <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Segments</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm overflow-hidden">
+    <div class="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-800">
+      <h2 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-3">
+        <span class="material-symbols-outlined text-primary text-[24px]">folder_open</span>
+        Scope Segments
+      </h2>
+      <button hx-get="/projects/{{ project.id }}/segments/new" hx-target="#modal-body"
+        @click="$store.modal.show()"
+        class="px-4 py-2.5 text-sm font-bold text-white bg-primary hover:bg-primary/90 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-primary/50 shadow-sm flex items-center gap-2">
+        <span class="material-symbols-outlined text-[18px]">add</span>
+        Add Segment
+      </button>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+              Segment
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+              Progress
+            </th>
+            <th class="px-6 py-3 text-right text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider w-32">
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody id="segments-table">
+          {% for item in segments_with_progress %}
+          <tr id="segment-row-{{ item.segment.id }}"
+            class="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group border-b border-slate-200 dark:border-slate-800">
+            <td class="px-6 py-4">
+              <div class="flex flex-col">
+                <span class="text-sm font-medium text-slate-900 dark:text-white break-words">{{ item.segment.name }}</span>
+                {% if item.segment.description %}
+                <span class="text-xs text-slate-500 dark:text-slate-400 mt-1">{{ item.segment.description }}</span>
+                {% endif %}
+              </div>
+            </td>
+            <td class="px-6 py-4">
+              <div class="flex flex-col items-start gap-2">
+                <span class="text-xs text-slate-500 dark:text-slate-400">{{ item.responded_count }}/{{ item.total_controls }} controls</span>
+                <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 max-w-xs overflow-hidden">
+                  <div class="bg-primary h-2 rounded-full transition-all" style="width: {{ item.progress_pct }}%;"></div>
+                </div>
+              </div>
+            </td>
+            <td class="px-6 py-4 text-right">
+              <div class="flex items-center justify-end gap-2">
+                <a href="/projects/{{ item.segment.id }}"
+                  class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors opacity-80 group-hover:opacity-100"
+                  title="View segment">
+                  <span class="material-symbols-outlined text-[20px]">arrow_outward</span>
+                </a>
+                <button hx-delete="/projects/{{ project.id }}/segments/{{ item.segment.id }}"
+                  hx-confirm="Are you sure you want to delete this segment? All responses will be lost."
+                  hx-target="#segment-row-{{ item.segment.id }}" hx-swap="delete swap:1s"
+                  class="p-2 text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                  title="Delete segment">
+                  <span class="material-symbols-outlined text-[20px]">delete</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="3" class="px-6 py-12 text-center">
+              <div class="flex flex-col items-center justify-center">
+                <span class="material-symbols-outlined text-4xl text-slate-300 dark:text-slate-600 mb-2">folder_open</span>
+                <p class="text-slate-500 dark:text-slate-400 text-sm">No segments yet. Click "Add Segment" to get started.</p>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="mt-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm p-6">
+    <h2 class="text-sm font-bold text-slate-900 dark:text-white mb-4 border-b border-slate-200 dark:border-slate-800 pb-3 flex items-center gap-2">
+      <span class="material-symbols-outlined text-slate-400">info</span>
+      Metadata
+    </h2>
+    <dl class="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div>
+        <dt class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Created</dt>
+        <dd class="mt-1 text-sm font-medium text-slate-700 dark:text-slate-300">{{ project.created_at.strftime('%Y-%m-%d %H:%M') if project.created_at else "-" }}</dd>
+      </div>
+      <div>
+        <dt class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Last Updated</dt>
+        <dd class="mt-1 text-sm font-medium text-slate-700 dark:text-slate-300">{{ project.updated_at.strftime('%Y-%m-%d %H:%M') if project.updated_at else "-" }}</dd>
+      </div>
+    </dl>
+  </div>
+</div>
+{% endblock %}

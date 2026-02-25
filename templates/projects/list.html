@@ -7,77 +7,68 @@
       <h1 class="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">Projects</h1>
       <p class="text-slate-500 mt-2 text-sm md:text-base">Manage and track your compliance assessments.</p>
     </div>
-    <button class="group relative rounded-xl transition-all duration-300 hover:scale-[1.02] shadow-sm hover:shadow"
-      hx-get="/projects/new" hx-target="#modal-body" @click="$store.modal.show()">
-      <div
-        class="px-5 py-2.5 bg-blue-600 rounded-xl flex items-center justify-center gap-2 text-sm font-bold text-white transition-all group-hover:bg-blue-700">
-        <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-        </svg>
-        New Project
-      </div>
-    </button>
+    <a href="/projects/new"
+      class="px-5 py-2.5 bg-primary hover:bg-primary/90 rounded-lg flex items-center justify-center gap-2 text-sm font-bold text-white transition-all">
+      <span class="material-symbols-outlined text-[18px]">add_circle</span>
+      New Project
+    </a>
   </div>
 
   <!-- Filter Bar -->
-  <div class="mb-6 rounded-2xl bg-white shadow-sm border border-slate-200 p-5">
+  <div class="mb-6 rounded-2xl bg-white dark:bg-slate-900 shadow-sm border border-slate-200 dark:border-slate-800 p-5">
     <form id="project-filters" class="grid grid-cols-1 md:grid-cols-4 gap-5">
       <div>
         <label for="status-filter"
-          class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Status</label>
+          class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Status</label>
         <div class="relative">
           <select id="status-filter" name="status" hx-get="/projects" hx-target="#projects-table" hx-swap="innerHTML"
             hx-push-url="true" hx-include="#project-filters" @change="htmx.trigger(this, 'change')"
-            class="w-full appearance-none pl-4 pr-10 py-2.5 bg-slate-50 border border-slate-200 text-slate-900 rounded-lg hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-colors sm:text-sm">
-            <option value="" class="bg-white">All Statuses</option>
-            <option value="draft" class="bg-white" {% if active_filters.get('status')=='draft' %}selected{% endif %}>
+            class="w-full appearance-none pl-4 pr-10 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-lg hover:border-slate-300 dark:hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors sm:text-sm">
+            <option value="" class="bg-white dark:bg-slate-800">All Statuses</option>
+            <option value="draft" class="bg-white dark:bg-slate-800" {% if active_filters.get('status')=='draft' %}selected{% endif %}>
               Draft</option>
-            <option value="in_progress" class="bg-white" {% if active_filters.get('status')=='in_progress' %}selected{%
+            <option value="in_progress" class="bg-white dark:bg-slate-800" {% if active_filters.get('status')=='in_progress' %}selected{%
               endif %}>In Progress</option>
-            <option value="completed" class="bg-white" {% if active_filters.get('status')=='completed' %}selected{%
+            <option value="completed" class="bg-white dark:bg-slate-800" {% if active_filters.get('status')=='completed' %}selected{%
               endif %}>Completed</option>
-            <option value="archived" class="bg-white" {% if active_filters.get('status')=='archived' %}selected{% endif
+            <option value="archived" class="bg-white dark:bg-slate-800" {% if active_filters.get('status')=='archived' %}selected{% endif
               %}>Archived</option>
           </select>
-          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-            </svg>
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400 dark:text-slate-500">
+            <span class="material-symbols-outlined text-[20px]">expand_more</span>
           </div>
         </div>
       </div>
 
       <div>
         <label for="client-filter"
-          class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Client</label>
+          class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Client</label>
         <div class="relative">
           <select id="client-filter" name="client_id" hx-get="/projects" hx-target="#projects-table" hx-swap="innerHTML"
             hx-push-url="true" hx-include="#project-filters" @change="htmx.trigger(this, 'change')"
-            class="w-full appearance-none pl-4 pr-10 py-2.5 bg-slate-50 border border-slate-200 text-slate-900 rounded-lg hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-colors sm:text-sm">
-            <option value="" class="bg-white">All Clients</option>
+            class="w-full appearance-none pl-4 pr-10 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-lg hover:border-slate-300 dark:hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors sm:text-sm">
+            <option value="" class="bg-white dark:bg-slate-800">All Clients</option>
             {% for client in all_clients %}
-            <option value="{{ client.id }}" class="bg-white" {% if active_filters.get('client_id')==client.id|string
+            <option value="{{ client.id }}" class="bg-white dark:bg-slate-800" {% if active_filters.get('client_id')==client.id|string
               %}selected{% endif %}>
               {{ client.name }}
             </option>
             {% endfor %}
           </select>
-          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-            </svg>
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400 dark:text-slate-500">
+            <span class="material-symbols-outlined text-[20px]">expand_more</span>
           </div>
         </div>
       </div>
 
       <div>
         <label for="framework-filter"
-          class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Framework</label>
+          class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Framework</label>
         <div class="relative">
           <select id="framework-filter" name="framework_id" hx-get="/projects" hx-target="#projects-table"
             hx-swap="innerHTML" hx-push-url="true" hx-include="#project-filters" @change="htmx.trigger(this, 'change')"
-            class="w-full appearance-none pl-4 pr-10 py-2.5 bg-slate-50 border border-slate-200 text-slate-900 rounded-lg hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-colors sm:text-sm">
-            <option value="" class="bg-white">All Frameworks</option>
+            class="w-full appearance-none pl-4 pr-10 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-lg hover:border-slate-300 dark:hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors sm:text-sm">
+            <option value="" class="bg-white dark:bg-slate-800">All Frameworks</option>
             {% for framework in all_frameworks %}
             <option value="{{ framework.id }}" class="bg-white" {% if
               active_filters.get('framework_id')==framework.id|string %}selected{% endif %}>
@@ -85,29 +76,23 @@
             </option>
             {% endfor %}
           </select>
-          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-            </svg>
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400 dark:text-slate-500">
+            <span class="material-symbols-outlined text-[20px]">expand_more</span>
           </div>
         </div>
       </div>
 
       <div>
         <label for="search-filter"
-          class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Search</label>
+          class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Search</label>
         <div class="relative group">
           <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <svg class="h-4 w-4 text-slate-400 group-focus-within:text-blue-600 transition-colors" fill="none"
-              viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
+            <span class="material-symbols-outlined text-slate-400 dark:text-slate-500 group-focus-within:text-primary transition-colors">search</span>
           </div>
           <input id="search-filter" type="text" name="q" placeholder="Search projects..." hx-get="/projects"
             hx-target="#projects-table" hx-swap="innerHTML" hx-push-url="true" hx-include="#project-filters"
             hx-trigger="keyup changed delay:400ms" value="{{ active_filters.get('q', '') }}"
-            class="w-full pl-10 pr-3 py-2.5 bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 rounded-lg hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-colors sm:text-sm" />
+            class="w-full pl-10 pr-3 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 rounded-lg hover:border-slate-300 dark:hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors sm:text-sm" />
         </div>
       </div>
     </form>

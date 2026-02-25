@@ -20,9 +20,12 @@ class ProjectRepository(BaseRepository[Project]):
         super().__init__(db)
 
     def get_all_with_details(self, tenant_id: UUID) -> List[Project]:
-        """Get all projects for a tenant with eager-loaded client and framework."""
+        """Get all top-level projects for a tenant with eager-loaded client and framework."""
         return self.db.query(Project).filter(
-            Project.tenant_id == tenant_id
+            and_(
+                Project.tenant_id == tenant_id,
+                Project.parent_project_id.is_(None),
+            )
         ).options(
             joinedload(Project.client),
             joinedload(Project.framework)
@@ -72,8 +75,13 @@ class ProjectRepository(BaseRepository[Project]):
         framework_id: UUID | None = None,
         search: str | None = None,
     ) -> List[Project]:
-        """Filter projects by optional criteria."""
-        query = self.db.query(Project).filter(Project.tenant_id == tenant_id)
+        """Filter top-level projects by optional criteria."""
+        query = self.db.query(Project).filter(
+            and_(
+                Project.tenant_id == tenant_id,
+                Project.parent_project_id.is_(None),
+            )
+        )
 
         if status:
             query = query.filter(Project.status == status)
@@ -92,3 +100,43 @@ class ProjectRepository(BaseRepository[Project]):
             joinedload(Project.client),
             joinedload(Project.framework),
         ).all()
+
+    def get_children(
+        self, tenant_id: UUID, parent_project_id: UUID
+    ) -> List[Project]:
+        """Get all sub-projects (segments) for a parent project."""
+        return self.db.query(Project).filter(
+            and_(
+                Project.tenant_id == tenant_id,
+                Project.parent_project_id == parent_project_id,
+            )
+        ).options(
+            joinedload(Project.client),
+            joinedload(Project.framework)
+        ).all()
+
+    def create_segment(
+        self,
+        tenant_id: UUID,
+        parent_project_id: UUID,
+        name: str,
+        description: str | None = None,
+    ) -> Project:
+        """Create a sub-project (segment) under a parent project."""
+        parent = self.get_by_id_with_details(tenant_id, parent_project_id)
+        if not parent:
+            raise ValueError(f"Parent project {parent_project_id} not found")
+
+        segment = self.model(
+            tenant_id=tenant_id,
+            parent_project_id=parent_project_id,
+            client_id=parent.client_id,
+            framework_id=parent.framework_id,
+            name=name,
+            description=description,
+            status=ProjectStatus.DRAFT,
+        )
+        self.db.add(segment)
+        self.db.commit()
+        self.db.refresh(segment, ["client", "framework"])
+        return segment

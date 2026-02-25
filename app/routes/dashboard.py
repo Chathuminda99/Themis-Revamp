@@ -50,5 +50,6 @@ async def dashboard(request: Request, db: Session = Depends(get_db)):
             "request": request,
             "user": user,
             "stats": stats,
+            "active_projects": active_projects,
         },
     )

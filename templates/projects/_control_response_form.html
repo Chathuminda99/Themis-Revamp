@@ -1,76 +1,112 @@
 <tr id="control-{{ control.id }}"
-  class="bg-blue-50/50 border-l-2 border-blue-500 shadow-[inset_0_1px_3px_rgba(0,0,0,0.05)]">
+  class="bg-primary/5 dark:bg-primary/10 border-l-2 border-primary shadow-[inset_0_1px_3px_rgba(0,0,0,0.02)]">
   <td colspan="4" class="px-6 py-6">
     <div class="space-y-5 flex flex-col max-w-5xl mx-auto">
       <div>
-        <h3 class="font-bold text-slate-900 tracking-wide flex items-center gap-3">
-          <span class="px-2.5 py-1 rounded bg-slate-200 border border-slate-300 text-slate-700 text-xs font-mono">{{
-            control.identifier }}</span>
-          {{ control.name }}
-        </h3>
-        <p class="text-sm text-slate-600 mt-3 leading-relaxed border-l-2 border-slate-300 pl-4 ml-1">{{
-          control.description or "" }}</p>
+        <div class="flex items-start gap-3 mb-3">
+          <span class="material-symbols-outlined text-primary text-[20px] mt-0.5">check_circle</span>
+          <div class="flex-1">
+            <h3 class="font-bold text-slate-900 dark:text-white tracking-wide break-words text-base">{{ control.name }}</h3>
+            <span class="inline-block mt-2 px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold font-mono">{{ control.control_id }}</span>
+          </div>
+        </div>
+        {% if control.description %}
+        <p class="text-sm text-slate-600 dark:text-slate-400 mt-3 leading-relaxed border-l-2 border-primary/30 pl-4 ml-1 break-words">{{ control.description }}</p>
+        {% endif %}
       </div>
 
       <form hx-post="/projects/{{ project.id }}/controls/{{ control.id }}/response"
         hx-target="#control-{{ control.id }}" hx-swap="outerHTML swap:1s"
-        class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm mt-4">
+        class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm mt-4">
         <div class="space-y-5">
+          <!-- Grid layout for parallel fields -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div>
+              <label for="finding-{{ control.id }}"
+                class="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
+                <span class="material-symbols-outlined text-[16px] text-primary">flag</span>
+                Finding
+              </label>
+              <textarea id="finding-{{ control.id }}" name="finding" rows="3"
+                class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 rounded-lg hover:border-slate-300 dark:hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors sm:text-sm"
+                placeholder="What did you observe?">{{ response.finding if response else "" }}</textarea>
+            </div>
+
+            <div>
+              <label for="recommendation-{{ control.id }}"
+                class="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
+                <span class="material-symbols-outlined text-[16px] text-primary">lightbulb</span>
+                Recommendation
+              </label>
+              <textarea id="recommendation-{{ control.id }}" name="recommendation" rows="3"
+                class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 rounded-lg hover:border-slate-300 dark:hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors sm:text-sm"
+                placeholder="How should this be addressed?">{{ response.recommendation if response else "" }}</textarea>
+            </div>
+          </div>
+
+          <div>
+            <label for="auditor-notes-{{ control.id }}"
+              class="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
+              <span class="material-symbols-outlined text-[16px] text-primary">edit_note</span>
+              Auditor Notes
+            </label>
+            <textarea id="auditor-notes-{{ control.id }}" name="auditor_notes" rows="2"
+              class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 rounded-lg hover:border-slate-300 dark:hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors sm:text-sm"
+              placeholder="Add comments, observations, or approval notes...">{{ response.auditor_notes if response else "" }}</textarea>
+          </div>
+
           <div>
             <label for="response-text-{{ control.id }}"
-              class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+              class="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
+              <span class="material-symbols-outlined text-[16px] text-primary">description</span>
               Evidence / Response
             </label>
-            <textarea id="response-text-{{ control.id }}" name="response_text" rows="4"
-              class="w-full px-4 py-3 bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 rounded-lg hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-colors sm:text-sm"
-              placeholder="Describe how your organization addresses this control...">{{ response.response_text if response else "" }}</textarea>
+            <textarea id="response-text-{{ control.id }}" name="response_text" rows="3"
+              class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 rounded-lg hover:border-slate-300 dark:hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors sm:text-sm"
+              placeholder="How does your organization address this control?">{{ response.response_text if response else "" }}</textarea>
           </div>
 
           <div>
             <label for="response-status-{{ control.id }}"
-              class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+              class="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
+              <span class="material-symbols-outlined text-[16px] text-primary">pending_actions</span>
               Status
             </label>
             <div class="relative max-w-xs">
               <select id="response-status-{{ control.id }}" name="status"
-                class="w-full appearance-none px-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-900 rounded-lg hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-colors sm:text-sm font-medium">
-                <option value="not_started" class="bg-white text-slate-700" {% if not response or
-                  response.status.value=='not_started' %}selected{% endif %}>
+                class="w-full appearance-none px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-lg hover:border-slate-300 dark:hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors sm:text-sm font-medium">
+                <option value="not_started" class="bg-white dark:bg-slate-800" {% if not response or response.status.value=='not_started' %}selected{% endif %}>
                   Not Started
                 </option>
-                <option value="in_progress" class="bg-white text-indigo-700" {% if response and
-                  response.status.value=='in_progress' %}selected{% endif %}>
+                <option value="in_progress" class="bg-white dark:bg-slate-800" {% if response and response.status.value=='in_progress' %}selected{% endif %}>
                   In Progress
                 </option>
-                <option value="submitted" class="bg-white text-blue-700" {% if response and
-                  response.status.value=='submitted' %}selected{% endif %}>
+                <option value="submitted" class="bg-white dark:bg-slate-800" {% if response and response.status.value=='submitted' %}selected{% endif %}>
                   Submitted
                 </option>
-                <option value="approved" class="bg-white text-emerald-700" {% if response and
-                  response.status.value=='approved' %}selected{% endif %}>
+                <option value="approved" class="bg-white dark:bg-slate-800" {% if response and response.status.value=='approved' %}selected{% endif %}>
                   Approved
                 </option>
-                <option value="rejected" class="bg-white text-rose-700" {% if response and
-                  response.status.value=='rejected' %}selected{% endif %}>
+                <option value="rejected" class="bg-white dark:bg-slate-800" {% if response and response.status.value=='rejected' %}selected{% endif %}>
                   Rejected
                 </option>
               </select>
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
-                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400 dark:text-slate-500">
+                <span class="material-symbols-outlined">expand_more</span>
               </div>
             </div>
           </div>
 
-          <div class="flex gap-3 justify-end pt-5 border-t border-slate-200 mt-4">
+          <div class="flex gap-3 justify-end pt-5 border-t border-slate-200 dark:border-slate-700 mt-4">
             <button type="button" hx-get="/projects/{{ project.id }}/controls/{{ control.id }}/row"
               hx-target="#control-{{ control.id }}" hx-swap="outerHTML"
-              class="px-5 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 hover:text-slate-900 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-slate-500/50 shadow-sm">
+              class="px-5 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-slate-500/50 shadow-sm flex items-center gap-2">
+              <span class="material-symbols-outlined text-[18px]">close</span>
               Cancel
             </button>
             <button type="submit"
-              class="px-5 py-2.5 text-sm font-bold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500/50 shadow-sm">
+              class="px-5 py-2.5 text-sm font-bold text-white bg-primary hover:bg-primary/90 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-primary/50 shadow-sm flex items-center gap-2">
+              <span class="material-symbols-outlined text-[18px]">save</span>
               Save Response
             </button>
           </div>

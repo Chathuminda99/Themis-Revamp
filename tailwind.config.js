@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: 'class',
   content: [
     "./templates/**/*.html",
     "./app/**/*.py",
@@ -13,10 +14,14 @@ module.exports = {
           800: '#1e293b', // Dark slate
           accent: '#06b6d4', // Cyan
           glow: '#6366f1', // Indigo
-        }
+        },
+        primary: '#137fec',
+        'background-light': '#f6f7f8',
+        'background-dark': '#101922',
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Manrope', 'system-ui', 'sans-serif'],
+        display: ['Manrope'],
       },
       animation: {
         'fade-in-up': 'fadeInUp 0.5s ease-out',
