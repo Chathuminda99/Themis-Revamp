@@ -1,3 +1,5 @@
+{%- import "components/_icon.html" as icon_macro -%}
+
 <!-- Top Header (CoreUI-inspired) -->
 <header
     class="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 z-20 sticky top-0">
@@ -6,10 +8,10 @@
         <button @click="sidebarOpen = !sidebarOpen"
             class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50"
             title="Toggle sidebar">
-            <span class="material-symbols-outlined text-[22px]">menu</span>
+            {{ icon_macro.icon('menu', 'currentColor', '22') }}
         </button>
         <div class="relative w-full max-w-sm hidden sm:block">
-            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">search</span>
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">{{ icon_macro.icon('search', 'currentColor', '18') }}</span>
             <input
                 class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary/50 transition-all text-slate-900 dark:text-slate-100 placeholder-slate-500"
                 placeholder="Search..." type="text">
@@ -21,7 +23,7 @@
         <!-- Create Project Button -->
         <a href="/projects/new"
             class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all shadow-sm shadow-primary/20 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-primary/50 whitespace-nowrap">
-            <span class="material-symbols-outlined text-[18px]">add</span>
+            {{ icon_macro.icon('plus', 'white', '18') }}
             <span class="hidden sm:inline">New Project</span>
         </a>
 
@@ -32,7 +34,7 @@
         <button
             class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg relative transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50"
             title="Notifications">
-            <span class="material-symbols-outlined text-[22px]">notifications</span>
+            {{ icon_macro.icon('bell', 'currentColor', '22') }}
             <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-slate-900"></span>
         </button>
 
@@ -40,7 +42,7 @@
         <button
             class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 hidden sm:flex items-center justify-center"
             title="Help">
-            <span class="material-symbols-outlined text-[22px]">help</span>
+            {{ icon_macro.icon('help-circle', 'currentColor', '22') }}
         </button>
 
         <!-- Divider -->
@@ -51,19 +53,19 @@
             <button
                 class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50"
                 title="Theme">
-                <span class="material-symbols-outlined text-[22px]">brightness_4</span>
+                {{ icon_macro.icon('sun', 'currentColor', '22') }}
             </button>
             <div class="absolute right-0 mt-0 hidden group-hover:block bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-lg p-2 min-w-[150px] z-50">
                 <button class="w-full flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-left text-slate-700 dark:text-slate-300">
-                    <span class="material-symbols-outlined text-[18px]">light_mode</span>
+                    {{ icon_macro.icon('sun', 'currentColor', '18') }}
                     Light
                 </button>
                 <button class="w-full flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-left text-slate-700 dark:text-slate-300">
-                    <span class="material-symbols-outlined text-[18px]">dark_mode</span>
+                    {{ icon_macro.icon('moon', 'currentColor', '18') }}
                     Dark
                 </button>
                 <button class="w-full flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-left text-slate-700 dark:text-slate-300">
-                    <span class="material-symbols-outlined text-[18px]">brightness_auto</span>
+                    {{ icon_macro.icon('sun', 'currentColor', '18') }}
                     Auto
                 </button>
             </div>
@@ -80,7 +82,7 @@
                 <span class="hidden sm:inline text-sm font-semibold text-slate-700 dark:text-slate-300">
                     {% if user %}{{ user.full_name.split()[0] }}{% else %}User{% endif %}
                 </span>
-                <span class="material-symbols-outlined text-[18px] text-slate-600 dark:text-slate-400 hidden sm:inline">expand_more</span>
+                <span class="hidden sm:inline text-slate-600 dark:text-slate-400">{{ icon_macro.icon('chevron-down', 'currentColor', '18') }}</span>
             </button>
 
             <!-- Dropdown Menu -->
@@ -95,19 +97,19 @@
                 </div>
                 <a href="#"
                     class="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
-                    <span class="material-symbols-outlined text-[18px]">person</span>
+                    {{ icon_macro.icon('user', 'currentColor', '18') }}
                     Profile
                 </a>
                 <a href="#"
                     class="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
-                    <span class="material-symbols-outlined text-[18px]">settings</span>
+                    {{ icon_macro.icon('settings', 'currentColor', '18') }}
                     Settings
                 </a>
                 <div class="border-t border-slate-200 dark:border-slate-700 my-2"></div>
                 <form method="POST" action="/auth/logout" class="block">
                     <button type="submit"
                         class="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-left">
-                        <span class="material-symbols-outlined text-[18px]">logout</span>
+                        {{ icon_macro.icon('logout', 'currentColor', '18') }}
                         Sign Out
                     </button>
                 </form>

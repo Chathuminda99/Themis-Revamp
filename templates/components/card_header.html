@@ -1,0 +1,10 @@
+{# Card Header Component #}
+<div class="px-6 py-4 border-b border-border">
+  {%- if card_title %}
+    <h3 class="text-lg font-semibold text-foreground">{{ card_title }}</h3>
+  {%- endif %}
+  {%- if card_description %}
+    <p class="text-sm text-muted-foreground mt-1">{{ card_description }}</p>
+  {%- endif %}
+  {{ card_header_content }}
+</div>

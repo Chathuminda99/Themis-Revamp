@@ -1,0 +1,30 @@
+{# Shadcn Badge Component with Variants #}
+{# Usage:
+   {% include "components/badge.html" with context %}
+   {# badge_text="Status", badge_variant="default|secondary|destructive|outline" #}
+#}
+
+<span
+  class="
+    inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold
+    whitespace-nowrap
+    {%- if badge_variant == 'secondary' %}
+      bg-secondary/20 text-secondary
+    {%- elif badge_variant == 'destructive' %}
+      bg-destructive/20 text-destructive
+    {%- elif badge_variant == 'outline' %}
+      border border-border bg-background text-foreground
+    {%- elif badge_variant == 'success' %}
+      bg-emerald-900/30 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400
+    {%- elif badge_variant == 'warning' %}
+      bg-amber-900/30 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400
+    {%- elif badge_variant == 'info' %}
+      bg-blue-900/30 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400
+    {%- else %} {# default primary #}
+      bg-primary/20 text-primary
+    {%- endif %}
+    {{ badge_class }}
+  "
+>
+  {%- if badge_icon %}{{ badge_icon }} {% endif %}{{ badge_text }}
+</span>

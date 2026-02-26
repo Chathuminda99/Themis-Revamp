@@ -1,0 +1,64 @@
+{# Shadcn Popover Component #}
+{# Click-triggered popover with interactive content #}
+{# Usage:
+   <div x-data="{ open: false }" @click.outside="open = false">
+     {% include "components/popover.html" with context %}
+     {# popover_trigger_text="Open", popover_title="Title", popover_content="..." #}
+   </div>
+#}
+
+<div class="relative inline-block">
+  <!-- Trigger Button -->
+  <button
+    @click="open = !open"
+    class="
+      inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium
+      rounded-md border border-input
+      bg-background text-foreground
+      hover:bg-muted
+      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+      focus-visible:ring-offset-background
+      transition-colors
+    "
+  >
+    {{ popover_trigger_text }}
+  </button>
+
+  <!-- Popover Content -->
+  <div
+    x-show="open"
+    x-transition:enter="transition ease-out duration-100"
+    x-transition:enter-start="opacity-0 scale-95 translate-y-2"
+    x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+    x-transition:leave="transition ease-in duration-75"
+    x-transition:leave-start="opacity-100 scale-100"
+    x-transition:leave-end="opacity-0 scale-95"
+    class="
+      absolute top-full left-0 mt-2 w-80 z-50
+      bg-card text-card-foreground
+      border border-border
+      rounded-lg shadow-lg
+    "
+  >
+    <!-- Arrow indicator -->
+    <div class="absolute -top-1 left-6 w-2 h-2 bg-card border-t border-l border-border transform rotate-45"></div>
+
+    <!-- Content -->
+    <div class="p-4 space-y-3">
+      {% if popover_title %}
+        <h4 class="font-semibold text-sm text-foreground">{{ popover_title }}</h4>
+      {% endif %}
+
+      {% if popover_content %}
+        <p class="text-sm text-muted-foreground">{{ popover_content }}</p>
+      {% endif %}
+
+      <!-- Optional footer -->
+      {% if popover_footer %}
+        <div class="flex gap-2 pt-2 border-t border-border">
+          {{ popover_footer }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>

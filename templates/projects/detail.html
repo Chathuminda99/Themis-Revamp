@@ -1,3 +1,4 @@
+{%- import "components/_icon.html" as icon_macro -%}
 {% extends "base.html" %}
 
 {% block title %}AuditPro Compliance - {{ project.name }}{% endblock %}
@@ -31,9 +32,13 @@
         <div class="mb-1">
           <button @click="expandedSections['{{ section.id }}'] = !expandedSections['{{ section.id }}']"
             class="w-full flex items-center gap-2 px-3 py-2 text-slate-900 dark:text-white font-bold text-sm hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors group">
-            <span class="material-symbols-outlined text-lg text-slate-400 group-hover:text-primary transition-colors"
-              x-text="expandedSections['{{ section.id }}'] ? 'keyboard_arrow_down' : 'keyboard_arrow_right'">keyboard_arrow_right</span>
-            <span class="material-symbols-outlined text-lg text-primary">folder</span>
+            <span class="text-slate-400 group-hover:text-primary transition-colors" x-show="!expandedSections['{{ section.id }}']">
+              {{ icon_macro.icon('chevron-right', 'currentColor', '20') }}
+            </span>
+            <span class="text-primary" x-show="expandedSections['{{ section.id }}']">
+              {{ icon_macro.icon('chevron-down', 'currentColor', '20') }}
+            </span>
+            <span class="text-primary">{{ icon_macro.icon('folder', 'currentColor', '20') }}</span>
             <span class="truncate">{{ section.name }}</span>
           </button>
 
@@ -49,14 +54,14 @@
               <span class="text-xs font-semibold truncate">{{ control.control_id }} {{ control.name }}</span>
               {% if resp %}
               {% if resp.status.value == 'approved' %}
-              <span class="material-symbols-outlined text-sm text-green-500">check_circle</span>
+              <span class="text-green-500">{{ icon_macro.icon('check-circle', 'currentColor', '18') }}</span>
               {% elif resp.status.value == 'rejected' %}
-              <span class="material-symbols-outlined text-sm text-red-500">error</span>
+              <span class="text-red-500">{{ icon_macro.icon('alert-circle', 'currentColor', '18') }}</span>
               {% else %}
-              <span class="material-symbols-outlined text-sm text-amber-500">pending</span>
+              <span class="text-amber-500">{{ icon_macro.icon('alert-triangle', 'currentColor', '18') }}</span>
               {% endif %}
               {% else %}
-              <span class="material-symbols-outlined text-sm text-slate-300 dark:text-slate-600">circle</span>
+              <span class="text-slate-300 dark:text-slate-600">{{ icon_macro.icon('circle', 'currentColor', '18') }}</span>
               {% endif %}
             </a>
             {% endfor %}
@@ -70,7 +75,7 @@
     <div class="p-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
       <button
         class="w-full py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-lg text-xs font-bold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
-        <span class="material-symbols-outlined text-sm">download_done</span>
+        {{ icon_macro.icon('download', 'currentColor', '16') }}
         Finalize &amp; Submit Audit
       </button>
     </div>
@@ -84,7 +89,7 @@
       class="flex-1 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center text-center p-10 h-full">
       <div
         class="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center text-blue-500 mb-4 mx-auto">
-        <span class="material-symbols-outlined text-3xl">fact_check</span>
+        {{ icon_macro.icon('check', 'currentColor', '32') }}
       </div>
       <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Select a Control</h3>
       <p class="text-slate-500 max-w-sm mx-auto">Choose a framework control from the left sidebar to view details, add

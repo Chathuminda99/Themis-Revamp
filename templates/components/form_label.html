@@ -1,0 +1,15 @@
+{# Shadcn Form Label Component #}
+{# Usage:
+   {% include "components/form_label.html" with context %}
+   {# label_for="field_id", label_text="Field Name", required=true #}
+#}
+<label for="{{ label_for }}"
+  class="
+    text-sm font-medium leading-none
+    text-foreground
+    peer-disabled:cursor-not-allowed peer-disabled:opacity-70
+  "
+>
+  {{ label_text }}
+  {% if required %}<span class="text-destructive">*</span>{% endif %}
+</label>

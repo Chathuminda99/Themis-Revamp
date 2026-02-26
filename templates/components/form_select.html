@@ -1,16 +1,30 @@
-<!-- Reusable Form Select Component -->
-<div class="form-group">
+{# Shadcn Select Component with CSS Variables #}
+{# Modern dropdown using the new design system #}
+<div class="space-y-2">
+    {% if label %}
     <label for="{{ field_name }}"
-        class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+        class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-foreground">
         {{ label }}
-        {% if required %}<span class="text-red-600">*</span>{% endif %}
+        {% if required %}<span class="text-destructive">*</span>{% endif %}
     </label>
+    {% endif %}
+
     <div class="relative">
         <select
             id="{{ field_name }}"
             name="{{ field_name }}"
             {% if required %}required{% endif %}
-            class="w-full px-4 py-2.5 appearance-none bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors">
+            {% if disabled %}disabled{% endif %}
+            class="
+              flex h-10 w-full appearance-none rounded-md
+              border border-input bg-background px-3 py-2 text-sm
+              placeholder:text-muted-foreground
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+              focus-visible:ring-offset-background
+              disabled:cursor-not-allowed disabled:opacity-50
+              transition-all duration-200
+            "
+        >
             {% if placeholder %}
             <option value="">{{ placeholder }}</option>
             {% endif %}
@@ -20,11 +34,16 @@
             </option>
             {% endfor %}
         </select>
-        <span class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-            <span class="material-symbols-outlined text-slate-400 dark:text-slate-500">expand_more</span>
+
+        {# Chevron Icon #}
+        <span class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
+            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
         </span>
     </div>
+
     {% if help_text %}
-    <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ help_text }}</p>
+    <p class="text-xs text-muted-foreground">{{ help_text }}</p>
     {% endif %}
 </div>

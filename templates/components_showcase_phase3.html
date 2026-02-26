@@ -1,0 +1,375 @@
+{% extends "base.html" %}
+
+{% block title %}Phase 3 Components - Themis{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+  <ol class="flex items-center gap-2 text-sm text-slate-500">
+    <li><a href="/" class="text-primary hover:underline">Home</a></li>
+    <li class="text-slate-300">/</li>
+    <li class="text-slate-700 dark:text-slate-300 font-medium">Phase 3 Components</li>
+  </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="space-y-12 max-w-6xl">
+  <!-- Header -->
+  <div class="space-y-2">
+    <h1 class="text-3xl font-bold text-slate-900 dark:text-slate-50">Phase 3 Components</h1>
+    <p class="text-slate-600 dark:text-slate-400">Advanced Form Controls & Multi-step Workflows</p>
+  </div>
+
+  <!-- Checkboxes Section -->
+  <section class="space-y-6">
+    <div>
+      <h2 class="text-2xl font-semibold text-slate-900 dark:text-slate-50 mb-4">Checkboxes</h2>
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-6 space-y-4">
+        <div class="space-y-3">
+          <div>
+            <input type="checkbox" id="check1" class="w-5 h-5 rounded border border-slate-300 dark:border-slate-600 cursor-pointer accent-primary checked:bg-primary checked:border-primary" />
+            <label for="check1" class="ml-2 text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer">Standard checkbox</label>
+          </div>
+
+          <div>
+            <input type="checkbox" id="check2" checked class="w-5 h-5 rounded border border-slate-300 dark:border-slate-600 cursor-pointer accent-primary checked:bg-primary checked:border-primary" />
+            <label for="check2" class="ml-2 text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer">Checked checkbox</label>
+            <p class="ml-7 text-xs text-slate-500 dark:text-slate-400 mt-1">This checkbox is pre-selected</p>
+          </div>
+
+          <div>
+            <input type="checkbox" id="check3" disabled class="w-5 h-5 rounded border border-slate-300 dark:border-slate-600 cursor-not-allowed accent-primary opacity-50" />
+            <label for="check3" class="ml-2 text-sm font-medium text-slate-700 dark:text-slate-300 cursor-not-allowed opacity-50">Disabled checkbox</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Radio Buttons Section -->
+  <section class="space-y-6">
+    <div>
+      <h2 class="text-2xl font-semibold text-slate-900 dark:text-slate-50 mb-4">Radio Buttons</h2>
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-6">
+        <fieldset class="space-y-3">
+          <legend class="text-sm font-semibold text-slate-900 dark:text-slate-50 mb-4">Select Status</legend>
+
+          <div>
+            <input type="radio" id="radio1" name="status" value="active" checked class="w-5 h-5 rounded-full border border-slate-300 dark:border-slate-600 cursor-pointer accent-primary" />
+            <label for="radio1" class="ml-2 text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer">Active</label>
+          </div>
+
+          <div>
+            <input type="radio" id="radio2" name="status" value="inactive" class="w-5 h-5 rounded-full border border-slate-300 dark:border-slate-600 cursor-pointer accent-primary" />
+            <label for="radio2" class="ml-2 text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer">Inactive</label>
+          </div>
+
+          <div>
+            <input type="radio" id="radio3" name="status" value="pending" class="w-5 h-5 rounded-full border border-slate-300 dark:border-slate-600 cursor-pointer accent-primary" />
+            <label for="radio3" class="ml-2 text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer">Pending</label>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tabs Section -->
+  <section class="space-y-6">
+    <div>
+      <h2 class="text-2xl font-semibold text-slate-900 dark:text-slate-50 mb-4">Tabs</h2>
+      <div class="space-y-4">
+        <div x-data="{ activeTab: 'tab1' }">
+          <!-- Tab Navigation -->
+          <div class="border-b border-slate-200 dark:border-slate-800">
+            <div class="flex gap-0">
+              <button
+                @click="activeTab = 'tab1'"
+                :class="{'border-b-2 border-primary text-primary': activeTab === 'tab1', 'border-b-2 border-transparent text-slate-600 dark:text-slate-400': activeTab !== 'tab1'}"
+                class="px-4 py-3 font-medium text-sm transition-colors hover:text-slate-900 dark:hover:text-slate-300">
+                Overview
+              </button>
+              <button
+                @click="activeTab = 'tab2'"
+                :class="{'border-b-2 border-primary text-primary': activeTab === 'tab2', 'border-b-2 border-transparent text-slate-600 dark:text-slate-400': activeTab !== 'tab2'}"
+                class="px-4 py-3 font-medium text-sm transition-colors hover:text-slate-900 dark:hover:text-slate-300">
+                Details
+              </button>
+              <button
+                @click="activeTab = 'tab3'"
+                :class="{'border-b-2 border-primary text-primary': activeTab === 'tab3', 'border-b-2 border-transparent text-slate-600 dark:text-slate-400': activeTab !== 'tab3'}"
+                class="px-4 py-3 font-medium text-sm transition-colors hover:text-slate-900 dark:hover:text-slate-300">
+                Settings
+              </button>
+            </div>
+          </div>
+
+          <!-- Tab Content -->
+          <div class="pt-4 space-y-2">
+            <div x-show="activeTab === 'tab1'">
+              <p class="text-slate-600 dark:text-slate-400">Overview tab content goes here. This is the default tab.</p>
+            </div>
+            <div x-show="activeTab === 'tab2'">
+              <p class="text-slate-600 dark:text-slate-400">Details tab content. More information about the item.</p>
+            </div>
+            <div x-show="activeTab === 'tab3'">
+              <p class="text-slate-600 dark:text-slate-400">Settings tab. Configure options here.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dropdown Menu Section -->
+  <section class="space-y-6">
+    <div>
+      <h2 class="text-2xl font-semibold text-slate-900 dark:text-slate-50 mb-4">Dropdown Menu</h2>
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-6">
+        <div x-data="{ open: false }" @click.outside="open = false" class="inline-block">
+          <button
+            @click="open = !open"
+            class="
+              inline-flex items-center gap-2 px-4 py-2 text-sm font-medium
+              rounded-md border border-slate-300 dark:border-slate-600
+              bg-white dark:bg-slate-950
+              text-slate-900 dark:text-slate-50
+              hover:bg-slate-50 dark:hover:bg-slate-900
+              transition-colors
+            ">
+            Actions
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+            </svg>
+          </button>
+
+          <div
+            x-show="open"
+            x-transition
+            class="
+              absolute mt-2 w-48 z-50
+              bg-white dark:bg-slate-900
+              border border-slate-200 dark:border-slate-800
+              rounded-lg shadow-lg
+            ">
+            <div class="py-1">
+              <a href="#" class="block px-4 py-2 text-sm text-slate-900 dark:text-slate-50 hover:bg-slate-100 dark:hover:bg-slate-800">Edit</a>
+              <a href="#" class="block px-4 py-2 text-sm text-slate-900 dark:text-slate-50 hover:bg-slate-100 dark:hover:bg-slate-800">Duplicate</a>
+              <div class="border-t border-slate-200 dark:border-slate-800 my-1"></div>
+              <a href="#" class="block px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20">Delete</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stepper Section -->
+  <section class="space-y-6">
+    <div>
+      <h2 class="text-2xl font-semibold text-slate-900 dark:text-slate-50 mb-4">Stepper</h2>
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-6">
+        <div class="space-y-4">
+          <!-- Step Progress -->
+          <div class="flex items-center gap-2">
+            <!-- Step 1 (Completed) -->
+            <div class="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-600 dark:bg-emerald-700 text-white font-semibold text-sm">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
+              </svg>
+            </div>
+            <div class="flex-1 h-1 bg-primary rounded-full"></div>
+
+            <!-- Step 2 (Active) -->
+            <div class="flex items-center justify-center w-10 h-10 rounded-full bg-primary dark:bg-primary text-white font-semibold text-sm ring-4 ring-primary/20">
+              2
+            </div>
+            <div class="flex-1 h-1 bg-slate-300 dark:bg-slate-600 rounded-full"></div>
+
+            <!-- Step 3 (Inactive) -->
+            <div class="flex items-center justify-center w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold text-sm">
+              3
+            </div>
+          </div>
+
+          <!-- Step Labels -->
+          <div class="flex gap-2 justify-between">
+            <div class="flex-1 text-center">
+              <p class="text-xs font-medium text-slate-600 dark:text-slate-400">Personal Info</p>
+            </div>
+            <div class="flex-1 text-center">
+              <p class="text-xs font-medium text-primary">Contact Details</p>
+            </div>
+            <div class="flex-1 text-center">
+              <p class="text-xs font-medium text-slate-600 dark:text-slate-400">Review & Submit</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Popover Section -->
+  <section class="space-y-6">
+    <div>
+      <h2 class="text-2xl font-semibold text-slate-900 dark:text-slate-50 mb-4">Popover</h2>
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-6">
+        <div x-data="{ open: false }" @click.outside="open = false" class="inline-block">
+          <button
+            @click="open = !open"
+            class="
+              px-4 py-2 text-sm font-medium
+              rounded-md bg-primary text-white
+              hover:bg-blue-700
+              transition-colors
+            ">
+            Show Popover
+          </button>
+
+          <div
+            x-show="open"
+            x-transition
+            class="
+              absolute mt-2 w-80 z-50
+              bg-white dark:bg-slate-900
+              border border-slate-200 dark:border-slate-800
+              rounded-lg shadow-lg p-4 space-y-3
+            ">
+            <h4 class="font-semibold text-sm text-slate-900 dark:text-slate-50">Quick Settings</h4>
+            <p class="text-sm text-slate-600 dark:text-slate-400">Adjust your preferences from here. These settings will be saved automatically.</p>
+            <div class="flex gap-2 pt-2 border-t border-slate-200 dark:border-slate-800">
+              {% include "components/button.html" with context %}
+              {# button_text="Cancel", button_variant="outline", button_size="sm", button_class="@click=\"open = false\"" #}
+              {% include "components/button.html" with context %}
+              {# button_text="Save", button_variant="primary", button_size="sm" #}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Data Table (Preview) -->
+  <section class="space-y-6">
+    <div>
+      <h2 class="text-2xl font-semibold text-slate-900 dark:text-slate-50 mb-4">Advanced Data Table</h2>
+      <div class="space-y-4">
+        <!-- Search -->
+        <div class="flex gap-2">
+          <div class="flex-1 relative">
+            <input
+              type="text"
+              placeholder="Search..."
+              class="
+                w-full px-4 py-2 text-sm rounded-md border border-slate-300 dark:border-slate-600
+                bg-white dark:bg-slate-950
+                placeholder:text-slate-400
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary
+              "
+            />
+            <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-800">
+          <table class="w-full">
+            <thead class="bg-slate-50 dark:bg-slate-950">
+              <tr>
+                <th class="px-4 py-3 text-left font-semibold text-xs uppercase text-slate-700 dark:text-slate-300">
+                  Name
+                </th>
+                <th class="px-4 py-3 text-left font-semibold text-xs uppercase text-slate-700 dark:text-slate-300">
+                  Status
+                </th>
+                <th class="px-4 py-3 text-left font-semibold text-xs uppercase text-slate-700 dark:text-slate-300">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/50">
+                <td class="px-4 py-3 text-sm text-slate-900 dark:text-slate-50">Alice Johnson</td>
+                <td class="px-4 py-3">
+                  {% include "components/badge.html" with context %}
+                  {# badge_text="Active", badge_variant="success" #}
+                </td>
+                <td class="px-4 py-3 text-sm">
+                  <button class="text-primary hover:underline">Edit</button>
+                </td>
+              </tr>
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/50">
+                <td class="px-4 py-3 text-sm text-slate-900 dark:text-slate-50">Bob Smith</td>
+                <td class="px-4 py-3">
+                  {% include "components/badge.html" with context %}
+                  {# badge_text="Pending", badge_variant="warning" #}
+                </td>
+                <td class="px-4 py-3 text-sm">
+                  <button class="text-primary hover:underline">Edit</button>
+                </td>
+              </tr>
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/50">
+                <td class="px-4 py-3 text-sm text-slate-900 dark:text-slate-50">Carol White</td>
+                <td class="px-4 py-3">
+                  {% include "components/badge.html" with context %}
+                  {# badge_text="Inactive", badge_variant="secondary" #}
+                </td>
+                <td class="px-4 py-3 text-sm">
+                  <button class="text-primary hover:underline">Edit</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Footer -->
+        <div class="flex items-center justify-between text-sm text-slate-600 dark:text-slate-400">
+          <p>Showing <span class="font-semibold">1</span> to <span class="font-semibold">3</span> of <span class="font-semibold">3</span> results</p>
+          <div class="flex gap-2">
+            <button class="px-3 py-1 rounded border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-900">Previous</button>
+            <button class="px-3 py-1 rounded border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-900">Next</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Component Summary -->
+  <section class="space-y-6 border-t border-slate-200 dark:border-slate-800 pt-8">
+    <div>
+      <h2 class="text-2xl font-semibold text-slate-900 dark:text-slate-50 mb-4">Phase 3 Summary</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="bg-slate-50 dark:bg-slate-950 rounded-lg p-4">
+          <h3 class="font-semibold text-slate-900 dark:text-slate-50 mb-1">☑️ Checkbox</h3>
+          <p class="text-xs text-slate-600 dark:text-slate-400">Custom styled checkboxes with label support</p>
+        </div>
+        <div class="bg-slate-50 dark:bg-slate-950 rounded-lg p-4">
+          <h3 class="font-semibold text-slate-900 dark:text-slate-50 mb-1">🔘 Radio Button</h3>
+          <p class="text-xs text-slate-600 dark:text-slate-400">Keyboard navigable radio groups</p>
+        </div>
+        <div class="bg-slate-50 dark:bg-slate-950 rounded-lg p-4">
+          <h3 class="font-semibold text-slate-900 dark:text-slate-50 mb-1">📑 Tabs</h3>
+          <p class="text-xs text-slate-600 dark:text-slate-400">Tab navigation with active states</p>
+        </div>
+        <div class="bg-slate-50 dark:bg-slate-950 rounded-lg p-4">
+          <h3 class="font-semibold text-slate-900 dark:text-slate-50 mb-1">📋 Dropdown</h3>
+          <p class="text-xs text-slate-600 dark:text-slate-400">Click-triggered dropdown menu</p>
+        </div>
+        <div class="bg-slate-50 dark:bg-slate-950 rounded-lg p-4">
+          <h3 class="font-semibold text-slate-900 dark:text-slate-50 mb-1">📍 Stepper</h3>
+          <p class="text-xs text-slate-600 dark:text-slate-400">Multi-step form progress indicator</p>
+        </div>
+        <div class="bg-slate-50 dark:bg-slate-950 rounded-lg p-4">
+          <h3 class="font-semibold text-slate-900 dark:text-slate-50 mb-1">💬 Popover</h3>
+          <p class="text-xs text-slate-600 dark:text-slate-400">Interactive popover with content</p>
+        </div>
+        <div class="bg-slate-50 dark:bg-slate-950 rounded-lg p-4">
+          <h3 class="font-semibold text-slate-900 dark:text-slate-50 mb-1">📊 Data Table</h3>
+          <p class="text-xs text-slate-600 dark:text-slate-400">Searchable, sortable data table</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}

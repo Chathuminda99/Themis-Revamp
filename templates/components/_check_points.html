@@ -1,0 +1,35 @@
+<!-- Reusable Check Points Component -->
+<!-- Usage: Set check_points_text variable, then {% include "components/_check_points.html" with context %} -->
+
+{% if check_points_text and check_points_text.strip() %}
+<div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm relative overflow-hidden mt-4">
+    <div class="absolute top-0 left-0 w-1 h-full bg-purple-500"></div>
+
+    <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+        <div class="bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400 p-1.5 rounded-lg flex items-center justify-center">
+            <span class="material-symbols-outlined text-[16px]">checklist</span>
+        </div>
+        Check Points
+    </h4>
+
+    <!-- Parse and format check points -->
+    <div class="space-y-3">
+        {% set lines = check_points_text.strip().split('\n') %}
+        {% for line in lines %}
+            {% if line.strip() %}
+                <div class="flex gap-3 items-start">
+                    <!-- Bullet indicator -->
+                    <div class="flex-shrink-0 mt-1.5">
+                        <div class="w-2 h-2 rounded-full bg-purple-500"></div>
+                    </div>
+
+                    <!-- Check point text (with leading bullet markers removed) -->
+                    <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed flex-1">
+                        {{ line.strip() | replace('• ', '') | replace('- ', '') | replace('* ', '') | replace('– ', '') }}
+                    </p>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endif %}

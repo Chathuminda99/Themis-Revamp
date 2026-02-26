@@ -37,7 +37,7 @@
     </div>
 
     <!-- Requirements and Testing Procedures Panels -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-6">
+    <div class="grid grid-cols-1 gap-4 mt-6">
         {% if control.requirements_text %}
         <div
             class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm relative overflow-hidden">
@@ -76,21 +76,58 @@
     </div>
 
     <!-- Check Points Panel -->
-    {% if control.check_points_text %}
-    <div
-        class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm relative overflow-hidden mt-4">
+    {% if control.check_points_text and control.check_points_text.strip() %}
+    <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm relative overflow-hidden mt-4">
         <div class="absolute top-0 left-0 w-1 h-full bg-purple-500"></div>
-        <h4
-            class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 flex items-center gap-2">
-            <div
-                class="bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400 p-1.5 rounded-lg flex items-center justify-center">
+
+        <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+            <div class="bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400 p-1.5 rounded-lg flex items-center justify-center">
                 <span class="material-symbols-outlined text-[16px]">checklist</span>
             </div>
             Check Points
         </h4>
-        <p
-            class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-wrap break-words max-h-64 overflow-y-auto">
-            {{- control.check_points_text }}</p>
+
+        <!-- Parse and format check points (with hierarchical support) -->
+        <div class="space-y-1">
+            {% set lines = control.check_points_text.strip().split('\n') %}
+            {% for line in lines %}
+                {% if line.strip() %}
+                    {% set indent_level = (line | length) - (line | trim | length) %}
+                    {% set indent_spaces = indent_level // 2 %}
+                    {% set clean_text = line.strip() | replace('• ', '') | replace('- ', '') | replace('* ', '') | replace('– ', '') | replace('◦ ', '') %}
+
+                    <!-- Indent based on level -->
+                    {% if indent_spaces == 0 %}
+                        <div class="flex gap-2 items-start">
+                    {% elif indent_spaces == 1 %}
+                        <div class="flex gap-2 items-start pl-4">
+                    {% elif indent_spaces == 2 %}
+                        <div class="flex gap-2 items-start pl-8">
+                    {% else %}
+                        <div class="flex gap-2 items-start pl-12">
+                    {% endif %}
+                        <!-- Bullet indicator (varies by level) -->
+                        <div class="flex-shrink-0 mt-1">
+                            {% if indent_spaces == 0 %}
+                                <!-- Level 1: larger dot -->
+                                <div class="w-2 h-2 rounded-full bg-purple-500"></div>
+                            {% elif indent_spaces == 1 %}
+                                <!-- Level 2: smaller dot -->
+                                <div class="w-1.5 h-1.5 rounded-full bg-purple-400"></div>
+                            {% else %}
+                                <!-- Level 3+: tiny dot -->
+                                <div class="w-1 h-1 rounded-full bg-purple-300"></div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Check point text -->
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed flex-1">
+                            {{ clean_text }}
+                        </p>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
     </div>
     {% endif %}
 </div>

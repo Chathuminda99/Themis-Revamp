@@ -1,0 +1,48 @@
+{# Shadcn Tooltip Component #}
+{# Hover-triggered tooltip with dark background #}
+{# Usage:
+   <div class="inline-block">
+     {% include "components/tooltip.html" with context %}
+     {# tooltip_text="Helpful information", tooltip_position="top" #}
+     <button>Hover me</button>
+   </div>
+#}
+
+<div
+  class="relative inline-block"
+  x-data="{ showTooltip: false }"
+  @mouseenter="showTooltip = true"
+  @mouseleave="showTooltip = false"
+  @focus="showTooltip = true"
+  @blur="showTooltip = false"
+>
+  {{ tooltip_trigger }}
+
+  <div
+    x-show="showTooltip"
+    x-transition.opacity.duration.200ms
+    role="tooltip"
+    class="
+      absolute z-50 px-3 py-2 text-xs font-medium text-primary-foreground
+      bg-primary rounded-md whitespace-nowrap
+      pointer-events-none shadow-lg
+      {%- if tooltip_position == 'right' %} left-full ml-2 top-1/2 -translate-y-1/2
+      {%- elif tooltip_position == 'bottom' %} top-full mt-2 left-1/2 -translate-x-1/2
+      {%- elif tooltip_position == 'left' %} right-full mr-2 top-1/2 -translate-y-1/2
+      {%- else %} {# top default #} bottom-full mb-2 left-1/2 -translate-x-1/2
+      {%- endif %}
+    "
+  >
+    {{ tooltip_text }}
+
+    {# Arrow indicator #}
+    <div class="
+      absolute w-2 h-2 bg-primary transform rotate-45
+      {%- if tooltip_position == 'right' %} -left-1 top-1/2 -translate-y-1/2
+      {%- elif tooltip_position == 'bottom' %} -top-1 left-1/2 -translate-x-1/2
+      {%- elif tooltip_position == 'left' %} -right-1 top-1/2 -translate-y-1/2
+      {%- else %} {# top #} -bottom-1 left-1/2 -translate-x-1/2
+      {%- endif %}
+    "></div>
+  </div>
+</div>

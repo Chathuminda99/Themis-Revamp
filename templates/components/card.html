@@ -1,0 +1,16 @@
+{# Shadcn Card Component #}
+{# Base card wrapper. Use with card_header, card_content, card_footer #}
+{# Usage:
+   {% include "components/card.html" with context %}
+   {# card_class="", card_hover=false #}
+#}
+
+<div
+  class="
+    bg-card text-card-foreground border border-border
+    rounded-lg shadow-sm {{ 'hover:shadow-md transition-shadow' if card_hover else '' }}
+    {{ card_class }}
+  "
+>
+  {{ card_content }}
+</div>

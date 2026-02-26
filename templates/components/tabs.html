@@ -1,0 +1,35 @@
+{# Shadcn Tabs Component #}
+{# Tab navigation with active state styling #}
+{# Usage:
+   <div x-data="{ activeTab: 'tab1' }">
+     {% include "components/tabs.html" with context %}
+     {# tabs_items=[{"id": "tab1", "label": "Overview"}, ...] #}
+
+     <!-- Content for each tab -->
+     <div x-show="activeTab === 'tab1'" class="...">Content 1</div>
+     <div x-show="activeTab === 'tab2'" class="...">Content 2</div>
+   </div>
+#}
+
+<div class="border-b border-border">
+  <div class="flex gap-0 overflow-x-auto">
+    {% for item in tabs_items %}
+      <button
+        @click="activeTab = '{{ item.id }}'"
+        :class="{
+          'border-b-2 border-primary text-primary': activeTab === '{{ item.id }}',
+          'border-b-2 border-transparent text-muted-foreground': activeTab !== '{{ item.id }}'
+        }"
+        class="
+          px-4 py-3 font-medium text-sm whitespace-nowrap
+          transition-colors duration-200
+          hover:text-foreground
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+          focus-visible:ring-offset-background
+        "
+      >
+        {{ item.label }}
+      </button>
+    {% endfor %}
+  </div>
+</div>

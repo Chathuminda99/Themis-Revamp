@@ -1,0 +1,45 @@
+{# Shadcn Checkbox Component #}
+{# Custom styled checkbox with label support #}
+{# Usage:
+   {% include "components/checkbox.html" with context %}
+   {# checkbox_id="accept_terms", checkbox_label="I agree to terms", checkbox_value="agreed" #}
+#}
+
+<div class="flex items-center gap-2">
+  <input
+    type="checkbox"
+    id="{{ checkbox_id }}"
+    name="{{ checkbox_id }}"
+    value="{{ checkbox_value or 'on' }}"
+    {% if checkbox_checked %}checked{% endif %}
+    {% if checkbox_disabled %}disabled{% endif %}
+    class="
+      w-5 h-5 rounded border border-input
+      bg-background
+      cursor-pointer accent-primary
+      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+      focus-visible:ring-offset-background
+      disabled:cursor-not-allowed disabled:opacity-50
+      transition-colors
+      checked:bg-primary checked:border-primary
+      hover:border-input
+    "
+  />
+
+  {% if checkbox_label %}
+    <label
+      for="{{ checkbox_id }}"
+      class="
+        text-sm font-medium text-foreground
+        cursor-pointer select-none
+        {% if checkbox_disabled %}opacity-50 cursor-not-allowed{% endif %}
+      "
+    >
+      {{ checkbox_label }}
+    </label>
+  {% endif %}
+</div>
+
+{% if checkbox_help_text %}
+  <p class="text-xs text-muted-foreground mt-1">{{ checkbox_help_text }}</p>
+{% endif %}

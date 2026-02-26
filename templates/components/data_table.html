@@ -1,10 +1,12 @@
+{%- import "components/_icon.html" as icon_macro -%}
+
 <!-- Advanced Data Table with Sorting & Filtering -->
 <div class="rounded-xl bg-white dark:bg-slate-900 shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
     <!-- Table Header with Search -->
     <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4">
         <div class="relative flex-1">
             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
-                <span class="material-symbols-outlined text-[18px]">search</span>
+                {{ icon_macro.icon('search', 'currentColor', '18') }}
             </span>
             <input type="text"
                 placeholder="Search {{ title|lower }}..."
@@ -17,12 +19,12 @@
             <button @click="view = 'table'"
                 :class="view === 'table' ? 'bg-primary text-white' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'"
                 class="p-2 rounded-lg transition-colors">
-                <span class="material-symbols-outlined text-[18px]">table_chart</span>
+                {{ icon_macro.icon('folder', 'currentColor', '18') }}
             </button>
             <button @click="view = 'list'"
                 :class="view === 'list' ? 'bg-primary text-white' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'"
                 class="p-2 rounded-lg transition-colors">
-                <span class="material-symbols-outlined text-[18px]">list</span>
+                {{ icon_macro.icon('menu', 'currentColor', '18') }}
             </button>
         </div>
     </div>
@@ -39,13 +41,13 @@
                             hx-target="#data-table"
                             class="flex items-center gap-2 hover:text-primary transition-colors">
                             {{ column.label }}
-                            <span class="material-symbols-outlined text-[14px] opacity-50">
+                            <span class="opacity-50">
                                 {% if current_sort == column.key and sort_order == 'asc' %}
-                                arrow_upward
+                                    {{ icon_macro.icon('arrow-right', 'currentColor', '14') }}
                                 {% elif current_sort == column.key and sort_order == 'desc' %}
-                                arrow_downward
+                                    {{ icon_macro.icon('arrow-right', 'currentColor', '14') }}
                                 {% else %}
-                                unfold_more
+                                    {{ icon_macro.icon('arrow-right', 'currentColor', '14') }}
                                 {% endif %}
                             </span>
                         </button>
@@ -71,7 +73,7 @@
                 <tr>
                     <td colspan="{{ columns|length }}" class="px-6 py-8 text-center">
                         <div class="flex flex-col items-center justify-center gap-2">
-                            <span class="material-symbols-outlined text-[32px] text-slate-400">inbox</span>
+                            {{ icon_macro.icon('folder', 'currentColor', '32') }}
                             <p class="text-slate-500 dark:text-slate-400">No {{ title|lower }} found</p>
                         </div>
                     </td>
@@ -92,7 +94,7 @@
         <div class="flex items-center gap-2">
             {% if current_page > 1 %}
             <a href="?page={{ current_page - 1 }}" class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors">
-                <span class="material-symbols-outlined text-[18px]">chevron_left</span>
+                {{ icon_macro.icon('menu-outline', 'currentColor', '18') }}
             </a>
             {% endif %}
 
@@ -108,7 +110,7 @@
 
             {% if current_page < total_pages %}
             <a href="?page={{ current_page + 1 }}" class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors">
-                <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+                {{ icon_macro.icon('chevron-right', 'currentColor', '18') }}
             </a>
             {% endif %}
         </div>

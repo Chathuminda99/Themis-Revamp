@@ -1,0 +1,27 @@
+{# Shadcn Spinner Component #}
+{# Loading spinner with optional label #}
+{# Usage:
+   {% include "components/spinner.html" with context %}
+   {# spinner_size="md", spinner_label="Loading...", spinner_variant="primary" #}
+#}
+
+<div class="flex flex-col items-center justify-center gap-3">
+  <div
+    class="
+      animate-spin rounded-full border-4 border-muted
+      {%- if spinner_variant == 'secondary' %} border-t-secondary
+      {%- elif spinner_variant == 'destructive' %} border-t-destructive
+      {%- elif spinner_variant == 'success' %} border-t-emerald-600 dark:border-t-emerald-500
+      {%- else %} {# primary default #} border-t-primary
+      {%- endif %}
+      {%- if spinner_size == 'sm' %} w-4 h-4 border-2
+      {%- elif spinner_size == 'lg' %} w-12 h-12
+      {%- else %} {# md default #} w-8 h-8
+      {%- endif %}
+    "
+  ></div>
+
+  {% if spinner_label %}
+    <p class="text-sm font-medium text-muted-foreground">{{ spinner_label }}</p>
+  {% endif %}
+</div>

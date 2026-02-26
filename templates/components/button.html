@@ -1,0 +1,55 @@
+{# Shadcn Button Component with Variants #}
+{# Usage:
+   {% include "components/button.html" with context %}
+   {# button_text="Click Me", button_variant="primary", button_size="md", button_class="" #}
+#}
+
+<button
+  class="
+    inline-flex items-center justify-center gap-2 font-medium rounded-md
+    transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed
+    focus-visible:outline-none
+    {%- if button_size == 'sm' %} px-3 py-1.5 text-xs
+    {%- elif button_size == 'lg' %} px-6 py-3 text-base
+    {%- elif button_size == 'icon' %} px-2 py-2 h-10 w-10
+    {%- else %} px-4 py-2 text-sm
+    {%- endif %}
+    {%- if button_variant == 'secondary' %}
+      bg-secondary text-secondary-foreground
+      hover:opacity-90
+      focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background
+    {%- elif button_variant == 'outline' %}
+      border border-input bg-background text-foreground
+      hover:bg-accent hover:text-accent-foreground
+      focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background
+    {%- elif button_variant == 'ghost' %}
+      bg-transparent text-foreground
+      hover:bg-accent hover:text-accent-foreground
+      focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background
+    {%- elif button_variant == 'destructive' %}
+      bg-destructive text-destructive-foreground
+      hover:opacity-90
+      focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background
+    {%- elif button_variant == 'link' %}
+      bg-transparent text-primary hover:underline
+      focus-visible:ring-offset-0 focus-visible:ring-2 focus-visible:ring-ring
+    {%- else %} {# primary default #}
+      bg-primary text-primary-foreground
+      hover:opacity-90
+      focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background
+    {%- endif %}
+    {{ button_class }}
+  "
+  {% if button_disabled %}disabled{% endif %}
+  {% if button_type %}type="{{ button_type }}"{% endif %}
+  {% if button_id %}id="{{ button_id }}"{% endif %}
+  {% if button_hx %}{{ button_hx }}{% endif %}
+>
+  {%- if button_icon_left %}
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">{{ button_icon_left }}</svg>
+  {%- endif %}
+  {{ button_text }}
+  {%- if button_icon_right %}
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">{{ button_icon_right }}</svg>
+  {%- endif %}
+</button>
