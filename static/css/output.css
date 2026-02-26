@@ -1309,6 +1309,11 @@ video {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
+.rotate-180 {
+  --tw-rotate: 180deg;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
 .rotate-45 {
   --tw-rotate: 45deg;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
@@ -1586,10 +1591,6 @@ video {
 
 .rounded-2xl {
   border-radius: 1rem;
-}
-
-.rounded-\[11px\] {
-  border-radius: 11px;
 }
 
 .rounded-full {
@@ -1963,6 +1964,10 @@ video {
   background-color: hsl(var(--primary) / 0.05);
 }
 
+.bg-primary\/90 {
+  background-color: hsl(var(--primary) / 0.9);
+}
+
 .bg-purple-100 {
   --tw-bg-opacity: 1;
   background-color: rgb(243 232 255 / var(--tw-bg-opacity, 1));
@@ -2187,10 +2192,6 @@ video {
 
 .p-8 {
   padding: 2rem;
-}
-
-.p-\[1px\] {
-  padding: 1px;
 }
 
 .px-2 {
@@ -2532,11 +2533,6 @@ video {
   color: rgb(120 53 15 / var(--tw-text-opacity, 1));
 }
 
-.text-blue-100 {
-  --tw-text-opacity: 1;
-  color: rgb(219 234 254 / var(--tw-text-opacity, 1));
-}
-
 .text-blue-500 {
   --tw-text-opacity: 1;
   color: rgb(59 130 246 / var(--tw-text-opacity, 1));
@@ -2807,10 +2803,6 @@ video {
   opacity: 0.8;
 }
 
-.opacity-90 {
-  opacity: 0.9;
-}
-
 .mix-blend-multiply {
   mix-blend-mode: multiply;
 }
@@ -3073,12 +3065,6 @@ video {
 
 .checked\:bg-primary:checked {
   background-color: hsl(var(--primary));
-}
-
-.hover\:scale-\[1\.02\]:hover {
-  --tw-scale-x: 1.02;
-  --tw-scale-y: 1.02;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
 .hover\:border-blue-300:hover {
@@ -3379,11 +3365,6 @@ video {
   opacity: 0.5;
 }
 
-.group:focus-within .group-focus-within\:text-blue-500 {
-  --tw-text-opacity: 1;
-  color: rgb(59 130 246 / var(--tw-text-opacity, 1));
-}
-
 .group:focus-within .group-focus-within\:text-primary {
   color: hsl(var(--primary));
 }
@@ -3398,11 +3379,6 @@ video {
 
 .group:hover .group-hover\:border-primary {
   border-color: hsl(var(--primary));
-}
-
-.group:hover .group-hover\:bg-blue-700 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(29 78 216 / var(--tw-bg-opacity, 1));
 }
 
 .group:hover .group-hover\:bg-primary\/20 {
