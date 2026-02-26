@@ -1,63 +1,109 @@
-{# Custom Modern Dropdown Component #}
-{# Replaces native select with beautiful custom dropdown #}
-{# Usage:
+{# ======================================================================
+   GLOBAL STANDARDIZED DROPDOWN COMPONENT
+   ======================================================================
+   This is the single source of truth for dropdown styling across the app.
+   All dropdowns should use this component for consistency.
+
+   Features:
+   - Modern enterprise dashboard aesthetic
+   - Smooth animations and transitions
+   - Accessible focus states
+   - Full keyboard navigation support
+   - Custom styling via global CSS classes
+
+   Usage:
    {% include "components/custom_select.html" with context %}
    {#
      select_id="status",
      select_name="status",
      select_value="draft",
      select_options=[{"value": "draft", "label": "Draft"}, ...],
-     select_label="Status",
-     on_change="htmx_trigger"
+     select_label="Status (Optional)",
+     select_help="Help text (Optional)",
+     required=false,
+     disabled=false,
+     on_change="htmx.trigger(this, 'change')",  # Optional callback
    #}
-#}
+====================================================================== #}
 
 <div class="space-y-2">
+  {# Label #}
   {% if select_label %}
-  <label for="{{ select_id }}" class="text-sm font-medium text-foreground">{{ select_label }}</label>
+  <label for="{{ select_id }}" class="text-sm font-medium text-foreground">
+    {{ select_label }}
+    {% if required %}<span class="text-destructive">*</span>{% endif %}
+  </label>
   {% endif %}
 
-  <div x-data="{ open: false, value: '{{ select_value }}' }" @click.outside="open = false" class="relative">
-    <!-- Closed State Button -->
+  {# Dropdown Container #}
+  <div x-data="{
+    open: false,
+    value: '{{ select_value }}',
+    getLabel() {
+      const labels = {
+        {% for option in select_options %}'{{ option.value }}': '{{ option.label }}',{% endfor %}
+      };
+      return labels[this.value] || 'Select...';
+    }
+  }" @click.outside="open = false" class="dropdown-wrapper">
+
+    {# Trigger Button #}
     <button
-      @click="open = !open"
       type="button"
-      class="w-full flex items-center justify-between h-10 px-4 py-2 rounded-md border-2 border-primary text-foreground bg-background hover:bg-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      id="{{ select_id }}"
+      @click="open = !open"
+      :class="{ 'border-primary': open }"
+      class="dropdown-select flex items-center justify-between group"
+      {% if required %}required{% endif %}
+      {% if disabled %}disabled{% endif %}
     >
-      <span x-text="($el.parentElement.querySelector('[x-current-label]') || {textContent: 'Select...'}).textContent"></span>
-      <svg class="w-4 h-4" :class="{ 'rotate-180': open }" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <span x-text="getLabel()" class="group-disabled:opacity-50"></span>
+      <svg
+        class="w-4 h-4 transition-transform duration-200 text-muted-foreground group-disabled:opacity-50"
+        :class="{ 'rotate-180': open }"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
         <polyline points="6 9 12 15 18 9"></polyline>
       </svg>
     </button>
 
-    <!-- Hidden Select for Form Submission -->
-    <input type="hidden" id="{{ select_id }}" name="{{ select_name }}" :value="value" />
+    {# Hidden Input for Form Submission #}
+    <input type="hidden" name="{{ select_name }}" :value="value" />
 
-    <!-- Dropdown Menu -->
+    {# Dropdown Menu Panel #}
     <div
       x-show="open"
-      x-transition:enter="transition ease-out duration-100"
-      x-transition:enter-start="opacity-0 -translate-y-2"
+      @keydown.escape.window="open = false"
+      @keydown.arrow-down.window.prevent="$focus.wrap().next()"
+      @keydown.arrow-up.window.prevent="$focus.wrap().previous()"
+      x-transition:enter="transition ease-out duration-150"
+      x-transition:enter-start="opacity-0 -translate-y-1"
       x-transition:enter-end="opacity-100 translate-y-0"
-      class="absolute top-full left-0 right-0 mt-2 bg-card text-card-foreground border-2 border-primary rounded-lg shadow-xl z-50 overflow-hidden"
+      x-transition:leave="transition ease-in duration-100"
+      x-transition:leave-start="opacity-100 translate-y-0"
+      x-transition:leave-end="opacity-0 -translate-y-1"
+      class="dropdown-menu"
     >
-      <ul class="max-h-56 overflow-y-auto divide-y divide-border">
+      <ul class="py-1" role="listbox">
         {% for option in select_options %}
-        <li class="first:border-t-0">
+        <li role="presentation">
           <button
             type="button"
+            role="option"
             @click="
               value = '{{ option.value }}';
               open = false;
-              $el.closest('[x-data]').querySelector('input[type=hidden]').value = '{{ option.value }}';
-              {% if on_change %}{{ on_change }}{% endif %}
+              {% if on_change %}{{ on_change }};{% endif %}
             "
-            x-current-label
-            class="w-full text-left px-5 py-4 transition-all duration-150 font-medium text-base"
-            :class="{
-              'bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm': value === '{{ option.value }}',
-              'bg-card text-foreground hover:bg-muted/50': value !== '{{ option.value }}'
-            }"
+            :aria-selected="value === '{{ option.value }}'"
+            class="dropdown-item"
+            :class="{ 'active': value === '{{ option.value }}' }"
           >
             {{ option.label }}
           </button>
@@ -65,5 +111,10 @@
         {% endfor %}
       </ul>
     </div>
+
+    {# Help Text #}
+    {% if select_help %}
+    <p class="text-xs text-muted-foreground mt-1.5">{{ select_help }}</p>
+    {% endif %}
   </div>
 </div>
