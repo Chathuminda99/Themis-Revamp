@@ -1,17 +1,17 @@
 {% if results %}
-<div class="border border-gray-300 rounded-lg bg-white shadow-lg max-h-48 overflow-y-auto">
+<div class="border border-border rounded-lg bg-card text-card-foreground shadow-lg max-h-48 overflow-y-auto">
   {% for result in results %}
   <button
     type="button"
-    class="w-full text-left px-4 py-3 hover:bg-blue-50 border-b border-gray-200 last:border-b-0 transition"
+    class="w-full text-left px-4 py-3 hover:bg-muted border-b border-border last:border-b-0 transition-colors"
     onclick="
       document.getElementById('client_id').value = '{{ result.id }}';
       document.getElementById('client_search').value = '{{ result.name }}';
       document.getElementById('client-suggestions').innerHTML = '';
     "
   >
-    <div class="font-medium text-gray-900">{{ result.name }}</div>
-    <div class="text-sm text-gray-600">{{ result.industry or 'No industry' }}</div>
+    <div class="font-medium text-foreground">{{ result.name }}</div>
+    <div class="text-sm text-muted-foreground">{{ result.industry or 'No industry' }}</div>
   </button>
   {% endfor %}
 </div>
