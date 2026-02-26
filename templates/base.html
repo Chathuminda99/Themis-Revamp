@@ -21,7 +21,7 @@
             color: white;
         }
     </style>
-    <link rel="stylesheet" href="{{ url_for('static', path='/css/output.css') }}?v=8">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/output.css') }}?v=9">
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
@@ -38,7 +38,7 @@
         </div>
     </div>
 
-    <div class="flex h-screen" x-data="{}">
+    <div class="flex h-screen" x-data="{ sidebarOpen: true }">
         <!-- Sidebar -->
         {% include "components/sidebar.html" %}
 

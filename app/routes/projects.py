@@ -1041,6 +1041,7 @@ async def get_control_details(
             "response": response,
             "observations": observations,
             "saved": False,
+            "responses": {},
         },
     )
 
