@@ -7,8 +7,10 @@ from app.repositories.base import BaseRepository
 class ProjectObservationRepository(BaseRepository[ProjectObservation]):
     """Repository for ProjectObservation model."""
 
+    model = ProjectObservation
+
     def __init__(self, db: Session):
-        super().__init__(ProjectObservation, db)
+        super().__init__(db)
 
     def get_for_control(
         self, project_id: uuid.UUID, control_id: uuid.UUID

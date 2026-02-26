@@ -231,41 +231,6 @@
     </div>
 </form>
 
-<script>
-  function initRecommendationPreview() {
-    const select = document.getElementById('scenario-{{ control.id }}');
-    if (!select) return;
-
-    const previewDiv = document.getElementById('scenario-preview-{{ control.id }}');
-    const recText = document.getElementById('scenario-recommendation-{{ control.id }}');
-    const scenarios = {{ control.assessment_checklist.scenarios|tojson if control.assessment_checklist else '[]' }};
-
-    function updatePreview() {
-      const selectedOption = select.options[select.selectedIndex];
-      if (selectedOption.value) {
-        const scenario = scenarios.find(s => s.id === selectedOption.value);
-        if (scenario) {
-          recText.textContent = scenario.recommendation;
-          previewDiv.classList.remove('hidden');
-        }
-      } else {
-        previewDiv.classList.add('hidden');
-      }
-    }
-
-    select.addEventListener('change', updatePreview);
-    updatePreview();
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initRecommendationPreview);
-  } else {
-    initRecommendationPreview();
-  }
-
-  document.addEventListener('htmx:afterSettle', initRecommendationPreview);
-  document.addEventListener('htmx:load', initRecommendationPreview);
-</script>
 
 <script>
 function addObservation(observationId, controlId) {
