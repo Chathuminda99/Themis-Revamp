@@ -59,6 +59,7 @@ class FrameworkControl(BaseModel, TimestampMixin):
     implementation_guidance: Mapped[str] = mapped_column(Text, nullable=True)
     requirements_text: Mapped[str] = mapped_column(Text, nullable=True)
     testing_procedures_text: Mapped[str] = mapped_column(Text, nullable=True)
+    check_points_text: Mapped[str] = mapped_column(Text, nullable=True)
     workflow_definition: Mapped[dict] = mapped_column(JSONB, nullable=True)
     assessment_checklist: Mapped[dict] = mapped_column(JSONB, nullable=True)
 

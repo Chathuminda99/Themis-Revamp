@@ -468,6 +468,15 @@ def seed_database():
                     "2.2.2.c: Interview personnel and examine system configurations to verify that all "
                     "vendor defaults have been changed in accordance with all elements specified in this requirement."
                 ),
+                check_points_text=(
+                    "• Ask whether default accounts exist or check the user list to see whether there are "
+                    "default accounts and their status\n\n"
+                    "• Ask whether the default accounts are in use or required to be used\n\n"
+                    "If default accounts are not in use, check whether accounts have been disabled?\n\n"
+                    "Or\n\n"
+                    "If in use or required to be used, check whether the default password has been changed?\n\n"
+                    "• Check the assigned password policy and last password change date"
+                ),
                 implementation_guidance=(
                     "Changing vendor defaults — including default passwords and removing/disabling "
                     "unnecessary default accounts — is one of the most important steps in securing "
