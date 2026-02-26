@@ -17,19 +17,18 @@
   <!-- Filter Bar -->
   <div class="mb-6 rounded-lg bg-card border border-border shadow-sm p-5">
     <form id="project-filters" class="grid grid-cols-1 md:grid-cols-4 gap-5">
-      <!-- Status Filter -->
       <div class="space-y-2">
         <label for="status-filter" class="text-sm font-medium text-foreground">Status</label>
-        <div class="dropdown-wrapper">
+        <div class="relative">
           <select id="status-filter" name="status" hx-get="/projects" hx-target="#projects-table" hx-swap="innerHTML" hx-push-url="true" hx-include="#project-filters" @change="htmx.trigger(this, 'change')"
-            class="dropdown-select">
+            class="w-full flex h-10 appearance-none rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 transition-colors">
             <option value="">All Statuses</option>
             <option value="draft" {% if active_filters.get('status')=='draft' %}selected{% endif %}>Draft</option>
             <option value="in_progress" {% if active_filters.get('status')=='in_progress' %}selected{% endif %}>In Progress</option>
             <option value="completed" {% if active_filters.get('status')=='completed' %}selected{% endif %}>Completed</option>
             <option value="archived" {% if active_filters.get('status')=='archived' %}selected{% endif %}>Archived</option>
           </select>
-          <span class="dropdown-icon">
+          <span class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
             <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
@@ -37,18 +36,17 @@
         </div>
       </div>
 
-      <!-- Client Filter -->
       <div class="space-y-2">
         <label for="client-filter" class="text-sm font-medium text-foreground">Client</label>
-        <div class="dropdown-wrapper">
+        <div class="relative">
           <select id="client-filter" name="client_id" hx-get="/projects" hx-target="#projects-table" hx-swap="innerHTML" hx-push-url="true" hx-include="#project-filters" @change="htmx.trigger(this, 'change')"
-            class="dropdown-select">
+            class="w-full flex h-10 appearance-none rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 transition-colors">
             <option value="">All Clients</option>
             {% for client in all_clients %}
             <option value="{{ client.id }}" {% if active_filters.get('client_id')==client.id|string %}selected{% endif %}>{{ client.name }}</option>
             {% endfor %}
           </select>
-          <span class="dropdown-icon">
+          <span class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
             <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
@@ -56,18 +54,17 @@
         </div>
       </div>
 
-      <!-- Framework Filter -->
       <div class="space-y-2">
         <label for="framework-filter" class="text-sm font-medium text-foreground">Framework</label>
-        <div class="dropdown-wrapper">
+        <div class="relative">
           <select id="framework-filter" name="framework_id" hx-get="/projects" hx-target="#projects-table" hx-swap="innerHTML" hx-push-url="true" hx-include="#project-filters" @change="htmx.trigger(this, 'change')"
-            class="dropdown-select">
+            class="w-full flex h-10 appearance-none rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 transition-colors">
             <option value="">All Frameworks</option>
             {% for framework in all_frameworks %}
             <option value="{{ framework.id }}" {% if active_filters.get('framework_id')==framework.id|string %}selected{% endif %}>{{ framework.name }}</option>
             {% endfor %}
           </select>
-          <span class="dropdown-icon">
+          <span class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
             <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
@@ -75,7 +72,6 @@
         </div>
       </div>
 
-      <!-- Search Filter -->
       <div class="space-y-2">
         <label for="search-filter" class="text-sm font-medium text-foreground">Search</label>
         <div class="relative">
@@ -83,7 +79,7 @@
             <span class="material-symbols-outlined text-[18px]">search</span>
           </span>
           <input id="search-filter" type="text" name="q" placeholder="Search projects..." hx-get="/projects" hx-target="#projects-table" hx-swap="innerHTML" hx-push-url="true" hx-include="#project-filters" hx-trigger="keyup changed delay:400ms" value="{{ active_filters.get('q', '') }}"
-            class="w-full flex h-10 rounded-lg border-2 border-input bg-background pl-10 pr-4 py-2 text-sm placeholder:text-muted-foreground text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all duration-200 hover:border-primary" />
+            class="w-full flex h-10 rounded-md border border-input bg-background pl-10 pr-3 py-2 text-sm placeholder:text-muted-foreground text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 transition-colors" />
         </div>
       </div>
     </form>
