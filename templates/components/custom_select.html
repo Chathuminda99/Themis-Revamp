@@ -39,7 +39,7 @@
       x-transition:enter="transition ease-out duration-100"
       x-transition:enter-start="opacity-0 -translate-y-2"
       x-transition:enter-end="opacity-100 translate-y-0"
-      class="absolute top-full left-0 right-0 mt-2 bg-card text-card-foreground border border-border rounded-md shadow-lg z-50 overflow-hidden"
+      class="absolute top-full left-0 right-0 mt-2 bg-card text-card-foreground border-2 border-primary rounded-lg shadow-xl z-50 overflow-hidden"
     >
       <ul class="max-h-48 overflow-y-auto">
         {% for option in select_options %}
@@ -53,10 +53,10 @@
               {% if on_change %}{{ on_change }}{% endif %}
             "
             x-current-label
-            class="w-full text-left px-4 py-3 hover:bg-muted transition-colors"
+            class="w-full text-left px-4 py-3 transition-all duration-150 font-medium"
             :class="{
               'bg-primary text-primary-foreground hover:bg-primary/90': value === '{{ option.value }}',
-              'bg-card text-card-foreground': value !== '{{ option.value }}'
+              'bg-card text-foreground hover:bg-muted': value !== '{{ option.value }}'
             }"
           >
             {{ option.label }}
