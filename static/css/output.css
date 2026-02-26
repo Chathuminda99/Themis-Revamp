@@ -1077,6 +1077,10 @@ video {
   max-height: 12rem;
 }
 
+.max-h-56 {
+  max-height: 14rem;
+}
+
 .max-h-64 {
   max-height: 16rem;
 }
@@ -1962,10 +1966,6 @@ video {
 
 .bg-primary\/5 {
   background-color: hsl(var(--primary) / 0.05);
-}
-
-.bg-primary\/90 {
-  background-color: hsl(var(--primary) / 0.9);
 }
 
 .bg-purple-100 {
@@ -3057,6 +3057,10 @@ video {
 
 .first\:mt-0:first-child {
   margin-top: 0px;
+}
+
+.first\:border-t-0:first-child {
+  border-top-width: 0px;
 }
 
 .last\:border-b-0:last-child {
