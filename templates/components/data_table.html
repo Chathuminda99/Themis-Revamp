@@ -1,0 +1,117 @@
+<!-- Advanced Data Table with Sorting & Filtering -->
+<div class="rounded-xl bg-white dark:bg-slate-900 shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+    <!-- Table Header with Search -->
+    <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4">
+        <div class="relative flex-1">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+                <span class="material-symbols-outlined text-[18px]">search</span>
+            </span>
+            <input type="text"
+                placeholder="Search {{ title|lower }}..."
+                x-data
+                @input="htmx.ajax('GET', window.location.pathname + '?q=' + $el.value, '#data-table')"
+                class="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50" />
+        </div>
+        <!-- View Toggle -->
+        <div class="flex gap-1" x-data="{ view: 'table' }">
+            <button @click="view = 'table'"
+                :class="view === 'table' ? 'bg-primary text-white' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'"
+                class="p-2 rounded-lg transition-colors">
+                <span class="material-symbols-outlined text-[18px]">table_chart</span>
+            </button>
+            <button @click="view = 'list'"
+                :class="view === 'list' ? 'bg-primary text-white' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'"
+                class="p-2 rounded-lg transition-colors">
+                <span class="material-symbols-outlined text-[18px]">list</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Scrollable Table -->
+    <div class="overflow-x-auto" id="data-table">
+        <table class="w-full">
+            <thead>
+                <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                    {% for column in columns %}
+                    <th class="px-6 py-4 text-left text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest">
+                        {% if column.sortable %}
+                        <button hx-get="{{ sort_url(column.key) }}"
+                            hx-target="#data-table"
+                            class="flex items-center gap-2 hover:text-primary transition-colors">
+                            {{ column.label }}
+                            <span class="material-symbols-outlined text-[14px] opacity-50">
+                                {% if current_sort == column.key and sort_order == 'asc' %}
+                                arrow_upward
+                                {% elif current_sort == column.key and sort_order == 'desc' %}
+                                arrow_downward
+                                {% else %}
+                                unfold_more
+                                {% endif %}
+                            </span>
+                        </button>
+                        {% else %}
+                        {{ column.label }}
+                        {% endif %}
+                    </th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                {% if items %}
+                    {% for item in items %}
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                        {% for column in columns %}
+                        <td class="px-6 py-4 text-sm text-slate-700 dark:text-slate-300">
+                            {{ item[column.key] }}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="{{ columns|length }}" class="px-6 py-8 text-center">
+                        <div class="flex flex-col items-center justify-center gap-2">
+                            <span class="material-symbols-outlined text-[32px] text-slate-400">inbox</span>
+                            <p class="text-slate-500 dark:text-slate-400">No {{ title|lower }} found</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination Footer -->
+    {% if total_pages > 1 %}
+    <div class="px-6 py-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 flex items-center justify-between">
+        <p class="text-sm text-slate-600 dark:text-slate-400">
+            Showing <span class="font-semibold">{{ offset + 1 }}</span> to
+            <span class="font-semibold">{{ [offset + limit, total]|min }}</span> of
+            <span class="font-semibold">{{ total }}</span>
+        </p>
+        <div class="flex items-center gap-2">
+            {% if current_page > 1 %}
+            <a href="?page={{ current_page - 1 }}" class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors">
+                <span class="material-symbols-outlined text-[18px]">chevron_left</span>
+            </a>
+            {% endif %}
+
+            {% for page_num in range(1, total_pages + 1) %}
+                {% if page_num == current_page %}
+                <span class="px-3 py-2 bg-primary text-white rounded-lg font-semibold">{{ page_num }}</span>
+                {% elif page_num <= current_page + 2 and page_num >= current_page - 2 %}
+                <a href="?page={{ page_num }}" class="px-3 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors">
+                    {{ page_num }}
+                </a>
+                {% endif %}
+            {% endfor %}
+
+            {% if current_page < total_pages %}
+            <a href="?page={{ current_page + 1 }}" class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors">
+                <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>

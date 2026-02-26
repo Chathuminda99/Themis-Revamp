@@ -1,0 +1,88 @@
+<!-- Toast Notification Component -->
+<!-- Add to base.html bottom of body for persistent toasts container -->
+<div id="toast-container" class="fixed bottom-4 right-4 z-40 space-y-3 max-w-sm"></div>
+
+<script>
+// Toast notification system
+window.showToast = function(message, type = 'info', duration = 5000) {
+    const container = document.getElementById('toast-container');
+
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type} p-4 rounded-lg border flex items-start gap-3 animate-pulse-in shadow-lg max-w-sm`;
+
+    // Icon mapping
+    const icons = {
+        'success': 'check_circle',
+        'error': 'error',
+        'warning': 'warning',
+        'info': 'info'
+    };
+
+    // Color mapping
+    const colors = {
+        'success': 'border-emerald-200 dark:border-emerald-900/30 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400',
+        'error': 'border-red-200 dark:border-red-900/30 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400',
+        'warning': 'border-amber-200 dark:border-amber-900/30 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400',
+        'info': 'border-blue-200 dark:border-blue-900/30 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400'
+    };
+
+    toast.innerHTML = `
+        <span class="material-symbols-outlined text-[20px] flex-shrink-0">${icons[type]}</span>
+        <p class="flex-1 text-sm">${message}</p>
+        <button onclick="this.parentElement.remove()" class="p-1 hover:opacity-60 transition-opacity">
+            <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+    `;
+
+    toast.className = `${colors[type]} p-4 rounded-lg border flex items-start gap-3 shadow-lg animate-in fade-in slide-in-from-right-4`;
+
+    container.appendChild(toast);
+
+    // Auto remove
+    const timeout = setTimeout(() => {
+        toast.style.animation = 'out 0.3s ease-out';
+        toast.addEventListener('animationend', () => toast.remove());
+    }, duration);
+
+    // Remove on manual close
+    toast.querySelector('button').addEventListener('click', () => clearTimeout(timeout));
+};
+</script>
+
+<style>
+@keyframes in {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes out {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+}
+
+.animate-in {
+    animation: in 0.3s ease-out;
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+</style>

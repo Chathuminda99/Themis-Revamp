@@ -1,63 +1,61 @@
-<tr id="project-row-{{ project.id }}" class="hover:bg-slate-50 transition-colors group">
-  <td class="px-6 py-4 text-sm">
+<tr id="project-row-{{ project.id }}" class="border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
+  <!-- Project Name -->
+  <td class="px-6 py-4">
     <a href="/projects/{{ project.id }}"
-      class="text-blue-600 hover:text-blue-700 font-semibold transition-colors flex items-center gap-2">
-      <svg class="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24"
-        stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-      </svg>
-      {{ project.name }}
+      class="inline-flex items-center gap-2 font-semibold text-slate-900 dark:text-white hover:text-primary transition-colors">
+      <span class="material-symbols-outlined text-[18px] text-slate-400 group-hover:text-primary transition-colors opacity-60 group-hover:opacity-100">assignment</span>
+      <span class="truncate">{{ project.name }}</span>
     </a>
   </td>
-  <td class="px-6 py-4 text-sm text-slate-700">
+
+  <!-- Client -->
+  <td class="px-6 py-4">
     <div class="flex items-center gap-2">
-      <div
-        class="w-6 h-6 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs font-bold ring-1 ring-indigo-200">
-        {{ project.client.name[0].upper() if project.client else "-" }}
+      <div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold flex-shrink-0">
+        {{ project.client.name[0].upper() if project.client else "?" }}
       </div>
-      {{ project.client.name if project.client else "-" }}
+      <span class="text-sm text-slate-700 dark:text-slate-300 truncate">{{ project.client.name if project.client else "Unassigned" }}</span>
     </div>
   </td>
-  <td class="px-6 py-4 text-sm text-slate-500">{{ project.framework.name if project.framework else "-" }}</td>
-  <td class="px-6 py-4 text-sm">
-    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border
-      {% if project.status.value == 'draft' %}
-        bg-slate-100 text-slate-700 border-slate-200
-      {% elif project.status.value == 'in_progress' %}
-        bg-indigo-50 text-indigo-700 border-indigo-200 shadow-sm
-      {% elif project.status.value == 'completed' %}
-        bg-emerald-50 text-emerald-700 border-emerald-200 shadow-sm
+
+  <!-- Framework -->
+  <td class="px-6 py-4">
+    <span class="text-sm text-slate-600 dark:text-slate-400">{{ project.framework.name if project.framework else "—" }}</span>
+  </td>
+
+  <!-- Status -->
+  <td class="px-6 py-4">
+    {% set status_config = {
+    'draft': {'bg': 'bg-slate-100 dark:bg-slate-800', 'text': 'text-slate-700 dark:text-slate-300', 'icon': 'edit', 'dot': 'bg-slate-400'},
+    'in_progress': {'bg': 'bg-blue-100 dark:bg-blue-900/30', 'text': 'text-blue-700 dark:text-blue-400', 'icon': 'schedule', 'dot': 'bg-blue-500'},
+    'completed': {'bg': 'bg-emerald-100 dark:bg-emerald-900/30', 'text': 'text-emerald-700 dark:text-emerald-400', 'icon': 'check_circle', 'dot': 'bg-emerald-500'},
+    'archived': {'bg': 'bg-slate-100 dark:bg-slate-800', 'text': 'text-slate-600 dark:text-slate-400', 'icon': 'archive', 'dot': 'bg-slate-400'}
+    } %}
+    {% set status_info = status_config.get(project.status.value, status_config['draft']) %}
+
+    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold {{ status_info.bg }} {{ status_info.text }}">
+      {% if project.status.value == 'in_progress' %}
+      <span class="w-1.5 h-1.5 rounded-full {{ status_info.dot }} animate-pulse"></span>
       {% else %}
-        bg-slate-100 text-slate-500 border-slate-200
+      <span class="material-symbols-outlined text-[14px]">{{ status_info.icon }}</span>
       {% endif %}
-    ">
-      {% if project.status.value == 'in_progress' %}<span
-        class="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-2 animate-pulse"></span>
-      {% elif project.status.value == 'completed' %}<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2"></span>
-      {% elif project.status.value == 'draft' %}<span class="w-1.5 h-1.5 rounded-full bg-slate-500 mr-2"></span>{% endif
-      %}
       {{ project.status.value|replace('_', ' ')|title }}
     </span>
   </td>
-  <td class="px-6 py-4 text-sm text-right">
-    <div class="flex items-center justify-end gap-3 opacity-60 group-hover:opacity-100 transition-opacity">
+
+  <!-- Actions -->
+  <td class="px-6 py-4">
+    <div class="flex items-center justify-end gap-1">
       <button hx-get="/projects/{{ project.id }}/edit" hx-target="#modal-body" @click="$store.modal.show()"
-        class="text-indigo-600 hover:text-indigo-700 transition-colors p-1.5 hover:bg-indigo-50 rounded-md"
+        class="p-2 text-slate-500 dark:text-slate-400 hover:text-primary hover:bg-primary/10 dark:hover:bg-primary/20 rounded-lg transition-colors"
         title="Edit Project">
-        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-        </svg>
+        <span class="material-symbols-outlined text-[18px]">edit</span>
       </button>
       <button hx-delete="/projects/{{ project.id }}" hx-confirm="Are you sure you want to delete this project?"
         hx-target="closest tr" hx-swap="outerHTML swap:1s"
-        class="text-red-600 hover:text-red-700 transition-colors p-1.5 hover:bg-red-50 rounded-md"
+        class="p-2 text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
         title="Delete Project">
-        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-        </svg>
+        <span class="material-symbols-outlined text-[18px]">delete</span>
       </button>
     </div>
   </td>

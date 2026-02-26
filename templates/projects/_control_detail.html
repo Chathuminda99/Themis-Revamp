@@ -11,16 +11,18 @@
 
     <div class="flex flex-wrap items-start justify-between gap-4">
         <div class="max-w-2xl">
-            <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{{ control.control_id }} {{
+            <h1 class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight leading-snug">{{
+                control.control_id }} {{
                 control.name }}</h1>
         </div>
 
-        <div class="bg-white dark:bg-slate-900 p-1.5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 flex items-center">
-            <select name="status" form="control-form" class="bg-transparent border-none text-sm font-bold focus:ring-0 outline-none
-          {% if response and response.status.value == 'approved' %} text-green-500
-          {% elif response and response.status.value == 'rejected' %} text-red-500
-          {% elif response and response.status.value == 'not_applicable' %} text-slate-400
-          {% else %} text-amber-500 {% endif %}">
+        <div
+            class="bg-white dark:bg-slate-900 px-3 py-1.5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 flex items-center transition-shadow hover:shadow-md">
+            <select name="status" form="control-form" class="bg-transparent border-none text-sm font-bold focus:ring-0 outline-none cursor-pointer
+          {% if response and response.status.value == 'approved' %} text-emerald-600 dark:text-emerald-500
+          {% elif response and response.status.value == 'rejected' %} text-rose-600 dark:text-rose-500
+          {% elif response and response.status.value == 'not_applicable' %} text-slate-500 dark:text-slate-400
+          {% else %} text-amber-600 dark:text-amber-500 {% endif %}">
                 <option class="text-slate-900 font-medium" value="in_progress" {% if not response or
                     response.status.value not in ['approved', 'rejected' , 'not_applicable' ] %}selected{% endif %}>In
                     Progress</option>
@@ -37,130 +39,178 @@
     <!-- Requirements and Testing Procedures Panels -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-6">
         {% if control.requirements_text %}
-        <div class="rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 p-4 overflow-hidden">
-            <h4 class="text-xs font-semibold text-amber-800 dark:text-amber-300 uppercase tracking-wider mb-2 flex items-center gap-1.5 flex-shrink-0">
-                <span class="material-symbols-outlined text-[16px] flex-shrink-0">description</span>
+        <div
+            class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
+            <h4
+                class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 flex items-center gap-2">
+                <div
+                    class="bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 p-1.5 rounded-lg flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[16px]">description</span>
+                </div>
                 Requirements
             </h4>
-            <p class="text-sm text-amber-900 dark:text-amber-100 leading-relaxed whitespace-pre-wrap break-words max-h-64 overflow-y-auto">{{ control.requirements_text }}</p>
+            <p
+                class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-wrap break-words max-h-64 overflow-y-auto">
+                {{- control.requirements_text }}</p>
         </div>
         {% endif %}
 
         {% if control.testing_procedures_text %}
-        <div class="rounded-lg border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 p-4 overflow-hidden">
-            <h4 class="text-xs font-semibold text-blue-800 dark:text-blue-300 uppercase tracking-wider mb-2 flex items-center gap-1.5 flex-shrink-0">
-                <span class="material-symbols-outlined text-[16px] flex-shrink-0">assignment_turned_in</span>
+        <div
+            class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+            <h4
+                class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 flex items-center gap-2">
+                <div
+                    class="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 p-1.5 rounded-lg flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[16px]">assignment_turned_in</span>
+                </div>
                 Testing Procedures
             </h4>
-            <p class="text-sm text-blue-900 dark:text-blue-100 leading-relaxed whitespace-pre-wrap break-words max-h-64 overflow-y-auto">{{ control.testing_procedures_text }}</p>
+            <p
+                class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-wrap break-words max-h-64 overflow-y-auto">
+                {{- control.testing_procedures_text }}</p>
         </div>
         {% endif %}
     </div>
 
     <!-- Check Points Panel -->
     {% if control.check_points_text %}
-    <div class="rounded-lg border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-900/20 p-4 overflow-hidden mt-4">
-        <h4 class="text-xs font-semibold text-purple-800 dark:text-purple-300 uppercase tracking-wider mb-2 flex items-center gap-1.5 flex-shrink-0">
-            <span class="material-symbols-outlined text-[16px] flex-shrink-0">checklist</span>
+    <div
+        class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm relative overflow-hidden mt-4">
+        <div class="absolute top-0 left-0 w-1 h-full bg-purple-500"></div>
+        <h4
+            class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 flex items-center gap-2">
+            <div
+                class="bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400 p-1.5 rounded-lg flex items-center justify-center">
+                <span class="material-symbols-outlined text-[16px]">checklist</span>
+            </div>
             Check Points
         </h4>
-        <p class="text-sm text-purple-900 dark:text-purple-100 leading-relaxed whitespace-pre-wrap break-words max-h-64 overflow-y-auto">{{ control.check_points_text }}</p>
+        <p
+            class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-wrap break-words max-h-64 overflow-y-auto">
+            {{- control.check_points_text }}</p>
     </div>
     {% endif %}
 </div>
 
 <form id="control-form" hx-post="/projects/{{ project.id }}/controls/{{ control.id }}/details"
     hx-target="#control-details" hx-swap="innerHTML" class="grid grid-cols-1 xl:grid-cols-3 gap-6 mt-6 fade-in"
-    x-data="{ showToast: {{ 'true' if saved else 'false' }} }"
-    x-init="if(showToast) { setTimeout(() => showToast = false, 3000) }">
+    x-data="{ observations: JSON.parse('{{ observations|tojson }}' || '[]'), showToast: {{ 'true' if saved else 'false' }} }"
+    x-init="if(showToast) { setTimeout(() => showToast = false, 3000) }"
+    @submit="prepareObservationsData()">
 
     <!-- Form Controls -->
     <div class="xl:col-span-2 space-y-6">
 
         {% if control.assessment_checklist %}
         <!-- Observations Section -->
-        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-          <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-800">
-            <div class="flex items-center gap-2">
-              <span class="material-symbols-outlined text-primary">assignment_turned_in</span>
-              <h3 class="font-bold text-slate-900 dark:text-white">Observations</h3>
+        <div
+            class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div
+                class="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/50">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">assignment_turned_in</span>
+                    <h3 class="font-bold text-slate-900 dark:text-white">Observations</h3>
+                </div>
+                <button type="button"
+                    class="px-4 py-2 text-sm font-bold text-white bg-primary hover:bg-primary/90 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-primary/50 flex items-center gap-2"
+                    onclick="document.getElementById('observation-dropdown-{{ control.id }}').classList.toggle('hidden')">
+                    <span class="material-symbols-outlined text-[18px]">add</span>
+                    Add Observation
+                </button>
             </div>
-            <button type="button"
-              class="px-4 py-2 text-sm font-bold text-white bg-primary hover:bg-primary/90 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-primary/50 flex items-center gap-2"
-              onclick="document.getElementById('observation-dropdown-{{ control.id }}').classList.toggle('hidden')">
-              <span class="material-symbols-outlined text-[18px]">add</span>
-              Add Observation
-            </button>
-          </div>
 
-          <!-- Dropdown to select predefined observations -->
-          <div id="observation-dropdown-{{ control.id }}" class="hidden border-b border-slate-100 dark:border-slate-800 p-6 bg-slate-50 dark:bg-slate-800/50">
-            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-3">
-              Select Observation
-            </label>
-            <select onchange="addObservation(this.value, '{{ control.id }}')" class="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white">
-              <option value="">-- Choose an observation --</option>
-              {% for obs in control.assessment_checklist.observations %}
-              <option value="{{ obs.id }}" data-label="{{ obs.label }}" data-recommendation="{{ obs.recommendation }}">
-                {{ obs.label|truncate(60) }}
-              </option>
-              {% endfor %}
-            </select>
-          </div>
+            <!-- Dropdown to select predefined observations -->
+            <div id="observation-dropdown-{{ control.id }}"
+                class="hidden border-b border-slate-100 dark:border-slate-800 p-6 bg-slate-50 dark:bg-slate-800/50">
+                <label
+                    class="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-3">
+                    Select Observation
+                </label>
+                <select onchange="addObservation(this.value, '{{ control.id }}')"
+                    class="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white">
+                    <option value="">-- Choose an observation --</option>
+                    {% for obs in control.assessment_checklist.observations %}
+                    <option value="{{ obs.id }}" data-label="{{ obs.label }}"
+                        data-recommendation="{{ obs.recommendation }}">
+                        {{ obs.label|truncate(60) }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
 
-          <!-- Observations Table -->
-          <div class="overflow-x-auto">
-            <table class="w-full text-sm" id="observations-table-{{ control.id }}">
-              <thead class="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
-                <tr>
-                  <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Observation</th>
-                  <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Recommendation</th>
-                  <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Evidence</th>
-                  <th class="px-6 py-3 text-center text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Actions</th>
-                </tr>
-              </thead>
-              <tbody id="observations-tbody-{{ control.id }}">
-                {% for obs in observations %}
-                <tr class="border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50">
-                  <td class="px-6 py-4 text-sm text-slate-900 dark:text-white break-words">{{ obs.observation_text }}</td>
-                  <td class="px-6 py-4 text-sm text-slate-700 dark:text-slate-300 break-words">{{ obs.recommendation_text }}</td>
-                  <td class="px-6 py-4 text-sm">
-                    <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
-                      {{ obs.evidence_files|length }} files
-                    </span>
-                  </td>
-                  <td class="px-6 py-4 text-center">
-                    <button type="button" class="text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors">
-                      <span class="material-symbols-outlined">delete</span>
-                    </button>
-                  </td>
-                </tr>
-                {% else %}
-                <tr>
-                  <td colspan="4" class="px-6 py-8 text-center text-slate-500 dark:text-slate-400">
-                    <div class="flex flex-col items-center gap-2">
-                      <span class="material-symbols-outlined text-4xl text-slate-300">assignment</span>
-                      <p class="text-sm">No observations added yet. Click "Add Observation" to get started.</p>
-                    </div>
-                  </td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
+            <!-- Observations Table -->
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm" id="observations-table-{{ control.id }}">
+                    <thead class="bg-slate-50/80 dark:bg-slate-800/80 border-b border-slate-100 dark:border-slate-700">
+                        <tr>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                                Observation</th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                                Recommendation</th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                                Evidence</th>
+                            <th
+                                class="px-6 py-3 text-center text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                                Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="observations-tbody-{{ control.id }}">
+                        {% for obs in observations %}
+                        <tr
+                            class="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors"
+                            data-obs-id="{{ obs.id }}">
+                            <td class="px-6 py-4 text-sm text-slate-900 dark:text-white break-words">{{
+                                obs.observation_text }}</td>
+                            <td class="px-6 py-4 text-sm text-slate-700 dark:text-slate-300 break-words">{{
+                                obs.recommendation_text }}</td>
+                            <td class="px-6 py-4 text-sm">
+                                <span
+                                    class="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
+                                    {{ obs.evidence_files|length }} files
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <button type="button"
+                                    @click="deleteObservation('{{ obs.id }}')"
+                                    class="text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors">
+                                    <span class="material-symbols-outlined">delete</span>
+                                </button>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr id="empty-obs-{{ control.id }}">
+                            <td colspan="4" class="px-6 py-8 text-center text-slate-500 dark:text-slate-400">
+                                <div class="flex flex-col items-center gap-2">
+                                    <span class="material-symbols-outlined text-4xl text-slate-300">assignment</span>
+                                    <p class="text-sm">No observations added yet. Click "Add Observation" to get
+                                        started.</p>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
         {% endif %}
 
         <!-- Note: Evidence upload is managed per observation -->
         <div class="text-sm text-slate-600 dark:text-slate-400 italic px-2">
-            Each observation can have associated text notes and image uploads. Click on an observation row to manage its evidence.
+            Each observation can have associated text notes and image uploads. Click on an observation row to manage its
+            evidence.
         </div>
     </div>
 
     <!-- Right Metadata Sidebar -->
     <div class="space-y-6 flex flex-col">
         <!-- Control Details Card -->
-        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-5">
+        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm p-5">
             <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 mb-4">Control Metadata</h3>
             <div class="space-y-4">
                 <div>
@@ -193,7 +243,7 @@
         </div>
 
         <!-- Audit Trail Card -->
-        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-5">
+        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm p-5">
             <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 mb-4">Audit Trail</h3>
             <div class="space-y-4">
                 {% if response and response.updated_at %}
@@ -230,49 +280,141 @@
 
 
 <script>
-function addObservation(observationId, controlId) {
-    if (!observationId) return;
+    function addObservation(observationId, controlId) {
+        if (!observationId) return;
 
-    // Get the selected option data
-    const select = document.querySelector(`select[onchange*="${controlId}"]`);
-    const option = select.querySelector(`option[value="${observationId}"]`);
+        // Get the selected option data
+        const select = document.querySelector(`select[onchange*="${controlId}"]`);
+        const option = select.querySelector(`option[value="${observationId}"]`);
 
-    if (!option) return;
+        if (!option) return;
 
-    const label = option.getAttribute('data-label');
-    const recommendation = option.getAttribute('data-recommendation');
+        const label = option.getAttribute('data-label');
+        const recommendation = option.getAttribute('data-recommendation');
 
-    // Create a new row
-    const tbody = document.getElementById(`observations-tbody-${controlId}`);
-    const newRow = document.createElement('tr');
-    newRow.className = 'border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50';
-    newRow.innerHTML = `
-        <td class="px-6 py-4 text-sm text-slate-900 dark:text-white break-words">${label}</td>
-        <td class="px-6 py-4 text-sm text-slate-700 dark:text-slate-300 break-words">${recommendation}</td>
-        <td class="px-6 py-4 text-sm">
-            <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
-                0 files
-            </span>
-        </td>
-        <td class="px-6 py-4 text-center">
-            <button type="button" class="text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors" onclick="this.parentElement.parentElement.remove()">
-                <span class="material-symbols-outlined">delete</span>
-            </button>
-        </td>
-    `;
+        // Get form Alpine data
+        const form = document.getElementById('control-form');
+        const alpineInstance = form.__x;
 
-    // Remove the "no observations" message if it exists
-    const emptyRow = tbody.querySelector('tr td[colspan="4"]');
-    if (emptyRow) {
-        emptyRow.parentElement.remove();
+        // Create unique ID for new observation
+        const newId = 'new_' + Date.now();
+
+        // Add to Alpine observations array
+        if (alpineInstance && alpineInstance.$data.observations) {
+            alpineInstance.$data.observations.push({
+                id: newId,
+                observation_text: label,
+                recommendation_text: recommendation,
+                evidence_files: [],
+                isNew: true
+            });
+        }
+
+        // Create a new row
+        const tbody = document.getElementById(`observations-tbody-${controlId}`);
+
+        // Remove empty state if exists
+        const emptyRow = document.getElementById(`empty-obs-${controlId}`);
+        if (emptyRow) {
+            emptyRow.remove();
+        }
+
+        const newRow = document.createElement('tr');
+        newRow.className = 'border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors';
+        newRow.setAttribute('data-obs-id', newId);
+        newRow.innerHTML = `
+            <td class="px-6 py-4 text-sm text-slate-900 dark:text-white break-words">${label}</td>
+            <td class="px-6 py-4 text-sm text-slate-700 dark:text-slate-300 break-words">${recommendation}</td>
+            <td class="px-6 py-4 text-sm">
+                <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
+                    0 files
+                </span>
+            </td>
+            <td class="px-6 py-4 text-center">
+                <button type="button" class="text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors" onclick="deleteObservationRow('${newId}', '${controlId}')">
+                    <span class="material-symbols-outlined">delete</span>
+                </button>
+            </td>
+        `;
+
+        tbody.appendChild(newRow);
+
+        // Reset and hide the dropdown
+        select.value = '';
+        document.getElementById(`observation-dropdown-${controlId}`).classList.add('hidden');
     }
 
-    tbody.appendChild(newRow);
+    function deleteObservationRow(obsId, controlId) {
+        const row = document.querySelector(`tr[data-obs-id="${obsId}"]`);
+        if (row) {
+            row.remove();
+        }
 
-    // Reset and hide the dropdown
-    select.value = '';
-    document.getElementById(`observation-dropdown-${controlId}`).classList.add('hidden');
-}
+        // Get form Alpine data
+        const form = document.getElementById('control-form');
+        const alpineInstance = form.__x;
+
+        if (alpineInstance && alpineInstance.$data.observations) {
+            alpineInstance.$data.observations = alpineInstance.$data.observations.filter(o => o.id !== obsId);
+        }
+
+        // Show empty state if no observations
+        const tbody = document.getElementById(`observations-tbody-${controlId}`);
+        if (tbody.querySelectorAll('tr[data-obs-id]').length === 0) {
+            const emptyRow = document.createElement('tr');
+            emptyRow.id = `empty-obs-${controlId}`;
+            emptyRow.innerHTML = `
+                <td colspan="4" class="px-6 py-8 text-center text-slate-500 dark:text-slate-400">
+                    <div class="flex flex-col items-center gap-2">
+                        <span class="material-symbols-outlined text-4xl text-slate-300">assignment</span>
+                        <p class="text-sm">No observations added yet. Click "Add Observation" to get started.</p>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(emptyRow);
+        }
+    }
+
+    function prepareObservationsData() {
+        // Create hidden inputs for each observation when form is submitted
+        const form = document.getElementById('control-form');
+
+        // Remove any existing observation inputs
+        form.querySelectorAll('input[name^="observation_"]').forEach(input => input.remove());
+
+        // Get Alpine observations
+        const alpineInstance = form.__x;
+        if (!alpineInstance || !alpineInstance.$data.observations) return;
+
+        // Add hidden inputs for observations
+        alpineInstance.$data.observations.forEach((obs, idx) => {
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = `observation_${idx}_text`;
+            hiddenInput.value = obs.observation_text;
+            form.appendChild(hiddenInput);
+
+            const hiddenInput2 = document.createElement('input');
+            hiddenInput2.type = 'hidden';
+            hiddenInput2.name = `observation_${idx}_recommendation`;
+            hiddenInput2.value = obs.recommendation_text;
+            form.appendChild(hiddenInput2);
+
+            if (obs.id && obs.id.startsWith('new_')) {
+                const hiddenInput3 = document.createElement('input');
+                hiddenInput3.type = 'hidden';
+                hiddenInput3.name = `observation_${idx}_is_new`;
+                hiddenInput3.value = 'true';
+                form.appendChild(hiddenInput3);
+            } else {
+                const hiddenInput3 = document.createElement('input');
+                hiddenInput3.type = 'hidden';
+                hiddenInput3.name = `observation_${idx}_id`;
+                hiddenInput3.value = obs.id;
+                form.appendChild(hiddenInput3);
+            }
+        });
+    }
 </script>
 
 <style>

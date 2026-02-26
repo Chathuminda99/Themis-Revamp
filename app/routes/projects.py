@@ -1063,7 +1063,7 @@ async def save_control_details(
     form_data = await request.form()
     response_text = form_data.get("response_text", "")
     status_value = form_data.get("status", ResponseStatus.IN_PROGRESS.value)
-    
+
     try:
         status = ResponseStatus(status_value)
     except ValueError:
@@ -1077,9 +1077,36 @@ async def save_control_details(
         status,
     )
 
+    # Process observations from form
+    from app.repositories.observation import ProjectObservationRepository
+    obs_repo = ProjectObservationRepository(db)
+
+    # Collect all observation data from form
+    import uuid
+    observation_data = {}
+    for key in form_data.keys():
+        if key.startswith("observation_"):
+            parts = key.split("_")
+            if len(parts) >= 2:
+                idx = parts[1]
+                field = "_".join(parts[2:])
+                if idx not in observation_data:
+                    observation_data[idx] = {}
+                observation_data[idx][field] = form_data.get(key)
+
+    # Create new observations
+    for idx, obs_data in observation_data.items():
+        if obs_data.get("is_new") == "true":
+            obs_repo.create_observation(
+                project.id,
+                uuid.UUID(control_id),
+                obs_data.get("text", ""),
+                obs_data.get("recommendation", ""),
+            )
+
     framework_repo = FrameworkRepository(db)
     framework = framework_repo.get_by_id_with_sections(user.tenant_id, project.framework_id)
-    
+
     control = None
     section_name = "Section"
     if framework:
@@ -1095,8 +1122,6 @@ async def save_control_details(
     response = response_repo.get_by_control(project.id, control.id)
 
     # Fetch observations for this control
-    from app.repositories.observation import ProjectObservationRepository
-    obs_repo = ProjectObservationRepository(db)
     observations = obs_repo.get_for_control(project.id, control.id)
 
     return templates.TemplateResponse(

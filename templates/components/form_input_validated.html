@@ -1,0 +1,54 @@
+<!-- Form Input with Validation States -->
+<div class="form-group">
+    <label for="{{ field_name }}"
+        class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+        {{ label }}
+        {% if required %}<span class="text-red-600">*</span>{% endif %}
+    </label>
+
+    <div class="relative">
+        <input
+            type="{{ input_type or 'text' }}"
+            id="{{ field_name }}"
+            name="{{ field_name }}"
+            {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+            {% if value %}value="{{ value }}"{% endif %}
+            {% if required %}required{% endif %}
+            class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-lg focus:outline-none transition-colors placeholder-slate-400 dark:placeholder-slate-500
+            {% if error %}border-red-500 dark:border-red-500 focus:border-red-500 focus:ring-red-500/20{% else %}focus:border-primary focus:ring-2 focus:ring-primary/50{% endif %}
+            {% if success %}border-emerald-500 dark:border-emerald-500{% endif %}"
+            @input="validateField('{{ field_name }}', $el.value)" />
+
+        <!-- Validation Icons -->
+        {% if error %}
+        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-red-500">
+            <span class="material-symbols-outlined text-[20px]">error</span>
+        </span>
+        {% elif success %}
+        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-500">
+            <span class="material-symbols-outlined text-[20px]">check_circle</span>
+        </span>
+        {% endif %}
+    </div>
+
+    <!-- Error Message -->
+    {% if error %}
+    <p class="mt-2 text-sm text-red-600 dark:text-red-400 flex items-center gap-1">
+        <span class="material-symbols-outlined text-[16px]">error</span>
+        {{ error }}
+    </p>
+    {% endif %}
+
+    <!-- Help Text -->
+    {% if help_text %}
+    <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">{{ help_text }}</p>
+    {% endif %}
+
+    <!-- Success Message -->
+    {% if success %}
+    <p class="mt-2 text-sm text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+        <span class="material-symbols-outlined text-[16px]">check_circle</span>
+        {{ success }}
+    </p>
+    {% endif %}
+</div>

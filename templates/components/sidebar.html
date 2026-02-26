@@ -1,72 +1,83 @@
-<!-- Sidebar -->
-<aside class="bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col transition-all duration-300 ease-in-out"
+<!-- Sidebar (CoreUI-inspired) -->
+<aside class="bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col transition-all duration-300 ease-in-out sidebar-fixed"
     :class="sidebarOpen ? 'w-64' : 'w-20'">
-    <div class="p-6 flex items-center gap-3" :class="sidebarOpen ? 'justify-start' : 'justify-center'">
+    <!-- Sidebar Header -->
+    <div class="p-4 flex items-center gap-3 border-b border-slate-200 dark:border-slate-800" :class="sidebarOpen ? 'justify-start' : 'justify-center'">
         <div class="bg-primary p-2 rounded-lg text-white flex-shrink-0">
-            <span class="material-symbols-outlined block">shield_lock</span>
+            <span class="material-symbols-outlined block text-[20px]">shield_lock</span>
         </div>
         <div x-show="sidebarOpen" x-transition.opacity>
-            <h1 class="text-lg font-bold leading-none tracking-tight">AuditPro</h1>
-            <p class="text-xs text-slate-500 dark:text-slate-400">Compliance Manager</p>
+            <h1 class="text-sm font-bold leading-none tracking-tight">AuditPro</h1>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Compliance</p>
         </div>
     </div>
-    <nav class="flex-1 px-4 py-4 space-y-1">
+
+    <!-- Sidebar Navigation -->
+    <nav class="flex-1 overflow-y-auto px-2 py-4 space-y-0.5">
+        <!-- Dashboard -->
         <a class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors" :class="sidebarOpen ? 'justify-start' : 'justify-center'" title="Dashboard"
             href="/dashboard"
-            :class="{ '{% if request.url.path == '/dashboard' %}active-nav{% else %}text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800{% endif %}': true }">
-            <span class="material-symbols-outlined text-[20px] flex-shrink-0">dashboard</span>
+            :class="{ '{% if request.url.path == '/dashboard' %}active-nav text-white{% else %}text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800{% endif %}': true }">
+            <span class="material-symbols-outlined text-[18px] flex-shrink-0">dashboard</span>
             <span x-show="sidebarOpen" x-transition.opacity class="text-sm font-semibold tracking-wide">Dashboard</span>
         </a>
+
+        <!-- Nav Title: Main -->
+        <div x-show="sidebarOpen" x-transition.opacity class="px-3 py-3 mt-4 first:mt-0">
+            <p class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Main</p>
+        </div>
+
+        <!-- Projects -->
         <a class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors" :class="sidebarOpen ? 'justify-start' : 'justify-center'" title="Projects"
             href="/projects"
-            :class="{ '{% if request.url.path.startswith('/projects') %}active-nav{% else %}text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800{% endif %}': true }">
-            <span class="material-symbols-outlined text-[20px] flex-shrink-0">assignment</span>
+            :class="{ '{% if request.url.path.startswith('/projects') %}active-nav text-white{% else %}text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800{% endif %}': true }">
+            <span class="material-symbols-outlined text-[18px] flex-shrink-0">assignment</span>
             <span x-show="sidebarOpen" x-transition.opacity class="text-sm font-semibold tracking-wide">Projects</span>
         </a>
+
+        <!-- Nav Title: Library -->
+        <div x-show="sidebarOpen" x-transition.opacity class="px-3 py-3 mt-4">
+            <p class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Library</p>
+        </div>
+
+        <!-- Frameworks -->
         <a class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors" :class="sidebarOpen ? 'justify-start' : 'justify-center'" title="Frameworks"
             href="/frameworks"
-            :class="{ '{% if request.url.path.startswith('/frameworks') %}active-nav{% else %}text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800{% endif %}': true }">
-            <span class="material-symbols-outlined text-[20px] flex-shrink-0">account_tree</span>
+            :class="{ '{% if request.url.path.startswith('/frameworks') %}active-nav text-white{% else %}text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800{% endif %}': true }">
+            <span class="material-symbols-outlined text-[18px] flex-shrink-0">account_tree</span>
             <span x-show="sidebarOpen" x-transition.opacity class="text-sm font-semibold tracking-wide">Frameworks</span>
         </a>
+
+        <!-- Clients -->
+        <a class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors" :class="sidebarOpen ? 'justify-start' : 'justify-center'" title="Clients"
+            href="/clients"
+            :class="{ '{% if request.url.path.startswith('/clients') %}active-nav text-white{% else %}text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800{% endif %}': true }">
+            <span class="material-symbols-outlined text-[18px] flex-shrink-0">corporate_fare</span>
+            <span x-show="sidebarOpen" x-transition.opacity class="text-sm font-semibold tracking-wide">Clients</span>
+        </a>
+
+        <!-- Reports (Coming Soon) -->
         <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-not-allowed" :class="sidebarOpen ? 'justify-start' : 'justify-center'" title="Reports (Coming Soon)"
             href="#">
-            <span class="material-symbols-outlined text-[20px] flex-shrink-0">bar_chart</span>
+            <span class="material-symbols-outlined text-[18px] flex-shrink-0">bar_chart</span>
             <span x-show="sidebarOpen" x-transition.opacity class="text-sm font-semibold tracking-wide flex-1">Reports</span>
             <span x-show="sidebarOpen" x-transition.opacity class="text-[10px] py-0.5 px-2 bg-slate-100 dark:bg-slate-800 rounded-full text-slate-500">SOON</span>
         </a>
-        <a class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors" :class="sidebarOpen ? 'justify-start' : 'justify-center'" title="Clients"
-            href="/clients"
-            :class="{ '{% if request.url.path.startswith('/clients') %}active-nav{% else %}text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800{% endif %}': true }">
-            <span class="material-symbols-outlined text-[20px] flex-shrink-0">description</span>
-            <span x-show="sidebarOpen" x-transition.opacity class="text-sm font-semibold tracking-wide">Clients</span>
-        </a>
     </nav>
-    <div class="p-4 border-t border-slate-200 dark:border-slate-800">
-        <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-not-allowed" :class="sidebarOpen ? 'justify-start' : 'justify-center'" title="Settings"
+
+    <!-- Sidebar Footer -->
+    <div class="p-3 border-t border-slate-200 dark:border-slate-800 space-y-2">
+        <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" :class="sidebarOpen ? 'justify-start' : 'justify-center'" title="Settings"
             href="#">
-            <span class="material-symbols-outlined text-[20px] flex-shrink-0">settings</span>
+            <span class="material-symbols-outlined text-[18px] flex-shrink-0">settings</span>
             <span x-show="sidebarOpen" x-transition.opacity class="text-sm font-semibold tracking-wide">Settings</span>
         </a>
-        <div class="mt-4 flex flex-col gap-2">
-            <div class="flex items-center gap-3 px-3 py-1" :class="sidebarOpen ? 'justify-start' : 'justify-center'">
-                <div
-                    class="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary font-bold flex-shrink-0">
-                    {% if user %}{{ user.full_name[0].upper() }}{% else %}U{% endif %}
-                </div>
-                <div x-show="sidebarOpen" x-transition.opacity class="flex-1 min-w-0">
-                    <p class="text-sm font-bold truncate">{% if user %}{{ user.full_name }}{% else %}Wait List User{%
-                        endif %}</p>
-                    <p class="text-xs text-slate-500 truncate">Admin</p>
-                </div>
-            </div>
-            <form method="POST" action="/auth/logout" class="px-3 pb-1">
-                <button type="submit"
-                    class="w-full flex items-center gap-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-500 transition-colors" :class="sidebarOpen ? 'justify-start' : 'justify-center'" title="Sign Out">
-                    <span class="material-symbols-outlined text-[20px] flex-shrink-0">logout</span>
-                    <span x-show="sidebarOpen" x-transition.opacity class="text-sm font-semibold tracking-wide">Sign Out</span>
-                </button>
-            </form>
-        </div>
+        <!-- Sidebar toggler for small screens -->
+        <button @click="sidebarOpen = !sidebarOpen" type="button"
+            class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            :class="sidebarOpen ? 'justify-start' : 'justify-center'" title="Collapse sidebar">
+            <span class="material-symbols-outlined text-[18px] flex-shrink-0">unfold_less</span>
+            <span x-show="sidebarOpen" x-transition.opacity class="text-sm font-semibold tracking-wide">Collapse</span>
+        </button>
     </div>
 </aside>
