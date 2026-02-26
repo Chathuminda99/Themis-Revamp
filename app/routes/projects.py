@@ -1025,6 +1025,11 @@ async def get_control_details(
     response_repo = ProjectResponseRepository(db)
     response = response_repo.get_by_control(project.id, control.id)
 
+    # Fetch observations for this control
+    from app.repositories.observation import ProjectObservationRepository
+    obs_repo = ProjectObservationRepository(db)
+    observations = obs_repo.get_for_control(project.id, control.id)
+
     return templates.TemplateResponse(
         "projects/_control_detail.html",
         {
@@ -1034,6 +1039,7 @@ async def get_control_details(
             "control": control,
             "section_name": section_name,
             "response": response,
+            "observations": observations,
             "saved": False,
         },
     )
@@ -1087,6 +1093,11 @@ async def save_control_details(
 
     response = response_repo.get_by_control(project.id, control.id)
 
+    # Fetch observations for this control
+    from app.repositories.observation import ProjectObservationRepository
+    obs_repo = ProjectObservationRepository(db)
+    observations = obs_repo.get_for_control(project.id, control.id)
+
     return templates.TemplateResponse(
         "projects/_control_detail.html",
         {
@@ -1096,7 +1107,59 @@ async def save_control_details(
             "control": control,
             "section_name": section_name,
             "response": response,
+            "observations": observations,
             "saved": True,
         },
     )
+
+
+@router.post("/{project_id}/controls/{control_id}/observations", response_class=HTMLResponse)
+async def create_observation(
+    project_id: str, control_id: str, request: Request, db: Session = Depends(get_db)
+):
+    """Create a new observation for a control."""
+    user = getattr(request.state, "user", None)
+    if not user:
+        return RedirectResponse(url="/auth/login", status_code=302)
+
+    repo = ProjectRepository(db)
+    project = repo.get_by_id_with_details(user.tenant_id, project_id)
+    if not project:
+        return HTMLResponse(content="Project not found", status_code=404)
+
+    form_data = await request.form()
+    observation_text = form_data.get("observation_text", "")
+    recommendation_text = form_data.get("recommendation_text", "")
+
+    from app.repositories.observation import ProjectObservationRepository
+    obs_repo = ProjectObservationRepository(db)
+    obs_repo.create_observation(
+        project.id, control_id, observation_text, recommendation_text
+    )
+
+    return HTMLResponse(content="Observation created", status_code=200)
+
+
+@router.delete("/{project_id}/observations/{observation_id}", response_class=HTMLResponse)
+async def delete_observation(
+    project_id: str, observation_id: str, request: Request, db: Session = Depends(get_db)
+):
+    """Delete an observation and its evidence files."""
+    user = getattr(request.state, "user", None)
+    if not user:
+        return RedirectResponse(url="/auth/login", status_code=302)
+
+    repo = ProjectRepository(db)
+    project = repo.get_by_id_with_details(user.tenant_id, project_id)
+    if not project:
+        return HTMLResponse(content="Project not found", status_code=404)
+
+    from app.repositories.observation import ProjectObservationRepository
+    obs_repo = ProjectObservationRepository(db)
+    success = obs_repo.delete_observation(observation_id)
+
+    if success:
+        return HTMLResponse(content="Observation deleted", status_code=200)
+    else:
+        return HTMLResponse(content="Observation not found", status_code=404)
 

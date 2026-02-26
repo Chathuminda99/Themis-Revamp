@@ -81,139 +81,82 @@
     <div class="xl:col-span-2 space-y-6">
 
         {% if control.assessment_checklist %}
-        <!-- Assessment Scenarios Section -->
-        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
-          <div class="space-y-5">
-            <div>
-              <label for="scenario-{{ control.id }}"
-                class="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-3">
-                <span class="material-symbols-outlined text-[16px] text-primary">fact_check</span>
-                Assessment Scenario
-              </label>
-              <div class="relative w-full">
-                <select id="scenario-{{ control.id }}" name="scenario_id"
-                  class="w-full appearance-none px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-lg hover:border-slate-300 dark:hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors sm:text-sm font-medium break-words">
-                  <option value="">-- Choose a scenario --</option>
-                  {% for scenario in control.assessment_checklist.scenarios %}
-                  <option value="{{ scenario.id }}" data-finding="{{ scenario.finding_type }}" data-label="{{ scenario.label }}" class="break-words">
-                    {% if scenario.finding_type == 'pass' %}
-                      ✓ PASS
-                    {% elif scenario.finding_type == 'fail' %}
-                      ✗ FAIL
-                    {% elif scenario.finding_type == 'observation' %}
-                      ⓘ OBSERVATION
-                    {% endif %}
-                    — {{ scenario.label }}
-                  </option>
-                  {% endfor %}
-                </select>
-                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400 dark:text-slate-500">
-                  <span class="material-symbols-outlined">expand_more</span>
-                </div>
-              </div>
+        <!-- Observations Section -->
+        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+          <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-800">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">assignment_turned_in</span>
+              <h3 class="font-bold text-slate-900 dark:text-white">Observations</h3>
             </div>
+            <button type="button"
+              class="px-4 py-2 text-sm font-bold text-white bg-primary hover:bg-primary/90 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-primary/50 flex items-center gap-2"
+              onclick="document.getElementById('observation-dropdown-{{ control.id }}').classList.toggle('hidden')">
+              <span class="material-symbols-outlined text-[18px]">add</span>
+              Add Observation
+            </button>
+          </div>
 
-            <!-- Preview Recommendation (populated on selection) -->
-            <div id="scenario-preview-{{ control.id }}" class="hidden">
-              <div class="rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-4 overflow-hidden">
-                <h5 class="text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2 break-words flex items-center gap-2">
-                  <span class="material-symbols-outlined text-[16px] text-primary">lightbulb</span>
-                  Recommendation:
-                </h5>
-                <p id="scenario-recommendation-{{ control.id }}" class="text-sm text-slate-700 dark:text-slate-300 leading-relaxed break-words whitespace-pre-wrap">
-                </p>
-              </div>
-            </div>
+          <!-- Dropdown to select predefined observations -->
+          <div id="observation-dropdown-{{ control.id }}" class="hidden border-b border-slate-100 dark:border-slate-800 p-6 bg-slate-50 dark:bg-slate-800/50">
+            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-3">
+              Select Observation
+            </label>
+            <select onchange="addObservation(this.value, '{{ control.id }}')" class="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white">
+              <option value="">-- Choose an observation --</option>
+              {% for obs in control.assessment_checklist.observations %}
+              <option value="{{ obs.id }}" data-label="{{ obs.label }}" data-recommendation="{{ obs.recommendation }}">
+                {{ obs.label|truncate(60) }}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <!-- Observations Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm" id="observations-table-{{ control.id }}">
+              <thead class="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Observation</th>
+                  <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Recommendation</th>
+                  <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Evidence</th>
+                  <th class="px-6 py-3 text-center text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="observations-tbody-{{ control.id }}">
+                {% for obs in observations %}
+                <tr class="border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                  <td class="px-6 py-4 text-sm text-slate-900 dark:text-white break-words">{{ obs.observation_text }}</td>
+                  <td class="px-6 py-4 text-sm text-slate-700 dark:text-slate-300 break-words">{{ obs.recommendation_text }}</td>
+                  <td class="px-6 py-4 text-sm">
+                    <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
+                      {{ obs.evidence_files|length }} files
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 text-center">
+                    <button type="button" class="text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors">
+                      <span class="material-symbols-outlined">delete</span>
+                    </button>
+                  </td>
+                </tr>
+                {% else %}
+                <tr>
+                  <td colspan="4" class="px-6 py-8 text-center text-slate-500 dark:text-slate-400">
+                    <div class="flex flex-col items-center gap-2">
+                      <span class="material-symbols-outlined text-4xl text-slate-300">assignment</span>
+                      <p class="text-sm">No observations added yet. Click "Add Observation" to get started.</p>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
           </div>
         </div>
         {% endif %}
 
-        <!-- Observations Card -->
-        <div
-            class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-            <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <span class="material-symbols-outlined text-primary">edit_note</span>
-                    <h3 class="font-bold text-slate-900 dark:text-white">Observations &amp; Findings</h3>
-                </div>
-
-                <div x-show="showToast" x-transition.opacity style="display: none;"
-                    class="flex items-center gap-2 text-[11px] font-bold text-green-500 bg-green-50 px-2 py-0.5 rounded">
-                    <span class="material-symbols-outlined text-xs">sync</span>
-                    Changes saved
-                </div>
-            </div>
-
-            <div class="p-0">
-                <div
-                    class="flex items-center gap-1 bg-slate-50 dark:bg-slate-950 px-4 py-2 border-b border-slate-100 dark:border-slate-800">
-                    <button type="button"
-                        class="p-1 text-slate-500 hover:text-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 rounded transition-colors"><span
-                            class="material-symbols-outlined text-lg">format_bold</span></button>
-                    <button type="button"
-                        class="p-1 text-slate-500 hover:text-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 rounded transition-colors"><span
-                            class="material-symbols-outlined text-lg">format_italic</span></button>
-                    <button type="button"
-                        class="p-1 text-slate-500 hover:text-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 rounded transition-colors"><span
-                            class="material-symbols-outlined text-lg">format_list_bulleted</span></button>
-                    <div class="w-px h-4 bg-slate-300 dark:bg-slate-700 mx-1"></div>
-                    <button type="button"
-                        class="p-1 text-slate-500 hover:text-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 rounded transition-colors"><span
-                            class="material-symbols-outlined text-lg">link</span></button>
-                    <button type="button"
-                        class="p-1 text-slate-500 hover:text-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 rounded transition-colors"><span
-                            class="material-symbols-outlined text-lg">image</span></button>
-                </div>
-                <textarea name="response_text"
-                    class="w-full border-none focus:ring-0 p-6 text-sm text-slate-700 dark:text-slate-300 bg-transparent outline-none placeholder:text-slate-400"
-                    placeholder="Describe the audit evidence gathered, interviews conducted, and any observed compliance gaps..."
-                    rows="12">{{ response.response_text if response else '' }}</textarea>
-            </div>
-        </div>
-
-        <!-- Evidence Upload Card -->
-        <div
-            class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-            <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-800">
-                <div class="flex items-center gap-2">
-                    <span class="material-symbols-outlined text-primary">attach_file</span>
-                    <h3 class="font-bold text-slate-900 dark:text-white">Evidence &amp; Documentation</h3>
-                </div>
-            </div>
-            <div class="p-6">
-                <div
-                    class="border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl p-8 flex flex-col items-center justify-center gap-3 bg-slate-50 dark:bg-slate-950/50 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors cursor-pointer">
-                    <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                        <span class="material-symbols-outlined text-3xl">cloud_upload</span>
-                    </div>
-                    <div class="text-center">
-                        <p class="text-sm font-bold text-slate-900 dark:text-white">Drag &amp; drop evidence files here
-                        </p>
-                        <p class="text-xs text-slate-500 mt-1">PDF, DOCX, XLSX or PNG (Max 25MB)</p>
-                    </div>
-                    <button type="button"
-                        class="mt-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-bold shadow-sm hover:shadow-md transition-all">Browse
-                        Files</button>
-                </div>
-
-                <!-- Placeholder Evidence list since there's no backend model currently -->
-                <div class="mt-6 space-y-3">
-                    <!-- Static examples matching user's HTML -->
-                    <div
-                        class="flex items-center justify-between p-3 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-lg">
-                        <div class="flex items-center gap-3">
-                            <div class="p-2 bg-blue-50 text-blue-500 rounded-lg"><span
-                                    class="material-symbols-outlined block">description</span></div>
-                            <div>
-                                <p class="text-xs font-bold text-slate-900 dark:text-white">Policy_v1.pdf</p>
-                                <p class="text-[10px] text-slate-500">Document Upload Placeholder</p>
-                            </div>
-                        </div>
-                        <button type="button" class="p-1.5 text-slate-400 hover:text-red-500"><span
-                                class="material-symbols-outlined text-lg">delete</span></button>
-                    </div>
-                </div>
-            </div>
+        <!-- Note: Evidence upload is managed per observation -->
+        <div class="text-sm text-slate-600 dark:text-slate-400 italic px-2">
+            Each observation can have associated text notes and image uploads. Click on an observation row to manage its evidence.
         </div>
     </div>
 
@@ -322,6 +265,52 @@
 
   document.addEventListener('htmx:afterSettle', initRecommendationPreview);
   document.addEventListener('htmx:load', initRecommendationPreview);
+</script>
+
+<script>
+function addObservation(observationId, controlId) {
+    if (!observationId) return;
+
+    // Get the selected option data
+    const select = document.querySelector(`select[onchange*="${controlId}"]`);
+    const option = select.querySelector(`option[value="${observationId}"]`);
+
+    if (!option) return;
+
+    const label = option.getAttribute('data-label');
+    const recommendation = option.getAttribute('data-recommendation');
+
+    // Create a new row
+    const tbody = document.getElementById(`observations-tbody-${controlId}`);
+    const newRow = document.createElement('tr');
+    newRow.className = 'border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50';
+    newRow.innerHTML = `
+        <td class="px-6 py-4 text-sm text-slate-900 dark:text-white break-words">${label}</td>
+        <td class="px-6 py-4 text-sm text-slate-700 dark:text-slate-300 break-words">${recommendation}</td>
+        <td class="px-6 py-4 text-sm">
+            <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
+                0 files
+            </span>
+        </td>
+        <td class="px-6 py-4 text-center">
+            <button type="button" class="text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors" onclick="this.parentElement.parentElement.remove()">
+                <span class="material-symbols-outlined">delete</span>
+            </button>
+        </td>
+    `;
+
+    // Remove the "no observations" message if it exists
+    const emptyRow = tbody.querySelector('tr td[colspan="4"]');
+    if (emptyRow) {
+        emptyRow.parentElement.remove();
+    }
+
+    tbody.appendChild(newRow);
+
+    // Reset and hide the dropdown
+    select.value = '';
+    document.getElementById(`observation-dropdown-${controlId}`).classList.add('hidden');
+}
 </script>
 
 <style>

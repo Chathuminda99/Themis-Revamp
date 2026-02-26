@@ -287,45 +287,29 @@ def seed_database():
             db.add(pci_req2_2)
             db.flush()
 
-            # Assessment checklist for 2.2.2 (predefined scenario-based assessment)
+            # Assessment checklist for 2.2.2 (predefined observations for auditor selection)
             assessment_checklist_222 = {
-                "type": "checklist",
-                "scenarios": [
+                "type": "observations",
+                "observations": [
                     {
-                        "id": "scenario_1",
-                        "label": "No default accounts present on system",
-                        "finding_type": "pass",
+                        "id": "obs_1",
+                        "label": "It was observed there are default accounts in active status which do not require for any operation.",
+                        "recommendation": "It is recommended to evaluate whether these default accounts are required or not. If these default accounts are not required, it is recommended to remove or disable.",
+                    },
+                    {
+                        "id": "obs_2",
+                        "label": "It was observed there are active default accounts and in use\n- without having business/technical need.\n- without having a password complying with organization's password length requirement",
+                        "recommendation": "If these default accounts are required, it is recommended to\n- have a business/technical justification with a management approval\n- implement the password length in accordance with the organization's password length requirement",
+                    },
+                    {
+                        "id": "obs_3",
+                        "label": "No default accounts were identified on the system.",
                         "recommendation": "No vendor default accounts were identified on this system component. This control requirement is satisfied. No further action is required.",
                     },
                     {
-                        "id": "scenario_2",
-                        "label": "Default accounts not in use - accounts properly disabled/removed",
-                        "finding_type": "pass",
-                        "recommendation": "Vendor default accounts exist but are not in use and have been properly disabled or removed from the system. This control is satisfied. Continue monitoring to ensure accounts remain disabled.",
-                    },
-                    {
-                        "id": "scenario_3",
-                        "label": "Default accounts not in use - accounts NOT disabled/removed",
-                        "finding_type": "fail",
-                        "recommendation": "FINDING: Vendor default accounts are present and not in use, but have NOT been disabled or removed. This is a control violation per PCI DSS 2.2.2. REMEDIATION REQUIRED: Immediately disable or remove all vendor default accounts. Verify in system logs and configuration files that accounts are no longer accessible.",
-                    },
-                    {
-                        "id": "scenario_4",
-                        "label": "Default accounts in use - password changed & meets complexity requirements",
-                        "finding_type": "observation",
-                        "recommendation": "Vendor default accounts are in use with changed passwords that meet complexity requirements. While this satisfies the technical requirement, BEST PRACTICE RECOMMENDATION: Consider replacing vendor default accounts with unique named accounts specific to your organization. This improves audit trail clarity and accountability. Document the business justification for continued use of vendor defaults.",
-                    },
-                    {
-                        "id": "scenario_5",
-                        "label": "Default accounts in use - password changed but does NOT meet complexity",
-                        "finding_type": "fail",
-                        "recommendation": "FINDING: Vendor default accounts are in use with changed passwords, but passwords do NOT meet organizational complexity requirements (per PCI DSS 8.3.6). This is a control violation. REMEDIATION REQUIRED: Update all vendor default account passwords to meet minimum complexity requirements (min 7 characters, including uppercase, lowercase, numbers, special characters). Document the change in the access control log.",
-                    },
-                    {
-                        "id": "scenario_6",
-                        "label": "Default accounts in use - passwords NOT changed from vendor default",
-                        "finding_type": "fail",
-                        "recommendation": "CRITICAL FINDING: Vendor default accounts are actively in use with vendor-supplied default passwords still in place. This is a CRITICAL security vulnerability per PCI DSS 2.2.2. IMMEDIATE REMEDIATION REQUIRED: Change all vendor default account passwords before any further use. Use strong, complex passwords (min 7 characters with uppercase, lowercase, numbers, special chars). Document changes in access control system. If this account cannot be secured, disable it immediately.",
+                        "id": "obs_4",
+                        "label": "Vendor default accounts exist but are not in use and have been properly disabled or removed.",
+                        "recommendation": "Vendor default accounts are not in use and have been disabled or removed from the system. This control is satisfied. Continue monitoring to ensure accounts remain disabled.",
                     },
                 ],
             }

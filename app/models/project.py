@@ -104,15 +104,43 @@ class ProjectResponse(BaseModel, TimestampMixin):
     control: Mapped["FrameworkControl"] = relationship()
 
 
+class ProjectObservation(BaseModel, TimestampMixin):
+    """Observation with recommendation for a specific control in a project."""
+
+    __tablename__ = "project_observations"
+
+    project_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("projects.id"), nullable=False
+    )
+    framework_control_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("framework_controls.id"), nullable=False
+    )
+    observation_text: Mapped[str] = mapped_column(Text, nullable=False)
+    recommendation_text: Mapped[str] = mapped_column(Text, nullable=False)
+
+    # Relationships
+    evidence_files: Mapped[list["ProjectEvidenceFile"]] = relationship(
+        back_populates="observation", cascade="all, delete-orphan"
+    )
+
+
 class ProjectEvidenceFile(BaseModel, TimestampMixin):
-    """Evidence file attachment for a project response."""
+    """Evidence file or text note attachment for an observation."""
 
     __tablename__ = "project_evidence_files"
 
-    project_response_id: Mapped[uuid.UUID] = mapped_column(
-        ForeignKey("project_responses.id"), nullable=False
+    project_observation_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("project_observations.id"), nullable=False
     )
-    filename: Mapped[str] = mapped_column(String(255), nullable=False)
-    file_path: Mapped[str] = mapped_column(String(512), nullable=False)
-    file_size: Mapped[int] = mapped_column(Integer, nullable=True)
-    file_type: Mapped[str] = mapped_column(String(50), nullable=True)
+    evidence_type: Mapped[str] = mapped_column(
+        String(50), nullable=False
+    )  # 'text_note' or 'image'
+    content: Mapped[str] = mapped_column(Text, nullable=True)  # For text notes
+    filename: Mapped[str] = mapped_column(String(255), nullable=True)  # For images
+    file_path: Mapped[str] = mapped_column(String(512), nullable=True)  # For images
+    file_size: Mapped[int] = mapped_column(Integer, nullable=True)  # For images
+
+    # Relationships
+    observation: Mapped["ProjectObservation"] = relationship(
+        back_populates="evidence_files"
+    )

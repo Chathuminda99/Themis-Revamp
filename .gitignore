@@ -92,3 +92,5 @@ static/uploads/
 # Temporary files
 *.tmp
 *.bak
+
+sample_docs/*
