@@ -36,16 +36,16 @@
   {% endif %}
 
   {# Dropdown Container #}
-  <div x-data="{
+  <div x-data='{
     open: false,
-    value: '{{ select_value }}',
+    value: {{ select_value | string | tojson | safe if select_value else "null" }},
     getLabel() {
       const labels = {
-        {% for option in select_options %}'{{ option.value }}': '{{ option.label }}',{% endfor %}
+        {% for option in select_options %}{{ option.value | string | tojson | safe }}: {{ option.label | tojson | safe }},{% endfor %}
       };
-      return labels[this.value] || 'Select...';
+      return labels[this.value] || "Select...";
     }
-  }" @click.outside="open = false" class="dropdown-wrapper">
+  }' @click.outside="open = false" class="dropdown-wrapper">
 
     {# Trigger Button #}
     <button
@@ -96,14 +96,14 @@
           <button
             type="button"
             role="option"
-            @click="
-              value = '{{ option.value }}';
+            @click='
+              value = {{ option.value | string | tojson | safe }};
               open = false;
               {% if on_change %}{{ on_change }};{% endif %}
-            "
-            :aria-selected="value === '{{ option.value }}'"
+            '
+            :aria-selected='value === {{ option.value | string | tojson | safe }}'
             class="dropdown-item"
-            :class="{ 'active': value === '{{ option.value }}' }"
+            :class='{ "active": value === {{ option.value | string | tojson | safe }} }'
           >
             {{ option.label }}
           </button>

@@ -17,58 +17,292 @@
   <!-- Filter Bar -->
   <div class="mb-6 rounded-lg bg-card border border-border shadow-sm p-5">
     <form id="project-filters" class="grid grid-cols-1 md:grid-cols-4 gap-5">
-      <div class="space-y-2">
-        <label for="status-filter" class="text-sm font-medium text-foreground">Status</label>
+      {% set label_status = 'All Statuses' %}
+      {% if active_filters.get('status') == 'draft' %}{% set label_status = 'Draft' %}
+      {% elif active_filters.get('status') == 'in_progress' %}{% set label_status = 'In Progress' %}
+      {% elif active_filters.get('status') == 'completed' %}{% set label_status = 'Completed' %}
+      {% elif active_filters.get('status') == 'archived' %}{% set label_status = 'Archived' %}
+      {% endif %}
+      <div class="space-y-2" x-data='{ 
+          open: false, 
+          value: "{{ active_filters.get("status", "") }}",
+          label: {{ label_status | tojson | safe }},
+          updateValue(val, newLabel) {
+              this.value = val;
+              this.label = newLabel;
+              this.$refs.input.value = val;
+              this.open = false;
+              this.$refs.input.dispatchEvent(new Event("change", { bubbles: true }));
+          }
+      }' @click.away="open = false">
+        <label for="status-filter-custom" class="text-sm font-medium text-foreground">Status</label>
         <div class="relative">
-          <select id="status-filter" name="status" hx-get="/projects" hx-target="#projects-table" hx-swap="innerHTML" hx-push-url="true" hx-include="#project-filters" @change="htmx.trigger(this, 'change')"
-            class="w-full flex h-10 appearance-none rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 transition-colors">
-            <option value="">All Statuses</option>
-            <option value="draft" {% if active_filters.get('status')=='draft' %}selected{% endif %}>Draft</option>
-            <option value="in_progress" {% if active_filters.get('status')=='in_progress' %}selected{% endif %}>In Progress</option>
-            <option value="completed" {% if active_filters.get('status')=='completed' %}selected{% endif %}>Completed</option>
-            <option value="archived" {% if active_filters.get('status')=='archived' %}selected{% endif %}>Archived</option>
-          </select>
-          <span class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
-            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
-          </span>
+          <input type="hidden" id="status-filter-custom" name="status" x-ref="input"
+            value="{{ active_filters.get('status', '') }}" hx-get="/projects" hx-target="#projects-table"
+            hx-swap="innerHTML" hx-push-url="true" hx-include="#project-filters">
+
+          <button type="button" @click="open = !open"
+            class="w-full flex items-center justify-between h-10 rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 transition-colors">
+            <span x-text="label" class="truncate block text-left flex-1 text-slate-700 dark:text-slate-300"></span>
+            <span class="pointer-events-none text-muted-foreground ml-2 transition-transform duration-200"
+              :class="open ? 'rotate-180' : ''">
+              <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </span>
+          </button>
+
+          <div x-show="open" x-cloak x-transition:enter="transition ease-out duration-150"
+            x-transition:enter-start="transform opacity-0 scale-95 translate-y-[-10px]"
+            x-transition:enter-end="transform opacity-100 scale-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-100"
+            x-transition:leave-start="transform opacity-100 scale-100 translate-y-0"
+            x-transition:leave-end="transform opacity-0 scale-95 translate-y-[-10px]"
+            class="absolute z-50 w-full mt-2 bg-white dark:bg-slate-900 rounded-[14px] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] dark:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] border border-slate-100 dark:border-slate-800 p-2 focus:outline-none overflow-hidden">
+
+            <ul
+              class="flex flex-col gap-1 max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700 p-0.5">
+              <li>
+                <button type="button" @click="updateValue('', 'All Statuses')" data-value="" data-label="All Statuses"
+                  :class="value === '' ? 'bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/20' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'"
+                  class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group">
+                  <span
+                    :class="value === '' ? 'text-white' : 'text-slate-500 bg-slate-100 dark:bg-slate-800 dark:text-slate-400'"
+                    class="flex items-center justify-center w-8 h-8 rounded-full transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">filter_list</span>
+                  </span>
+                  <span class="truncate">All Statuses</span>
+                </button>
+              </li>
+              <li>
+                <button type="button" @click="updateValue('draft', 'Draft')" data-value="draft" data-label="Draft"
+                  :class="value === 'draft' ? 'bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/20' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'"
+                  class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all">
+                  <span
+                    :class="value === 'draft' ? 'text-white' : 'text-slate-600 bg-slate-100 dark:bg-slate-800 dark:text-slate-400'"
+                    class="flex items-center justify-center w-8 h-8 rounded-full transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">edit_document</span>
+                  </span>
+                  <span class="truncate">Draft</span>
+                </button>
+              </li>
+              <li>
+                <button type="button" @click="updateValue('in_progress', 'In Progress')" data-value="in_progress"
+                  data-label="In Progress"
+                  :class="value === 'in_progress' ? 'bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/20' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'"
+                  class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all">
+                  <span
+                    :class="value === 'in_progress' ? 'text-white' : 'text-amber-600 bg-amber-50 dark:bg-amber-900/30 dark:text-amber-400'"
+                    class="flex items-center justify-center w-8 h-8 rounded-full transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">pending</span>
+                  </span>
+                  <span class="truncate">In Progress</span>
+                </button>
+              </li>
+              <li>
+                <button type="button" @click="updateValue('completed', 'Completed')" data-value="completed"
+                  data-label="Completed"
+                  :class="value === 'completed' ? 'bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/20' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'"
+                  class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all">
+                  <span
+                    :class="value === 'completed' ? 'text-white' : 'text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 dark:text-emerald-400'"
+                    class="flex items-center justify-center w-8 h-8 rounded-full transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">check_circle</span>
+                  </span>
+                  <span class="truncate">Completed</span>
+                </button>
+              </li>
+              <li>
+                <button type="button" @click="updateValue('archived', 'Archived')" data-value="archived"
+                  data-label="Archived"
+                  :class="value === 'archived' ? 'bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/20' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'"
+                  class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all">
+                  <span
+                    :class="value === 'archived' ? 'text-white' : 'text-slate-600 bg-slate-100 dark:bg-slate-800 dark:text-slate-400'"
+                    class="flex items-center justify-center w-8 h-8 rounded-full transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">inventory_2</span>
+                  </span>
+                  <span class="truncate">Archived</span>
+                </button>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
 
-      <div class="space-y-2">
-        <label for="client-filter" class="text-sm font-medium text-foreground">Client</label>
+      {% set label_client = 'All Clients' %}
+      {% for c in all_clients %}
+      {% if active_filters.get('client_id') == c.id|string %}
+      {% set label_client = c.name %}
+      {% endif %}
+      {% endfor %}
+      <div class="space-y-2" x-data='{ 
+          open: false, 
+          value: "{{ active_filters.get("client_id", "") }}",
+          label: {{ label_client | tojson | safe }},
+          updateValue(val, newLabel) {
+              this.value = val;
+              this.label = newLabel;
+              this.$refs.input.value = val;
+              this.open = false;
+              this.$refs.input.dispatchEvent(new Event("change", { bubbles: true }));
+          }
+      }' @click.away="open = false">
+        <label for="client-filter-custom" class="text-sm font-medium text-foreground">Client</label>
         <div class="relative">
-          <select id="client-filter" name="client_id" hx-get="/projects" hx-target="#projects-table" hx-swap="innerHTML" hx-push-url="true" hx-include="#project-filters" @change="htmx.trigger(this, 'change')"
-            class="w-full flex h-10 appearance-none rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 transition-colors">
-            <option value="">All Clients</option>
-            {% for client in all_clients %}
-            <option value="{{ client.id }}" {% if active_filters.get('client_id')==client.id|string %}selected{% endif %}>{{ client.name }}</option>
-            {% endfor %}
-          </select>
-          <span class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
-            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
-          </span>
+          <input type="hidden" id="client-filter-custom" name="client_id" x-ref="input"
+            value="{{ active_filters.get('client_id', '') }}" hx-get="/projects" hx-target="#projects-table"
+            hx-swap="innerHTML" hx-push-url="true" hx-include="#project-filters">
+
+          <button type="button" @click="open = !open"
+            class="w-full flex items-center justify-between h-10 rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 transition-colors">
+            <span x-text="label" class="truncate block text-left flex-1 text-slate-700 dark:text-slate-300"></span>
+            <span class="pointer-events-none text-muted-foreground ml-2 transition-transform duration-200"
+              :class="open ? 'rotate-180' : ''">
+              <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </span>
+          </button>
+
+          <div x-show="open" x-cloak x-transition:enter="transition ease-out duration-150"
+            x-transition:enter-start="transform opacity-0 scale-95 translate-y-[-10px]"
+            x-transition:enter-end="transform opacity-100 scale-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-100"
+            x-transition:leave-start="transform opacity-100 scale-100 translate-y-0"
+            x-transition:leave-end="transform opacity-0 scale-95 translate-y-[-10px]"
+            class="absolute z-50 w-full mt-2 bg-white dark:bg-slate-900 rounded-[14px] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] dark:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] border border-slate-100 dark:border-slate-800 p-2 focus:outline-none overflow-hidden">
+
+            <ul
+              class="flex flex-col gap-1 max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700 p-0.5">
+              <li>
+                <button type="button" @click="updateValue('', 'All Clients')" data-value="" data-label="All Clients"
+                  :class="value === '' ? 'bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/20' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'"
+                  class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group">
+                  <span
+                    :class="value === '' ? 'text-white' : 'text-blue-500 bg-blue-50 dark:bg-blue-900/40 dark:text-blue-400'"
+                    class="flex items-center justify-center w-8 h-8 rounded-full transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">group</span>
+                  </span>
+                  <span class="truncate">All Clients</span>
+                </button>
+              </li>
+
+              {% set colors = [
+              {'bg': 'bg-blue-50 dark:bg-blue-900/30', 'text': 'text-blue-600 dark:text-blue-400'},
+              {'bg': 'bg-emerald-50 dark:bg-emerald-900/30', 'text': 'text-emerald-600 dark:text-emerald-400'},
+              {'bg': 'bg-purple-50 dark:bg-purple-900/30', 'text': 'text-purple-600 dark:text-purple-400'},
+              {'bg': 'bg-amber-50 dark:bg-amber-900/30', 'text': 'text-amber-600 dark:text-amber-400'},
+              {'bg': 'bg-rose-50 dark:bg-rose-900/30', 'text': 'text-rose-600 dark:text-rose-400'}
+              ] %}
+
+              {% for client in all_clients %}
+              {% set color = colors[loop.index0 % colors|length] %}
+              <li>
+                <button type="button" @click='updateValue({{ client.id | string | tojson | safe }}, $el.dataset.label)'
+                  data-value="{{ client.id }}" data-label="{{ client.name }}"
+                  :class='value === {{ client.id | string | tojson | safe }} ? "bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/20" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"'
+                  class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all">
+                  <span :class='value === {{ client.id | string | tojson | safe }} ? "text-white" : "{{ color.text }} {{ color.bg }}"'
+                    class="flex items-center justify-center w-8 h-8 rounded-full font-bold text-xs transition-colors">
+                    {{ client.name[0]|upper }}
+                  </span>
+                  <span class="truncate">{{ client.name }}</span>
+                </button>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
         </div>
       </div>
 
-      <div class="space-y-2">
-        <label for="framework-filter" class="text-sm font-medium text-foreground">Framework</label>
+      {% set label_framework = 'All Frameworks' %}
+      {% for f in all_frameworks %}
+      {% if active_filters.get('framework_id') == f.id|string %}
+      {% set label_framework = f.name %}
+      {% endif %}
+      {% endfor %}
+      <div class="space-y-2" x-data='{ 
+          open: false, 
+          value: "{{ active_filters.get("framework_id", "") }}",
+          label: {{ label_framework | tojson | safe }},
+          updateValue(val, newLabel) {
+              this.value = val;
+              this.label = newLabel;
+              this.$refs.input.value = val;
+              this.open = false;
+              this.$refs.input.dispatchEvent(new Event("change", { bubbles: true }));
+          }
+      }' @click.away="open = false">
+        <label for="framework-filter-custom" class="text-sm font-medium text-foreground">Framework</label>
         <div class="relative">
-          <select id="framework-filter" name="framework_id" hx-get="/projects" hx-target="#projects-table" hx-swap="innerHTML" hx-push-url="true" hx-include="#project-filters" @change="htmx.trigger(this, 'change')"
-            class="w-full flex h-10 appearance-none rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 transition-colors">
-            <option value="">All Frameworks</option>
-            {% for framework in all_frameworks %}
-            <option value="{{ framework.id }}" {% if active_filters.get('framework_id')==framework.id|string %}selected{% endif %}>{{ framework.name }}</option>
-            {% endfor %}
-          </select>
-          <span class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
-            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
-          </span>
+          <input type="hidden" id="framework-filter-custom" name="framework_id" x-ref="input"
+            value="{{ active_filters.get('framework_id', '') }}" hx-get="/projects" hx-target="#projects-table"
+            hx-swap="innerHTML" hx-push-url="true" hx-include="#project-filters">
+
+          <button type="button" @click="open = !open"
+            class="w-full flex items-center justify-between h-10 rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 transition-colors">
+            <span x-text="label" class="truncate block text-left flex-1 text-slate-700 dark:text-slate-300"></span>
+            <span class="pointer-events-none text-muted-foreground ml-2 transition-transform duration-200"
+              :class="open ? 'rotate-180' : ''">
+              <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </span>
+          </button>
+
+          <div x-show="open" x-cloak x-transition:enter="transition ease-out duration-150"
+            x-transition:enter-start="transform opacity-0 scale-95 translate-y-[-10px]"
+            x-transition:enter-end="transform opacity-100 scale-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-100"
+            x-transition:leave-start="transform opacity-100 scale-100 translate-y-0"
+            x-transition:leave-end="transform opacity-0 scale-95 translate-y-[-10px]"
+            class="absolute z-50 w-full mt-2 bg-white dark:bg-slate-900 rounded-[14px] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] dark:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] border border-slate-100 dark:border-slate-800 p-2 focus:outline-none overflow-hidden">
+
+            <ul
+              class="flex flex-col gap-1 max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700 p-0.5">
+              <li>
+                <button type="button" @click="updateValue('', 'All Frameworks')" data-value=""
+                  data-label="All Frameworks"
+                  :class="value === '' ? 'bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/20' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'"
+                  class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group">
+                  <span
+                    :class="value === '' ? 'text-white' : 'text-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 dark:text-indigo-400'"
+                    class="flex items-center justify-center w-8 h-8 rounded-full transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">category</span>
+                  </span>
+                  <span class="truncate">All Frameworks</span>
+                </button>
+              </li>
+
+              {% set colors = [
+              {'bg': 'bg-blue-50 dark:bg-blue-900/30', 'text': 'text-blue-600 dark:text-blue-400'},
+              {'bg': 'bg-emerald-50 dark:bg-emerald-900/30', 'text': 'text-emerald-600 dark:text-emerald-400'},
+              {'bg': 'bg-purple-50 dark:bg-purple-900/30', 'text': 'text-purple-600 dark:text-purple-400'},
+              {'bg': 'bg-amber-50 dark:bg-amber-900/30', 'text': 'text-amber-600 dark:text-amber-400'},
+              {'bg': 'bg-rose-50 dark:bg-rose-900/30', 'text': 'text-rose-600 dark:text-rose-400'}
+              ] %}
+
+              {% for framework in all_frameworks %}
+              {% set color = colors[loop.index0 % colors|length] %}
+              <li>
+                <button type="button" @click='updateValue({{ framework.id | string | tojson | safe }}, $el.dataset.label)'
+                  data-value="{{ framework.id }}" data-label="{{ framework.name }}"
+                  :class='value === {{ framework.id | string | tojson | safe }} ? "bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/20" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"'
+                  class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all">
+                  <span :class='value === {{ framework.id | string | tojson | safe }} ? "text-white" : "{{ color.text }} {{ color.bg }}"'
+                    class="flex items-center justify-center w-8 h-8 rounded-full font-bold text-xs transition-colors">
+                    {{ framework.name[0]|upper }}
+                  </span>
+                  <span class="truncate">{{ framework.name }}</span>
+                </button>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
         </div>
       </div>
 
@@ -78,23 +312,36 @@
           <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground">
             <span class="material-symbols-outlined text-[18px]">search</span>
           </span>
-          <input id="search-filter" type="text" name="q" placeholder="Search projects..." hx-get="/projects" hx-target="#projects-table" hx-swap="innerHTML" hx-push-url="true" hx-include="#project-filters" hx-trigger="keyup changed delay:400ms" value="{{ active_filters.get('q', '') }}"
+          <input id="search-filter" type="text" name="q" placeholder="Search projects..." hx-get="/projects"
+            hx-target="#projects-table" hx-swap="innerHTML" hx-push-url="true" hx-include="#project-filters"
+            hx-trigger="keyup changed delay:400ms" value="{{ active_filters.get('q', '') }}"
             class="w-full flex h-10 rounded-md border border-input bg-background pl-10 pr-3 py-2 text-sm placeholder:text-muted-foreground text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 transition-colors" />
         </div>
       </div>
     </form>
   </div>
 
-  <div class="rounded-xl bg-white dark:bg-slate-900 shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+  <div
+    class="rounded-xl bg-white dark:bg-slate-900 shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
     <div class="overflow-x-auto">
       <table class="w-full">
         <thead>
           <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
-            <th class="px-6 py-4 text-left text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest">Project Name</th>
-            <th class="px-6 py-4 text-left text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest">Client</th>
-            <th class="px-6 py-4 text-left text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest">Framework</th>
-            <th class="px-6 py-4 text-left text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest">Status</th>
-            <th class="px-6 py-4 text-right text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest">Actions</th>
+            <th
+              class="px-6 py-4 text-left text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest">
+              Project Name</th>
+            <th
+              class="px-6 py-4 text-left text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest">
+              Client</th>
+            <th
+              class="px-6 py-4 text-left text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest">
+              Framework</th>
+            <th
+              class="px-6 py-4 text-left text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest">
+              Status</th>
+            <th
+              class="px-6 py-4 text-right text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest">
+              Actions</th>
           </tr>
         </thead>
         <tbody id="projects-table" class="divide-y divide-slate-100 dark:divide-slate-800">

@@ -134,7 +134,7 @@
 
 <form id="control-form" hx-post="/projects/{{ project.id }}/controls/{{ control.id }}/details"
     hx-target="#control-details" hx-swap="innerHTML" class="grid grid-cols-1 xl:grid-cols-3 gap-6 mt-6 fade-in"
-    x-data="{ observations: JSON.parse('{{ observations|tojson }}' || '[]'), showToast: {{ 'true' if saved else 'false' }} }"
+    x-data='{ observations: {{ observations | map("dict") | list | tojson | safe }} || [], showToast: {{ "true" if saved else "false" }} }'
     x-init="if(showToast) { setTimeout(() => showToast = false, 3000) }"
     @submit="prepareObservationsData()">
 
