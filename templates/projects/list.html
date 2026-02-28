@@ -9,7 +9,7 @@
     </div>
     <a href="/projects/new"
       class="px-5 py-2.5 bg-primary hover:bg-primary/90 rounded-lg flex items-center justify-center gap-2 text-sm font-bold text-white transition-all">
-      <span class="material-symbols-outlined text-[18px]">add_circle</span>
+      <span class="material-symbols-outlined text-[14px]">add_circle</span>
       New Project
     </a>
   </div>
@@ -65,24 +65,24 @@
               class="flex flex-col gap-1 max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700 p-0.5">
               <li>
                 <button type="button" @click="updateValue('', 'All Statuses')" data-value="" data-label="All Statuses"
-                  :class="value === '' ? 'bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/20' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'"
-                  class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group">
+                  :class="value === '' ? 'bg-primary text-white shadow-md shadow-primary/25' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'"
+                  class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-sm font-medium transition-all group">
                   <span
                     :class="value === '' ? 'text-white' : 'text-slate-500 bg-slate-100 dark:bg-slate-800 dark:text-slate-400'"
-                    class="flex items-center justify-center w-8 h-8 rounded-full transition-colors">
-                    <span class="material-symbols-outlined text-[18px]">filter_list</span>
+                    class="flex items-center justify-center w-6 h-6 rounded-full transition-colors">
+                    <span class="material-symbols-outlined text-[14px]">filter_list</span>
                   </span>
                   <span class="truncate">All Statuses</span>
                 </button>
               </li>
               <li>
                 <button type="button" @click="updateValue('draft', 'Draft')" data-value="draft" data-label="Draft"
-                  :class="value === 'draft' ? 'bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/20' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'"
-                  class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all">
+                  :class="value === 'draft' ? 'bg-primary text-white shadow-md shadow-primary/25' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'"
+                  class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-sm font-medium transition-all">
                   <span
                     :class="value === 'draft' ? 'text-white' : 'text-slate-600 bg-slate-100 dark:bg-slate-800 dark:text-slate-400'"
-                    class="flex items-center justify-center w-8 h-8 rounded-full transition-colors">
-                    <span class="material-symbols-outlined text-[18px]">edit_document</span>
+                    class="flex items-center justify-center w-6 h-6 rounded-full transition-colors">
+                    <span class="material-symbols-outlined text-[14px]">edit_document</span>
                   </span>
                   <span class="truncate">Draft</span>
                 </button>
@@ -90,12 +90,12 @@
               <li>
                 <button type="button" @click="updateValue('in_progress', 'In Progress')" data-value="in_progress"
                   data-label="In Progress"
-                  :class="value === 'in_progress' ? 'bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/20' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'"
-                  class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all">
+                  :class="value === 'in_progress' ? 'bg-primary text-white shadow-md shadow-primary/25' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'"
+                  class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-sm font-medium transition-all">
                   <span
                     :class="value === 'in_progress' ? 'text-white' : 'text-amber-600 bg-amber-50 dark:bg-amber-900/30 dark:text-amber-400'"
-                    class="flex items-center justify-center w-8 h-8 rounded-full transition-colors">
-                    <span class="material-symbols-outlined text-[18px]">pending</span>
+                    class="flex items-center justify-center w-6 h-6 rounded-full transition-colors">
+                    <span class="material-symbols-outlined text-[14px]">pending</span>
                   </span>
                   <span class="truncate">In Progress</span>
                 </button>
@@ -103,12 +103,12 @@
               <li>
                 <button type="button" @click="updateValue('completed', 'Completed')" data-value="completed"
                   data-label="Completed"
-                  :class="value === 'completed' ? 'bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/20' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'"
-                  class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all">
+                  :class="value === 'completed' ? 'bg-primary text-white shadow-md shadow-primary/25' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'"
+                  class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-sm font-medium transition-all">
                   <span
                     :class="value === 'completed' ? 'text-white' : 'text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 dark:text-emerald-400'"
-                    class="flex items-center justify-center w-8 h-8 rounded-full transition-colors">
-                    <span class="material-symbols-outlined text-[18px]">check_circle</span>
+                    class="flex items-center justify-center w-6 h-6 rounded-full transition-colors">
+                    <span class="material-symbols-outlined text-[14px]">check_circle</span>
                   </span>
                   <span class="truncate">Completed</span>
                 </button>
@@ -116,12 +116,12 @@
               <li>
                 <button type="button" @click="updateValue('archived', 'Archived')" data-value="archived"
                   data-label="Archived"
-                  :class="value === 'archived' ? 'bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/20' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'"
-                  class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all">
+                  :class="value === 'archived' ? 'bg-primary text-white shadow-md shadow-primary/25' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'"
+                  class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-sm font-medium transition-all">
                   <span
                     :class="value === 'archived' ? 'text-white' : 'text-slate-600 bg-slate-100 dark:bg-slate-800 dark:text-slate-400'"
-                    class="flex items-center justify-center w-8 h-8 rounded-full transition-colors">
-                    <span class="material-symbols-outlined text-[18px]">inventory_2</span>
+                    class="flex items-center justify-center w-6 h-6 rounded-full transition-colors">
+                    <span class="material-symbols-outlined text-[14px]">inventory_2</span>
                   </span>
                   <span class="truncate">Archived</span>
                 </button>
@@ -179,12 +179,12 @@
               class="flex flex-col gap-1 max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700 p-0.5">
               <li>
                 <button type="button" @click="updateValue('', 'All Clients')" data-value="" data-label="All Clients"
-                  :class="value === '' ? 'bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/20' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'"
-                  class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group">
+                  :class="value === '' ? 'bg-primary text-white shadow-md shadow-primary/25' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'"
+                  class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-sm font-medium transition-all group">
                   <span
                     :class="value === '' ? 'text-white' : 'text-blue-500 bg-blue-50 dark:bg-blue-900/40 dark:text-blue-400'"
-                    class="flex items-center justify-center w-8 h-8 rounded-full transition-colors">
-                    <span class="material-symbols-outlined text-[18px]">group</span>
+                    class="flex items-center justify-center w-6 h-6 rounded-full transition-colors">
+                    <span class="material-symbols-outlined text-[14px]">group</span>
                   </span>
                   <span class="truncate">All Clients</span>
                 </button>
@@ -203,10 +203,10 @@
               <li>
                 <button type="button" @click='updateValue({{ client.id | string | tojson | safe }}, $el.dataset.label)'
                   data-value="{{ client.id }}" data-label="{{ client.name }}"
-                  :class='value === {{ client.id | string | tojson | safe }} ? "bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/20" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"'
-                  class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all">
+                  :class='value === {{ client.id | string | tojson | safe }} ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"'
+                  class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-sm font-medium transition-all">
                   <span :class='value === {{ client.id | string | tojson | safe }} ? "text-white" : "{{ color.text }} {{ color.bg }}"'
-                    class="flex items-center justify-center w-8 h-8 rounded-full font-bold text-xs transition-colors">
+                    class="flex items-center justify-center w-6 h-6 rounded-full font-bold text-xs transition-colors">
                     {{ client.name[0]|upper }}
                   </span>
                   <span class="truncate">{{ client.name }}</span>
@@ -267,12 +267,12 @@
               <li>
                 <button type="button" @click="updateValue('', 'All Frameworks')" data-value=""
                   data-label="All Frameworks"
-                  :class="value === '' ? 'bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/20' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'"
-                  class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group">
+                  :class="value === '' ? 'bg-primary text-white shadow-md shadow-primary/25' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'"
+                  class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-sm font-medium transition-all group">
                   <span
                     :class="value === '' ? 'text-white' : 'text-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 dark:text-indigo-400'"
-                    class="flex items-center justify-center w-8 h-8 rounded-full transition-colors">
-                    <span class="material-symbols-outlined text-[18px]">category</span>
+                    class="flex items-center justify-center w-6 h-6 rounded-full transition-colors">
+                    <span class="material-symbols-outlined text-[14px]">category</span>
                   </span>
                   <span class="truncate">All Frameworks</span>
                 </button>
@@ -291,10 +291,10 @@
               <li>
                 <button type="button" @click='updateValue({{ framework.id | string | tojson | safe }}, $el.dataset.label)'
                   data-value="{{ framework.id }}" data-label="{{ framework.name }}"
-                  :class='value === {{ framework.id | string | tojson | safe }} ? "bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/20" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"'
-                  class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all">
+                  :class='value === {{ framework.id | string | tojson | safe }} ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"'
+                  class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-sm font-medium transition-all">
                   <span :class='value === {{ framework.id | string | tojson | safe }} ? "text-white" : "{{ color.text }} {{ color.bg }}"'
-                    class="flex items-center justify-center w-8 h-8 rounded-full font-bold text-xs transition-colors">
+                    class="flex items-center justify-center w-6 h-6 rounded-full font-bold text-xs transition-colors">
                     {{ framework.name[0]|upper }}
                   </span>
                   <span class="truncate">{{ framework.name }}</span>
@@ -310,7 +310,7 @@
         <label for="search-filter" class="text-sm font-medium text-foreground">Search</label>
         <div class="relative">
           <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground">
-            <span class="material-symbols-outlined text-[18px]">search</span>
+            <span class="material-symbols-outlined text-[14px]">search</span>
           </span>
           <input id="search-filter" type="text" name="q" placeholder="Search projects..." hx-get="/projects"
             hx-target="#projects-table" hx-swap="innerHTML" hx-push-url="true" hx-include="#project-filters"

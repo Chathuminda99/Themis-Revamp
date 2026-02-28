@@ -70,10 +70,10 @@
             {% set color = colors[loop.index0 % colors|length] %}
             <li>
               <button type="button" @click='value = "{{ framework.id }}"; open = false'
-                :class='value === "{{ framework.id }}" ? "bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/20" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"'
+                :class='value === "{{ framework.id }}" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"'
                 class="dropdown-item">
                 <span :class='value === "{{ framework.id }}" ? "text-white" : "{{ color.text }} {{ color.bg }}"'
-                  class="flex items-center justify-center w-8 h-8 rounded-full font-bold text-xs transition-colors flex-shrink-0">
+                  class="flex items-center justify-center w-6 h-6 rounded-full font-bold text-xs transition-colors flex-shrink-0">
                   {{ framework.name[0]|upper }}
                 </span>
                 <span class="truncate">{{ framework.name }}</span>
@@ -113,7 +113,7 @@
       </button>
       <button type="submit"
         class="inline-flex items-center justify-center gap-2 font-medium rounded-md px-4 py-2 text-sm transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background bg-primary text-primary-foreground hover:opacity-90">
-        <span class="material-symbols-outlined text-[18px]">{% if project %}edit{% else %}add_circle{% endif %}</span>
+        <span class="material-symbols-outlined text-[14px]">{% if project %}edit{% else %}add_circle{% endif %}</span>
         {% if project %}Update{% else %}Create{% endif %} Project
       </button>
     </div>

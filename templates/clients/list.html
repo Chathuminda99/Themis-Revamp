@@ -10,7 +10,7 @@
     <button
       class="inline-flex items-center justify-center gap-2 font-medium rounded-md px-4 py-2 text-sm transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background bg-primary text-primary-foreground hover:opacity-90"
       hx-get="/clients/new" hx-target="#modal-body" @click="$store.modal.show()">
-      <span class="material-symbols-outlined text-[18px]">add_circle</span>
+      <span class="material-symbols-outlined text-[14px]">add_circle</span>
       New Client
     </button>
   </div>
@@ -55,11 +55,11 @@
             <ul class="flex flex-col gap-1 max-h-64 overflow-y-auto p-0.5">
               <li>
                 <button type="button" @click="updateValue('', 'All Industries')"
-                  :class="value === '' ? 'bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/20' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'"
-                  class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all">
+                  :class="value === '' ? 'bg-primary text-white shadow-md shadow-primary/25' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'"
+                  class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-sm font-medium transition-all">
                   <span :class="value === '' ? 'text-white' : 'text-blue-500 bg-blue-50 dark:bg-blue-900/40 dark:text-blue-400'"
-                    class="flex items-center justify-center w-8 h-8 rounded-full transition-colors flex-shrink-0">
-                    <span class="material-symbols-outlined text-[18px]">domain</span>
+                    class="flex items-center justify-center w-6 h-6 rounded-full transition-colors flex-shrink-0">
+                    <span class="material-symbols-outlined text-[14px]">domain</span>
                   </span>
                   <span class="truncate">All Industries</span>
                 </button>
@@ -75,10 +75,10 @@
               {% set color = colors[loop.index0 % colors|length] %}
               <li>
                 <button type="button" @click="updateValue({{ ind | tojson | safe }}, {{ ind | tojson | safe }})"
-                  :class='value === {{ ind | tojson | safe }} ? "bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/20" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"'
-                  class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all">
+                  :class='value === {{ ind | tojson | safe }} ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"'
+                  class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-sm font-medium transition-all">
                   <span :class='value === {{ ind | tojson | safe }} ? "text-white" : "{{ color.text }} {{ color.bg }}"'
-                    class="flex items-center justify-center w-8 h-8 rounded-full font-bold text-xs transition-colors flex-shrink-0">
+                    class="flex items-center justify-center w-6 h-6 rounded-full font-bold text-xs transition-colors flex-shrink-0">
                     {{ ind[0]|upper }}
                   </span>
                   <span class="truncate">{{ ind }}</span>

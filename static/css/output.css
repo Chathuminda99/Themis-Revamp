@@ -571,8 +571,8 @@ video {
   --accent-foreground: 0 0% 12.5490%;
   --destructive: 9.8901 81.9820% 43.5294%;
   --destructive-foreground: 0 100% 99.4118%;
-  --border: 0 0% 87.4510%;
-  --input: 0 0% 96.4706%;
+  --border: 0 0% 78%;
+  --input: 0 0% 75%;
   --ring: 151.3274 66.8639% 66.8627%;
   --chart-1: 151.3274 66.8639% 66.8627%;
   --chart-2: 217.2193 91.2195% 59.8039%;
@@ -721,12 +721,12 @@ video {
   border-radius: 14px;
   border-width: 1px;
   --tw-border-opacity: 1;
-  border-color: rgb(241 245 249 / var(--tw-border-opacity, 1));
+  border-color: rgb(226 232 240 / var(--tw-border-opacity, 1));
 }
 
 .dropdown-menu:is(.dark *) {
   --tw-border-opacity: 1;
-  border-color: rgb(30 41 59 / var(--tw-border-opacity, 1));
+  border-color: rgb(51 65 85 / var(--tw-border-opacity, 1));
 }
 
 .dropdown-menu {
@@ -780,12 +780,12 @@ video {
   display: flex;
   width: 100%;
   align-items: center;
-  gap: 0.75rem;
-  border-radius: calc(var(--radius) + 4px);
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
-  padding-top: 0.625rem;
-  padding-bottom: 0.625rem;
+  gap: 0.625rem;
+  border-radius: var(--radius);
+  padding-left: 0.625rem;
+  padding-right: 0.625rem;
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
   font-size: 0.875rem;
   line-height: 1.25rem;
   font-weight: 500;
@@ -817,10 +817,10 @@ video {
 }
 
 .dropdown-item.active {
+  background-color: hsl(var(--primary));
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
-  background-image: linear-gradient(to right, #3b82f6, #22d3ee);
-  box-shadow: 0 4px 6px -1px rgba(59,130,246,0.2);
+  box-shadow: 0 4px 6px -1px hsl(var(--primary) / 0.3);
 }
 
 .dropdown-item.active:hover {
@@ -2309,12 +2309,6 @@ video {
   background-image: linear-gradient(to right, var(--tw-gradient-stops));
 }
 
-.from-blue-500 {
-  --tw-gradient-from: #3b82f6 var(--tw-gradient-from-position);
-  --tw-gradient-to: rgb(59 130 246 / 0) var(--tw-gradient-to-position);
-  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
-}
-
 .from-blue-600 {
   --tw-gradient-from: #2563eb var(--tw-gradient-from-position);
   --tw-gradient-to: rgb(37 99 235 / 0) var(--tw-gradient-to-position);
@@ -2354,10 +2348,6 @@ video {
 
 .to-blue-500 {
   --tw-gradient-to: #3b82f6 var(--tw-gradient-to-position);
-}
-
-.to-cyan-400 {
-  --tw-gradient-to: #22d3ee var(--tw-gradient-to-position);
 }
 
 .to-indigo-600 {
@@ -3083,11 +3073,6 @@ video {
   --tw-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-}
-
-.shadow-blue-500\/20 {
-  --tw-shadow-color: rgb(59 130 246 / 0.2);
-  --tw-shadow: var(--tw-shadow-colored);
 }
 
 .shadow-primary\/20 {

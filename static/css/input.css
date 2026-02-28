@@ -27,7 +27,7 @@
     @apply absolute top-full left-0 right-0 mt-2 z-50 overflow-hidden;
     @apply bg-white dark:bg-slate-900;
     @apply rounded-[14px];
-    @apply border border-slate-100 dark:border-slate-800;
+    @apply border border-slate-200 dark:border-slate-700;
     @apply p-2;
     box-shadow: 0 10px 40px -10px rgba(0,0,0,0.15);
   }
@@ -57,7 +57,7 @@
   }
 
   .dropdown-item {
-    @apply w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all;
+    @apply w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-sm font-medium transition-all;
     @apply cursor-pointer text-slate-700 dark:text-slate-300;
     @apply focus-visible:outline-none;
   }
@@ -67,9 +67,8 @@
   }
 
   .dropdown-item.active {
-    @apply text-white;
-    background-image: linear-gradient(to right, #3b82f6, #22d3ee);
-    box-shadow: 0 4px 6px -1px rgba(59,130,246,0.2);
+    @apply bg-primary text-white;
+    box-shadow: 0 4px 6px -1px hsl(var(--primary) / 0.3);
   }
 
   .dropdown-item.active:hover {
@@ -99,8 +98,8 @@
     --accent-foreground: 0 0% 12.5490%;
     --destructive: 9.8901 81.9820% 43.5294%;
     --destructive-foreground: 0 100% 99.4118%;
-    --border: 0 0% 87.4510%;
-    --input: 0 0% 96.4706%;
+    --border: 0 0% 78%;
+    --input: 0 0% 75%;
     --ring: 151.3274 66.8639% 66.8627%;
     --chart-1: 151.3274 66.8639% 66.8627%;
     --chart-2: 217.2193 91.2195% 59.8039%;
