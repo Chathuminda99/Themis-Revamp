@@ -18,21 +18,75 @@
   <!-- Filter Bar -->
   <div class="mb-6 rounded-lg bg-card border border-border p-5 shadow-sm">
     <form id="client-filters" class="grid grid-cols-1 md:grid-cols-2 gap-5">
-      <div>
-        <label for="industry-filter" class="text-sm font-medium text-foreground block mb-2">Industry</label>
+      <div class="space-y-2" x-data='{
+          open: false,
+          value: "{{ active_filters.get("industry", "") }}",
+          label: {{ active_filters.get("industry", "All Industries") | tojson | safe }},
+          updateValue(val, newLabel) {
+              this.value = val;
+              this.label = newLabel;
+              this.$refs.input.value = val;
+              this.open = false;
+              this.$refs.input.dispatchEvent(new Event("change", { bubbles: true }));
+          }
+      }' @click.away="open = false">
+        <label class="text-sm font-medium text-foreground block">Industry</label>
         <div class="relative">
-          <select id="industry-filter" name="industry" hx-get="/clients" hx-target="#clients-table" hx-swap="innerHTML" hx-push-url="true" hx-include="#client-filters" @change="htmx.trigger(this, 'change')"
-            class="w-full flex h-10 appearance-none rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 transition-colors">
-            <option value="">All Industries</option>
-            {% for ind in distinct_industries %}
-            <option value="{{ ind }}" {% if active_filters.get('industry')==ind %}selected{% endif %}>{{ ind }}</option>
-            {% endfor %}
-          </select>
-          <span class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
-            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
-          </span>
+          <input type="hidden" name="industry" x-ref="input"
+            value="{{ active_filters.get('industry', '') }}"
+            hx-get="/clients" hx-target="#clients-table" hx-swap="innerHTML" hx-push-url="true" hx-include="#client-filters">
+          <button type="button" @click="open = !open"
+            class="w-full flex items-center justify-between h-10 rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-colors">
+            <span x-text="label" class="truncate block text-left flex-1 text-slate-700 dark:text-slate-300"></span>
+            <span class="pointer-events-none text-muted-foreground ml-2 transition-transform duration-200" :class="open ? 'rotate-180' : ''">
+              <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </span>
+          </button>
+          <div x-show="open" x-cloak
+            x-transition:enter="transition ease-out duration-150"
+            x-transition:enter-start="transform opacity-0 scale-95 translate-y-[-10px]"
+            x-transition:enter-end="transform opacity-100 scale-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-100"
+            x-transition:leave-start="transform opacity-100 scale-100 translate-y-0"
+            x-transition:leave-end="transform opacity-0 scale-95 translate-y-[-10px]"
+            class="absolute z-50 w-full mt-2 bg-white dark:bg-slate-900 rounded-[14px] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] dark:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] border border-slate-100 dark:border-slate-800 p-2 overflow-hidden">
+            <ul class="flex flex-col gap-1 max-h-64 overflow-y-auto p-0.5">
+              <li>
+                <button type="button" @click="updateValue('', 'All Industries')"
+                  :class="value === '' ? 'bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/20' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60'"
+                  class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all">
+                  <span :class="value === '' ? 'text-white' : 'text-blue-500 bg-blue-50 dark:bg-blue-900/40 dark:text-blue-400'"
+                    class="flex items-center justify-center w-8 h-8 rounded-full transition-colors flex-shrink-0">
+                    <span class="material-symbols-outlined text-[18px]">domain</span>
+                  </span>
+                  <span class="truncate">All Industries</span>
+                </button>
+              </li>
+              {% set colors = [
+                {'bg': 'bg-blue-50 dark:bg-blue-900/30', 'text': 'text-blue-600 dark:text-blue-400'},
+                {'bg': 'bg-emerald-50 dark:bg-emerald-900/30', 'text': 'text-emerald-600 dark:text-emerald-400'},
+                {'bg': 'bg-purple-50 dark:bg-purple-900/30', 'text': 'text-purple-600 dark:text-purple-400'},
+                {'bg': 'bg-amber-50 dark:bg-amber-900/30', 'text': 'text-amber-600 dark:text-amber-400'},
+                {'bg': 'bg-rose-50 dark:bg-rose-900/30', 'text': 'text-rose-600 dark:text-rose-400'}
+              ] %}
+              {% for ind in distinct_industries %}
+              {% set color = colors[loop.index0 % colors|length] %}
+              <li>
+                <button type="button" @click="updateValue({{ ind | tojson | safe }}, {{ ind | tojson | safe }})"
+                  :class='value === {{ ind | tojson | safe }} ? "bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/20" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"'
+                  class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all">
+                  <span :class='value === {{ ind | tojson | safe }} ? "text-white" : "{{ color.text }} {{ color.bg }}"'
+                    class="flex items-center justify-center w-8 h-8 rounded-full font-bold text-xs transition-colors flex-shrink-0">
+                    {{ ind[0]|upper }}
+                  </span>
+                  <span class="truncate">{{ ind }}</span>
+                </button>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
         </div>
       </div>
 

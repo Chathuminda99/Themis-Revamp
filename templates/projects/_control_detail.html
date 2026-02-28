@@ -16,23 +16,77 @@
                 control.name }}</h1>
         </div>
 
-        <div
-            class="bg-white dark:bg-slate-900 px-3 py-1.5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 flex items-center transition-shadow hover:shadow-md">
-            <select name="status" form="control-form" class="bg-transparent border-none text-sm font-bold focus:ring-0 outline-none cursor-pointer
-          {% if response and response.status.value == 'approved' %} text-emerald-600 dark:text-emerald-500
-          {% elif response and response.status.value == 'rejected' %} text-rose-600 dark:text-rose-500
-          {% elif response and response.status.value == 'not_applicable' %} text-slate-500 dark:text-slate-400
-          {% else %} text-amber-600 dark:text-amber-500 {% endif %}">
-                <option class="text-slate-900 font-medium" value="in_progress" {% if not response or
-                    response.status.value not in ['approved', 'rejected' , 'not_applicable' ] %}selected{% endif %}>In
-                    Progress</option>
-                <option class="text-slate-900 font-medium" value="approved" {% if response and
-                    response.status.value=='approved' %}selected{% endif %}>Compliant</option>
-                <option class="text-slate-900 font-medium" value="rejected" {% if response and
-                    response.status.value=='rejected' %}selected{% endif %}>Non-Compliant</option>
-                <option class="text-slate-900 font-medium" value="not_applicable" {% if response and
-                    response.status.value=='not_applicable' %}selected{% endif %}>N/A</option>
-            </select>
+        <div x-data='{
+            open: false,
+            value: "{{ response.status.value if response and response.status.value in ["approved","rejected","not_applicable"] else "in_progress" }}",
+            colors: {"in_progress": "text-amber-600 dark:text-amber-500", "approved": "text-emerald-600 dark:text-emerald-500", "rejected": "text-rose-600 dark:text-rose-500", "not_applicable": "text-slate-500 dark:text-slate-400"},
+            labels: {"in_progress": "In Progress", "approved": "Compliant", "rejected": "Non-Compliant", "not_applicable": "N/A"}
+        }' @click.outside="open = false" class="relative">
+            <input type="hidden" name="status" form="control-form" :value="value" />
+            <button type="button" @click="open = !open"
+                class="bg-white dark:bg-slate-900 px-3 py-1.5 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 transition-shadow hover:shadow-md text-sm font-bold cursor-pointer"
+                :class="colors[value]">
+                <span x-text="labels[value]"></span>
+                <svg class="w-3.5 h-3.5 transition-transform duration-150" :class="open ? 'rotate-180' : ''"
+                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </button>
+            <div x-show="open" x-cloak
+                x-transition:enter="transition ease-out duration-150"
+                x-transition:enter-start="transform opacity-0 scale-95 translate-y-[-10px]"
+                x-transition:enter-end="transform opacity-100 scale-100 translate-y-0"
+                x-transition:leave="transition ease-in duration-100"
+                x-transition:leave-start="transform opacity-100 scale-100 translate-y-0"
+                x-transition:leave-end="transform opacity-0 scale-95 translate-y-[-10px]"
+                class="absolute right-0 top-full z-50 mt-2 w-48 bg-white dark:bg-slate-900 rounded-[14px] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] dark:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] border border-slate-100 dark:border-slate-800 p-2 overflow-hidden">
+                <ul class="flex flex-col gap-1 p-0.5">
+                    <li>
+                        <button type="button" @click='value = "in_progress"; open = false'
+                            :class='value === "in_progress" ? "bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/20" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"'
+                            class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-all">
+                            <span :class='value === "in_progress" ? "text-white" : "text-amber-600 bg-amber-50 dark:bg-amber-900/30 dark:text-amber-400"'
+                                class="flex items-center justify-center w-7 h-7 rounded-full transition-colors flex-shrink-0">
+                                <span class="material-symbols-outlined text-[16px]">pending</span>
+                            </span>
+                            <span>In Progress</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" @click='value = "approved"; open = false'
+                            :class='value === "approved" ? "bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/20" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"'
+                            class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-all">
+                            <span :class='value === "approved" ? "text-white" : "text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 dark:text-emerald-400"'
+                                class="flex items-center justify-center w-7 h-7 rounded-full transition-colors flex-shrink-0">
+                                <span class="material-symbols-outlined text-[16px]">check_circle</span>
+                            </span>
+                            <span>Compliant</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" @click='value = "rejected"; open = false'
+                            :class='value === "rejected" ? "bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/20" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"'
+                            class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-all">
+                            <span :class='value === "rejected" ? "text-white" : "text-rose-600 bg-rose-50 dark:bg-rose-900/30 dark:text-rose-400"'
+                                class="flex items-center justify-center w-7 h-7 rounded-full transition-colors flex-shrink-0">
+                                <span class="material-symbols-outlined text-[16px]">cancel</span>
+                            </span>
+                            <span>Non-Compliant</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" @click='value = "not_applicable"; open = false'
+                            :class='value === "not_applicable" ? "bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/20" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"'
+                            class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-all">
+                            <span :class='value === "not_applicable" ? "text-white" : "text-slate-500 bg-slate-100 dark:bg-slate-800 dark:text-slate-400"'
+                                class="flex items-center justify-center w-7 h-7 rounded-full transition-colors flex-shrink-0">
+                                <span class="material-symbols-outlined text-[16px]">do_not_disturb</span>
+                            </span>
+                            <span>N/A</span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 
@@ -166,16 +220,51 @@
                     class="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-3">
                     Select Observation
                 </label>
-                <select onchange="addObservation(this.value, '{{ control.id }}')"
-                    class="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white">
-                    <option value="">-- Choose an observation --</option>
-                    {% for obs in control.assessment_checklist.observations %}
-                    <option value="{{ obs.id }}" data-label="{{ obs.label }}"
-                        data-recommendation="{{ obs.recommendation }}">
-                        {{ obs.label|truncate(60) }}
-                    </option>
-                    {% endfor %}
-                </select>
+                {% set obs_list = [] %}
+                {% for obs in control.assessment_checklist.observations %}
+                {% set _ = obs_list.append({"id": obs.id|string, "label": obs.label, "recommendation": obs.recommendation or ""}) %}
+                {% endfor %}
+                <div x-data='{
+                    open: false,
+                    value: "",
+                    obsData: {{ obs_list | tojson | safe }}
+                }' @click.away="open = false" class="relative">
+                    <button type="button" @click="open = !open"
+                        class="w-full flex items-center justify-between h-10 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30">
+                        <span x-text="value ? (obsData.find(o => o.id === value)?.label || '').substring(0, 60) : '-- Choose an observation --'"
+                            :class="value ? 'text-slate-900 dark:text-white' : 'text-slate-400 dark:text-slate-500'"
+                            class="truncate text-left flex-1"></span>
+                        <span class="pointer-events-none text-slate-400 ml-2 transition-transform duration-200" :class="open ? 'rotate-180' : ''">
+                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </span>
+                    </button>
+                    <div x-show="open" x-cloak
+                        x-transition:enter="transition ease-out duration-150"
+                        x-transition:enter-start="transform opacity-0 scale-95 translate-y-[-10px]"
+                        x-transition:enter-end="transform opacity-100 scale-100 translate-y-0"
+                        x-transition:leave="transition ease-in duration-100"
+                        x-transition:leave-start="transform opacity-100 scale-100 translate-y-0"
+                        x-transition:leave-end="transform opacity-0 scale-95 translate-y-[-10px]"
+                        class="absolute z-50 w-full mt-2 bg-white dark:bg-slate-900 rounded-[14px] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] dark:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] border border-slate-100 dark:border-slate-800 p-2 overflow-hidden">
+                        <ul class="flex flex-col gap-1 max-h-64 overflow-y-auto p-0.5">
+                            <template x-for="(obs, idx) in obsData" :key="obs.id">
+                                <li>
+                                    <button type="button"
+                                        @click='addObservation(obs.id, "{{ control.id }}", obs.label, obs.recommendation); value = obs.id; open = false; $nextTick(() => { value = "" })'
+                                        :class='value === obs.id ? "bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/20" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"'
+                                        class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all">
+                                        <span :class='value === obs.id ? "text-white" : "text-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 dark:text-indigo-400"'
+                                            class="flex items-center justify-center w-8 h-8 rounded-full transition-colors flex-shrink-0 text-[10px] font-bold"
+                                            x-text="(obs.label || '')[0]?.toUpperCase() || '?'"></span>
+                                        <span class="truncate text-left" x-text="obs.label.length > 55 ? obs.label.substring(0, 55) + '...' : obs.label"></span>
+                                    </button>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
             <!-- Observations Table -->
@@ -317,17 +406,8 @@
 
 
 <script>
-    function addObservation(observationId, controlId) {
+    function addObservation(observationId, controlId, label, recommendation) {
         if (!observationId) return;
-
-        // Get the selected option data
-        const select = document.querySelector(`select[onchange*="${controlId}"]`);
-        const option = select.querySelector(`option[value="${observationId}"]`);
-
-        if (!option) return;
-
-        const label = option.getAttribute('data-label');
-        const recommendation = option.getAttribute('data-recommendation');
 
         // Get form Alpine data
         const form = document.getElementById('control-form');

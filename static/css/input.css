@@ -2,6 +2,85 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =====================================================================
+   DROPDOWN COMPONENT STYLES
+   Matches the filter bar dropdown visual style (rounded-[14px] panel,
+   gradient active state, icon badges).
+   ===================================================================== */
+@layer components {
+  .dropdown-select {
+    @apply w-full flex items-center justify-between h-10 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground;
+    @apply transition-colors duration-200;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+    @apply disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .dropdown-select:hover:not(:disabled) {
+    @apply border-primary/60;
+  }
+
+  .dropdown-wrapper {
+    @apply relative;
+  }
+
+  .dropdown-menu {
+    @apply absolute top-full left-0 right-0 mt-2 z-50 overflow-hidden;
+    @apply bg-white dark:bg-slate-900;
+    @apply rounded-[14px];
+    @apply border border-slate-100 dark:border-slate-800;
+    @apply p-2;
+    box-shadow: 0 10px 40px -10px rgba(0,0,0,0.15);
+  }
+
+  .dark .dropdown-menu {
+    box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
+  }
+
+  .dropdown-menu::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  .dropdown-menu::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  .dropdown-menu::-webkit-scrollbar-thumb {
+    @apply bg-slate-200 dark:bg-slate-700 rounded-full;
+  }
+
+  .dropdown-menu::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-300 dark:bg-slate-600;
+  }
+
+  .dropdown-menu ul {
+    @apply flex flex-col gap-1 max-h-64 overflow-y-auto p-0.5;
+  }
+
+  .dropdown-item {
+    @apply w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all;
+    @apply cursor-pointer text-slate-700 dark:text-slate-300;
+    @apply focus-visible:outline-none;
+  }
+
+  .dropdown-item:hover:not(:disabled) {
+    @apply bg-slate-50 dark:bg-slate-800/60;
+  }
+
+  .dropdown-item.active {
+    @apply text-white;
+    background-image: linear-gradient(to right, #3b82f6, #22d3ee);
+    box-shadow: 0 4px 6px -1px rgba(59,130,246,0.2);
+  }
+
+  .dropdown-item.active:hover {
+    @apply opacity-90;
+  }
+
+  .dropdown-item:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 98.8235%;

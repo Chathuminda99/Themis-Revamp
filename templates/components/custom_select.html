@@ -1,29 +1,29 @@
 {# ======================================================================
    GLOBAL STANDARDIZED DROPDOWN COMPONENT
    ======================================================================
-   This is the single source of truth for dropdown styling across the app.
-   All dropdowns should use this component for consistency.
+   Visual style matches the filter bar dropdowns (projects/list.html).
 
-   Features:
-   - Modern enterprise dashboard aesthetic
-   - Smooth animations and transitions
-   - Accessible focus states
-   - Full keyboard navigation support
-   - Custom styling via global CSS classes
+   Usage: set all variables with {% set %} before including:
+      {% set select_id = "status" %}
+      {% set select_name = "status" %}
+      {% set select_value = "draft" %}
+      {% set select_label = "Status" %}
+      {% set select_options = [
+        {"value": "draft", "label": "Draft",
+         "icon": "edit_document",
+         "color": "text-slate-600 dark:text-slate-400",
+         "icon_bg": "bg-slate-100 dark:bg-slate-800"},
+        ...
+      ] %}
+      {% include "components/custom_select.html" with context %}
 
-   Usage:
-   {% include "components/custom_select.html" with context %}
-   {#
-     select_id="status",
-     select_name="status",
-     select_value="draft",
-     select_options=[{"value": "draft", "label": "Draft"}, ...],
-     select_label="Status (Optional)",
-     select_help="Help text (Optional)",
-     required=false,
-     disabled=false,
-     on_change="htmx.trigger(this, 'change')",  # Optional callback
-   #}
+   Options keys:
+     value, label — required
+     icon         — optional Material Symbol name (shows icon badge)
+     color        — optional icon text color class
+     icon_bg      — optional icon background class
+   Optional:
+     select_help, required, disabled, on_change
 ====================================================================== #}
 
 <div class="space-y-2">
@@ -38,39 +38,32 @@
   {# Dropdown Container #}
   <div x-data='{
     open: false,
-    value: {{ select_value | string | tojson | safe if select_value else "null" }},
+    value: {{ select_value | string | tojson | safe if select_value is defined and select_value is not none else "\"\"" }},
     getLabel() {
       const labels = {
         {% for option in select_options %}{{ option.value | string | tojson | safe }}: {{ option.label | tojson | safe }},{% endfor %}
       };
       return labels[this.value] || "Select...";
     }
-  }' @click.outside="open = false" class="dropdown-wrapper">
+  }' @click.outside="open = false" class="relative">
 
     {# Trigger Button #}
     <button
       type="button"
       id="{{ select_id }}"
       @click="open = !open"
-      :class="{ 'border-primary': open }"
-      class="dropdown-select flex items-center justify-between group"
+      class="dropdown-select"
       {% if required %}required{% endif %}
       {% if disabled %}disabled{% endif %}
     >
-      <span x-text="getLabel()" class="group-disabled:opacity-50"></span>
-      <svg
-        class="w-4 h-4 transition-transform duration-200 text-muted-foreground group-disabled:opacity-50"
-        :class="{ 'rotate-180': open }"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <polyline points="6 9 12 15 18 9"></polyline>
-      </svg>
+      <span x-text="getLabel()" class="truncate block text-left flex-1 text-slate-700 dark:text-slate-300"></span>
+      <span class="pointer-events-none text-muted-foreground ml-2 transition-transform duration-200"
+        :class="open ? 'rotate-180' : ''">
+        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </span>
     </button>
 
     {# Hidden Input for Form Submission #}
@@ -79,18 +72,17 @@
     {# Dropdown Menu Panel #}
     <div
       x-show="open"
+      x-cloak
       @keydown.escape.window="open = false"
-      @keydown.arrow-down.window.prevent="$focus.wrap().next()"
-      @keydown.arrow-up.window.prevent="$focus.wrap().previous()"
       x-transition:enter="transition ease-out duration-150"
-      x-transition:enter-start="opacity-0 -translate-y-1"
-      x-transition:enter-end="opacity-100 translate-y-0"
+      x-transition:enter-start="transform opacity-0 scale-95 translate-y-[-10px]"
+      x-transition:enter-end="transform opacity-100 scale-100 translate-y-0"
       x-transition:leave="transition ease-in duration-100"
-      x-transition:leave-start="opacity-100 translate-y-0"
-      x-transition:leave-end="opacity-0 -translate-y-1"
+      x-transition:leave-start="transform opacity-100 scale-100 translate-y-0"
+      x-transition:leave-end="transform opacity-0 scale-95 translate-y-[-10px]"
       class="dropdown-menu"
     >
-      <ul class="py-1" role="listbox">
+      <ul role="listbox">
         {% for option in select_options %}
         <li role="presentation">
           <button
@@ -102,10 +94,17 @@
               {% if on_change %}{{ on_change }};{% endif %}
             '
             :aria-selected='value === {{ option.value | string | tojson | safe }}'
+            :class='value === {{ option.value | string | tojson | safe }} ? "bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/20" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"'
             class="dropdown-item"
-            :class='{ "active": value === {{ option.value | string | tojson | safe }} }'
           >
-            {{ option.label }}
+            {% if option.icon is defined %}
+            <span
+              :class='value === {{ option.value | string | tojson | safe }} ? "text-white" : "{{ option.color | default("text-slate-500") }} {{ option.icon_bg | default("bg-slate-100 dark:bg-slate-800") }}"'
+              class="flex items-center justify-center w-8 h-8 rounded-full transition-colors flex-shrink-0">
+              <span class="material-symbols-outlined text-[18px]">{{ option.icon }}</span>
+            </span>
+            {% endif %}
+            <span class="truncate">{{ option.label }}</span>
           </button>
         </li>
         {% endfor %}

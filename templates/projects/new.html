@@ -48,13 +48,58 @@
                     <div class="flex flex-col gap-2">
                         <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Client or Department
                             <span class="text-red-500">*</span></label>
-                        <select name="client_id" required
-                            class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all">
-                            <option value="" disabled selected>Select a client/department...</option>
-                            {% for client in clients %}
-                            <option value="{{ client.id }}">{{ client.name }}</option>
-                            {% endfor %}
-                        </select>
+                        <div x-data='{
+                            open: false,
+                            value: "",
+                            names: {
+                                {% for client in clients %}"{{ client.id }}": {{ client.name | tojson | safe }},{% endfor %}
+                            },
+                            getLabel() { return this.names[this.value] || "Select a client/department..."; }
+                        }' @click.away="open = false" class="relative">
+                            <input type="hidden" name="client_id" :value="value" required />
+                            <button type="button" @click="open = !open"
+                                class="w-full flex items-center justify-between h-10 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                                <span x-text="getLabel()" class="truncate text-left flex-1"
+                                    :class="value ? 'text-slate-900 dark:text-slate-100' : 'text-slate-400 dark:text-slate-500'"></span>
+                                <span class="pointer-events-none text-slate-400 ml-2 transition-transform duration-200" :class="open ? 'rotate-180' : ''">
+                                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </span>
+                            </button>
+                            <div x-show="open" x-cloak
+                                x-transition:enter="transition ease-out duration-150"
+                                x-transition:enter-start="transform opacity-0 scale-95 translate-y-[-10px]"
+                                x-transition:enter-end="transform opacity-100 scale-100 translate-y-0"
+                                x-transition:leave="transition ease-in duration-100"
+                                x-transition:leave-start="transform opacity-100 scale-100 translate-y-0"
+                                x-transition:leave-end="transform opacity-0 scale-95 translate-y-[-10px]"
+                                class="absolute z-50 w-full mt-2 bg-white dark:bg-slate-900 rounded-[14px] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] dark:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] border border-slate-100 dark:border-slate-800 p-2 overflow-hidden">
+                                <ul class="flex flex-col gap-1 max-h-64 overflow-y-auto p-0.5">
+                                    {% set colors = [
+                                      {'text': 'text-blue-600 dark:text-blue-400', 'bg': 'bg-blue-50 dark:bg-blue-900/30'},
+                                      {'text': 'text-emerald-600 dark:text-emerald-400', 'bg': 'bg-emerald-50 dark:bg-emerald-900/30'},
+                                      {'text': 'text-purple-600 dark:text-purple-400', 'bg': 'bg-purple-50 dark:bg-purple-900/30'},
+                                      {'text': 'text-amber-600 dark:text-amber-400', 'bg': 'bg-amber-50 dark:bg-amber-900/30'},
+                                      {'text': 'text-rose-600 dark:text-rose-400', 'bg': 'bg-rose-50 dark:bg-rose-900/30'}
+                                    ] %}
+                                    {% for client in clients %}
+                                    {% set color = colors[loop.index0 % colors|length] %}
+                                    <li>
+                                        <button type="button" @click='value = "{{ client.id }}"; open = false'
+                                            :class='value === "{{ client.id }}" ? "bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md shadow-blue-500/20" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"'
+                                            class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all">
+                                            <span :class='value === "{{ client.id }}" ? "text-white" : "{{ color.text }} {{ color.bg }}"'
+                                                class="flex items-center justify-center w-8 h-8 rounded-full font-bold text-xs transition-colors flex-shrink-0">
+                                                {{ client.name[0]|upper }}
+                                            </span>
+                                            <span class="truncate">{{ client.name }}</span>
+                                        </button>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                     <div class="flex flex-col gap-2">
                         <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Project Description
