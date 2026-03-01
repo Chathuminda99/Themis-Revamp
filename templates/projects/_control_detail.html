@@ -115,7 +115,7 @@
                 x-transition:leave="transition ease-in duration-150"
                 x-transition:leave-start="opacity-100"
                 x-transition:leave-end="opacity-0"
-                class="px-5 pb-5 border-t border-slate-100 dark:border-slate-800 pt-4">
+                class="px-6 pb-6 border-t border-slate-100 dark:border-slate-800 pt-5">
                 <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-wrap break-words">{{- control.requirements_text }}</p>
             </div>
         </div>
@@ -144,7 +144,7 @@
                 x-transition:leave="transition ease-in duration-150"
                 x-transition:leave-start="opacity-100"
                 x-transition:leave-end="opacity-0"
-                class="px-5 pb-5 border-t border-slate-100 dark:border-slate-800 pt-4">
+                class="px-6 pb-6 border-t border-slate-100 dark:border-slate-800 pt-5">
                 <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-wrap break-words">{{- control.testing_procedures_text }}</p>
             </div>
         </div>
@@ -186,7 +186,7 @@
                 x-transition:leave="transition ease-in duration-150"
                 x-transition:leave-start="opacity-100"
                 x-transition:leave-end="opacity-0"
-                class="border-t border-purple-100 dark:border-purple-900/40 px-5 py-4 max-h-52 overflow-y-auto scrollbar-thin scrollbar-thumb-purple-300 dark:scrollbar-thumb-purple-700">
+                class="border-t border-purple-100 dark:border-purple-900/40 px-6 py-5 max-h-52 overflow-y-auto scrollbar-thin scrollbar-thumb-purple-300 dark:scrollbar-thumb-purple-700">
                 <div class="space-y-1">
                     {% set lines = control.check_points_text.strip().split('\n') %}
                     {% for line in lines %}
