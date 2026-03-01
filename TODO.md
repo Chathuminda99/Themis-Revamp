@@ -32,7 +32,8 @@
 
 ## Features & Functionality
 
-- [ ] (Future items to be added)
+- [x] Evidence panel per observation — add text notes and upload images/files
+- [x] Audit timer in project controls sidebar — start, pause, stop with localStorage persistence
 
 ## Antigravity UX/UI suggestions
 
