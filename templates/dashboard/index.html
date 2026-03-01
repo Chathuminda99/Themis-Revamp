@@ -70,10 +70,10 @@
     </div>
 
     <!-- Section Heading -->
-    <div class="mb-6">
+    <div class="mb-6 flex items-center justify-between">
         <h2 class="text-xl font-bold text-slate-900 dark:text-white">Active Audit Projects</h2>
+        <a href="/projects" class="text-sm font-medium text-primary hover:opacity-75 transition-opacity">View all</a>
     </div>
-
 
     <!-- Project Grid -->
     {% if active_projects %}
@@ -167,19 +167,21 @@
 
     {% else %}
     <!-- Empty State -->
-    <div class="bg-card border border-border rounded-xl shadow-sm flex flex-col items-center justify-center py-20 px-8 text-center">
-        <div class="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center mb-6">
-            <span class="material-symbols-outlined text-primary" style="font-size:40px">assignment</span>
+    <div class="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+        <div class="flex flex-col items-center justify-center py-16 px-6 text-center">
+            <div class="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-5">
+                <span class="material-symbols-outlined text-primary" style="font-size:32px">assignment</span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 mb-2">No active projects</h3>
+            <p class="text-slate-500 dark:text-slate-400 text-sm mb-6 max-w-xs">
+                You have no in-progress audits. Start a new project to begin a compliance assessment.
+            </p>
+            <a href="/projects/new"
+                class="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm shadow-primary/20">
+                <span class="material-symbols-outlined" style="font-size:16px">add_circle</span>
+                New Project
+            </a>
         </div>
-        <h3 class="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2">No active projects</h3>
-        <p class="text-slate-500 dark:text-slate-400 text-sm max-w-sm mb-8">
-            You have no in-progress audits right now. Start a new project to begin a compliance assessment.
-        </p>
-        <a href="/projects/new"
-            class="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-5 py-2.5 rounded-lg text-sm font-bold transition-all shadow-sm shadow-primary/20">
-            <span class="material-symbols-outlined" style="font-size:18px">add_circle</span>
-            New Project
-        </a>
     </div>
     {% endif %}
 </div>
