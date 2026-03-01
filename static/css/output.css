@@ -2362,10 +2362,6 @@ body {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
 }
 
-.bg-white\/75 {
-  background-color: rgb(255 255 255 / 0.75);
-}
-
 .bg-white\/90 {
   background-color: rgb(255 255 255 / 0.9);
 }
@@ -3914,10 +3910,6 @@ body {
 
 .dark\:bg-slate-900\/50:is(.dark *) {
   background-color: rgb(15 23 42 / 0.5);
-}
-
-.dark\:bg-slate-900\/75:is(.dark *) {
-  background-color: rgb(15 23 42 / 0.75);
 }
 
 .dark\:bg-slate-900\/90:is(.dark *) {
