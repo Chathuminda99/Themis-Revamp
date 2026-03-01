@@ -19,7 +19,7 @@
                         {{ control.control_id }}
                     </span>
                 </div>
-                <h1 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight">
+                <h1 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">
                     {{ control.name }}
                 </h1>
                 <p class="text-slate-500 dark:text-slate-400 mt-2 text-sm">
@@ -37,7 +37,7 @@
     <!-- Success Message -->
     {% if saved %}
     <div class="mb-6 p-4 rounded-lg border border-emerald-200 dark:border-emerald-900/30 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 flex items-start gap-3">
-        <span class="material-symbols-outlined flex-shrink-0 text-[20px]">check_circle</span>
+        <span class="material-symbols-outlined flex-shrink-0 text-xl">check_circle</span>
         <div>
             <p class="font-bold text-sm">Template saved successfully!</p>
             <p class="text-xs mt-1">Your changes have been saved to the database.</p>
@@ -48,12 +48,12 @@
     <!-- Edit Form -->
     <form method="POST" action="/admin/controls/{{ control.id }}/save" class="space-y-6">
         <!-- Requirements Section -->
-        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+        <div class="bg-card border border-border rounded-xl p-6 shadow-sm">
             <div class="flex items-center gap-2 mb-4">
                 <div class="bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 p-2 rounded-lg flex items-center justify-center">
-                    <span class="material-symbols-outlined text-[18px]">description</span>
+                    <span class="material-symbols-outlined text-lg">description</span>
                 </div>
-                <h2 class="text-lg font-bold text-slate-900 dark:text-white">Requirements</h2>
+                <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100">Requirements</h2>
             </div>
 
             <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">
@@ -64,20 +64,20 @@
                 name="requirements_text"
                 rows="8"
                 placeholder="• Main requirement&#10;  ◦ Sub-requirement&#10;  ◦ Another sub-point&#10;• Second requirement"
-                class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 font-mono text-sm">{{ control.requirements_text or '' }}</textarea>
+                class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 font-mono text-sm">{{ control.requirements_text or '' }}</textarea>
 
-            <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-2">
+            <p class="text-xs text-slate-400 dark:text-slate-500 mt-2">
                 💡 Use spaces/tabs for indentation to create sub-levels
             </p>
         </div>
 
         <!-- Testing Procedures Section -->
-        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+        <div class="bg-card border border-border rounded-xl p-6 shadow-sm">
             <div class="flex items-center gap-2 mb-4">
                 <div class="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 p-2 rounded-lg flex items-center justify-center">
-                    <span class="material-symbols-outlined text-[18px]">assignment_turned_in</span>
+                    <span class="material-symbols-outlined text-lg">assignment_turned_in</span>
                 </div>
-                <h2 class="text-lg font-bold text-slate-900 dark:text-white">Testing Procedures</h2>
+                <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100">Testing Procedures</h2>
             </div>
 
             <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">
@@ -88,20 +88,20 @@
                 name="testing_procedures_text"
                 rows="8"
                 placeholder="• Test step 1&#10;  ◦ Verification method&#10;  ◦ Expected result&#10;• Test step 2"
-                class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 font-mono text-sm">{{ control.testing_procedures_text or '' }}</textarea>
+                class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 font-mono text-sm">{{ control.testing_procedures_text or '' }}</textarea>
 
-            <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-2">
+            <p class="text-xs text-slate-400 dark:text-slate-500 mt-2">
                 💡 Use spaces/tabs for indentation to create sub-levels
             </p>
         </div>
 
         <!-- Check Points Section -->
-        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+        <div class="bg-card border border-border rounded-xl p-6 shadow-sm">
             <div class="flex items-center gap-2 mb-4">
                 <div class="bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400 p-2 rounded-lg flex items-center justify-center">
-                    <span class="material-symbols-outlined text-[18px]">checklist</span>
+                    <span class="material-symbols-outlined text-lg">checklist</span>
                 </div>
-                <h2 class="text-lg font-bold text-slate-900 dark:text-white">Check Points</h2>
+                <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100">Check Points</h2>
             </div>
 
             <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">
@@ -112,9 +112,9 @@
                 name="check_points_text"
                 rows="8"
                 placeholder="• Primary checkpoint&#10;  - Sub-checkpoint 1&#10;  - Sub-checkpoint 2&#10;• Secondary checkpoint"
-                class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 font-mono text-sm">{{ control.check_points_text or '' }}</textarea>
+                class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 font-mono text-sm">{{ control.check_points_text or '' }}</textarea>
 
-            <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-2">
+            <p class="text-xs text-slate-400 dark:text-slate-500 mt-2">
                 💡 Use spaces/tabs for indentation to create sub-levels
             </p>
         </div>
@@ -137,15 +137,15 @@
 
     <!-- Preview Section -->
     <div class="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
-        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-6">Preview</h3>
+        <h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 mb-6">Preview</h3>
         <div class="grid grid-cols-1 gap-6">
             <!-- Requirements Preview -->
             {% if control.requirements_text %}
-            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm relative overflow-hidden">
+            <div class="bg-card border border-border rounded-xl p-5 shadow-sm relative overflow-hidden">
                 <div class="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
-                <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 flex items-center gap-2">
+                <h4 class="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider mb-3 flex items-center gap-2">
                     <div class="bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 p-1.5 rounded-lg flex items-center justify-center">
-                        <span class="material-symbols-outlined text-[16px]">description</span>
+                        <span class="material-symbols-outlined text-base">description</span>
                     </div>
                     Requirements
                 </h4>
@@ -156,11 +156,11 @@
 
             <!-- Testing Procedures Preview -->
             {% if control.testing_procedures_text %}
-            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm relative overflow-hidden">
+            <div class="bg-card border border-border rounded-xl p-5 shadow-sm relative overflow-hidden">
                 <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
-                <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 flex items-center gap-2">
+                <h4 class="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider mb-3 flex items-center gap-2">
                     <div class="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 p-1.5 rounded-lg flex items-center justify-center">
-                        <span class="material-symbols-outlined text-[16px]">assignment_turned_in</span>
+                        <span class="material-symbols-outlined text-base">assignment_turned_in</span>
                     </div>
                     Testing Procedures
                 </h4>
@@ -171,11 +171,11 @@
 
             <!-- Check Points Preview -->
             {% if control.check_points_text %}
-            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm relative overflow-hidden">
+            <div class="bg-card border border-border rounded-xl p-5 shadow-sm relative overflow-hidden">
                 <div class="absolute top-0 left-0 w-1 h-full bg-purple-500"></div>
-                <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+                <h4 class="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider mb-4 flex items-center gap-2">
                     <div class="bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400 p-1.5 rounded-lg flex items-center justify-center">
-                        <span class="material-symbols-outlined text-[16px]">checklist</span>
+                        <span class="material-symbols-outlined text-base">checklist</span>
                     </div>
                     Check Points
                 </h4>
