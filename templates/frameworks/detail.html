@@ -1,60 +1,107 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="px-8 py-8">
-  <div class="mb-8">
-    <h1 class="text-3xl font-bold text-slate-900 dark:text-slate-100">{{ framework.name }}</h1>
-    {% if framework.version %}
-    <p class="text-slate-500 dark:text-slate-400 mt-2">Version: {{ framework.version }}</p>
-    {% endif %}
-    {% if framework.description %}
-    <p class="text-slate-600 dark:text-slate-300 mt-4">{{ framework.description }}</p>
-    {% endif %}
+<div class="px-4 py-6 md:px-8 md:py-8 animate-fade-in-up">
+
+  <!-- Page Header -->
+  <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div class="flex items-center gap-5">
+      <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-primary to-primary/70 text-white flex items-center justify-center shadow-md shadow-primary/30 flex-shrink-0">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+      </div>
+      <div>
+        <div class="flex items-center gap-3">
+          <h1 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">{{ framework.name }}</h1>
+          {% if framework.version %}
+          <span class="text-xs font-medium bg-primary/10 text-primary px-2.5 py-1 rounded-full">v{{ framework.version }}</span>
+          {% endif %}
+        </div>
+        {% if framework.description %}
+        <p class="text-slate-500 dark:text-slate-400 mt-1 text-sm md:text-base">{{ framework.description }}</p>
+        {% endif %}
+      </div>
+    </div>
+    <a href="/frameworks"
+      class="inline-flex items-center gap-2 text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-primary transition-colors">
+      <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      All Frameworks
+    </a>
   </div>
 
-  <div class="bg-white dark:bg-slate-900 rounded-lg shadow border border-slate-200 dark:border-slate-800">
-    <div class="p-6">
-      <h2 class="text-xl font-semibold text-slate-800 dark:text-slate-200 mb-6">Sections & Controls</h2>
+  <!-- Stats bar -->
+  {% set total_controls = namespace(count=0) %}
+  {% for section in framework.sections %}{% set total_controls.count = total_controls.count + (section.controls | length) %}{% endfor %}
+  <div class="mb-6 grid grid-cols-2 md:grid-cols-3 gap-4">
+    <div class="bg-card border border-border rounded-xl p-4 shadow-sm">
+      <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">Sections</p>
+      <p class="text-2xl font-bold text-slate-900 dark:text-slate-100 mt-1">{{ framework.sections | length }}</p>
+    </div>
+    <div class="bg-card border border-border rounded-xl p-4 shadow-sm">
+      <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">Controls</p>
+      <p class="text-2xl font-bold text-slate-900 dark:text-slate-100 mt-1">{{ total_controls.count }}</p>
+    </div>
+  </div>
 
-      {% if framework.sections %}
-      <div class="space-y-4">
-        {% for section in framework.sections %}
-        <div class="border border-slate-200 dark:border-slate-700 rounded-lg p-4">
-          <div class="flex items-start justify-between">
-            <div class="flex-1">
-              <h3 class="text-lg font-semibold text-slate-800 dark:text-slate-200">{{ section.name }}</h3>
-              {% if section.description %}
-              <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">{{ section.description }}</p>
-              {% endif %}
-            </div>
+  <!-- Sections & Controls -->
+  <div class="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+    <div class="px-6 py-4 border-b border-border">
+      <h2 class="text-base font-semibold text-slate-800 dark:text-slate-200">Sections &amp; Controls</h2>
+    </div>
+
+    {% if framework.sections %}
+    <div class="divide-y divide-border">
+      {% for section in framework.sections %}
+      <div x-data="{ open: true }">
+        <!-- Section header -->
+        <button type="button" @click="open = !open"
+          class="w-full flex items-center justify-between px-6 py-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors text-left">
+          <div>
+            <h3 class="font-semibold text-slate-800 dark:text-slate-200">{{ section.name }}</h3>
+            {% if section.description %}
+            <p class="text-sm text-slate-500 dark:text-slate-400 mt-0.5">{{ section.description }}</p>
+            {% endif %}
           </div>
+          <div class="flex items-center gap-3 flex-shrink-0 ml-4">
+            <span class="text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-2.5 py-1 rounded-full">
+              {{ section.controls | length }} controls
+            </span>
+            <svg class="w-4 h-4 text-slate-400 transition-transform duration-200" :class="open ? 'rotate-180' : ''"
+              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </div>
+        </button>
 
-          {% if section.controls %}
-          <div class="mt-4 ml-4 space-y-3">
+        <!-- Controls list -->
+        {% if section.controls %}
+        <div x-show="open" x-transition.opacity class="border-t border-border bg-slate-50/50 dark:bg-slate-800/20">
+          <div class="divide-y divide-border/60">
             {% for control in section.controls %}
-            <div class="bg-slate-50 dark:bg-slate-800/60 rounded p-3 border-l-4 border-primary">
-              <div class="font-medium text-slate-800 dark:text-slate-200">
-                <span class="text-primary">{{ control.control_id }}</span> — {{ control.name }}
+            <div class="px-6 py-4 pl-10">
+              <div class="flex items-start gap-3">
+                <span class="flex-shrink-0 text-xs font-mono font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded mt-0.5">{{ control.control_id }}</span>
+                <div class="flex-1 min-w-0">
+                  <p class="font-medium text-slate-800 dark:text-slate-200">{{ control.name }}</p>
+                  {% if control.description %}
+                  <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">{{ control.description }}</p>
+                  {% endif %}
+                  {% if control.implementation_guidance %}
+                  <p class="text-sm text-slate-600 dark:text-slate-300 mt-2 border-l-2 border-primary/40 pl-3 italic">{{ control.implementation_guidance }}</p>
+                  {% endif %}
+                </div>
               </div>
-              {% if control.description %}
-              <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">{{ control.description }}</p>
-              {% endif %}
-              {% if control.implementation_guidance %}
-              <p class="text-sm text-slate-600 dark:text-slate-300 mt-2">
-                <strong>Guidance:</strong> {{ control.implementation_guidance }}
-              </p>
-              {% endif %}
             </div>
             {% endfor %}
           </div>
-          {% endif %}
         </div>
-        {% endfor %}
+        {% endif %}
       </div>
-      {% else %}
-      <p class="text-slate-500 dark:text-slate-400">No sections defined for this framework.</p>
-      {% endif %}
+      {% endfor %}
     </div>
+    {% else %}
+    <div class="px-6 py-12 text-center text-slate-500 dark:text-slate-400">
+      No sections defined for this framework.
+    </div>
+    {% endif %}
   </div>
 </div>
 {% endblock %}
