@@ -44,12 +44,38 @@ async def dashboard(request: Request, db: Session = Depends(get_db)):
         "total_frameworks": len(framework_repo.get_all(user.tenant_id)),
     }
 
+    # Calculate progress for each active project
+    active_projects_with_progress = []
+    for project in active_projects:
+        framework = framework_repo.get_by_id_with_sections(
+            user.tenant_id, project.framework_id
+        ) if project.framework_id else None
+
+        total_controls = 0
+        responded_count = 0
+        if framework:
+            all_responses = response_repo.get_for_project(project.id)
+            responses_dict = {str(r.framework_control_id) for r in all_responses}
+            for section in framework.sections:
+                total_controls += len(section.controls)
+                for control in section.controls:
+                    if str(control.id) in responses_dict:
+                        responded_count += 1
+
+        progress_pct = round(responded_count / total_controls * 100) if total_controls > 0 else 0
+        active_projects_with_progress.append({
+            "project": project,
+            "total_controls": total_controls,
+            "responded_count": responded_count,
+            "progress_pct": progress_pct,
+        })
+
     return templates.TemplateResponse(
         "dashboard/index.html",
         {
             "request": request,
             "user": user,
             "stats": stats,
-            "active_projects": active_projects,
+            "active_projects": active_projects_with_progress,
         },
     )

@@ -78,7 +78,8 @@
     <!-- Project Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-        {% for project in active_projects %}
+        {% for item in active_projects %}
+        {% set project = item.project %}
         <a href="/projects/{{ project.id }}"
             class="group bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-lg transition-all hover:border-primary/40 overflow-hidden flex flex-col">
             <!-- Card Header with accent line -->
@@ -89,7 +90,7 @@
                 <!-- Framework + Status -->
                 <div class="flex items-center justify-between gap-3 mb-4">
                     <span class="inline-flex items-center gap-1 bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-semibold">
-                        <span class="material-symbols-outlined text-[14px]">account_tree</span>
+                        <span class="material-symbols-outlined" style="font-size:14px">account_tree</span>
                         {{ project.framework.name if project.framework else "Framework" }}
                     </span>
 
@@ -103,7 +104,7 @@
                     {% set status_info = status_config.get(project.status.value, status_config['draft']) %}
 
                     <div class="flex items-center gap-1 {{ status_info.bg }} {{ status_info.text }} px-3 py-1 rounded-full text-xs font-semibold">
-                        <span class="material-symbols-outlined text-[14px]">{{ status_info.icon }}</span>
+                        <span class="material-symbols-outlined" style="font-size:14px">{{ status_info.icon }}</span>
                         {{ project.status.value|replace('_', ' ')|title }}
                     </div>
                 </div>
@@ -119,7 +120,7 @@
                 <!-- Client Info -->
                 {% if project.client %}
                 <div class="flex items-center gap-2 mb-4 pb-4 border-b border-slate-100 dark:border-slate-800">
-                    <span class="material-symbols-outlined text-[16px] text-slate-400">corporate_fare</span>
+                    <span class="material-symbols-outlined text-slate-400" style="font-size:16px">corporate_fare</span>
                     <span class="text-sm text-slate-600 dark:text-slate-400">{{ project.client.name }}</span>
                 </div>
                 {% endif %}
@@ -127,11 +128,16 @@
                 <!-- Progress -->
                 <div class="space-y-2">
                     <div class="flex justify-between items-center">
-                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">Progress</span>
-                        <span class="text-sm font-bold text-slate-900 dark:text-white">0%</span>
+                        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                            Progress
+                            {% if item.total_controls > 0 %}
+                            <span class="normal-case font-normal">({{ item.responded_count }}/{{ item.total_controls }})</span>
+                            {% endif %}
+                        </span>
+                        <span class="text-sm font-bold text-slate-900 dark:text-white">{{ item.progress_pct }}%</span>
                     </div>
                     <div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
-                        <div class="bg-gradient-to-r from-primary to-blue-400 h-full rounded-full transition-all" style="width: 0%"></div>
+                        <div class="bg-gradient-to-r from-primary to-blue-400 h-full rounded-full transition-all" style="width: {{ item.progress_pct }}%"></div>
                     </div>
                 </div>
 
@@ -140,7 +146,7 @@
                     <span class="text-slate-400">Updated recently</span>
                     <span class="inline-flex items-center gap-1 text-primary font-semibold group-hover:gap-2 transition-all">
                         View details
-                        <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                        <span class="material-symbols-outlined" style="font-size:16px">arrow_forward</span>
                     </span>
                 </div>
             </div>
