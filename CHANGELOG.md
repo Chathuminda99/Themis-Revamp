@@ -9,6 +9,15 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and vers
 
 ---
 
+## [0.5.11] — 2026-03-02
+
+### Fixed
+- `jinja2.TemplateRuntimeError: No filter named 'dict'` — removed invalid `observations | map("dict")` from `x-data` (caused 500 on any control with an assessment checklist)
+- Removed stale Alpine.js v2 `form.__x` references in `addObservation()` and `deleteObservationRow()` (dead code; Alpine v3 is in use)
+- Simplified form `x-data` to only `{ showToast }` since `prepareObservationsData()` reads the DOM directly
+
+---
+
 ## [0.5.10] — 2026-03-01
 
 ### Added

@@ -155,7 +155,7 @@
 
 <form id="control-form" hx-post="/projects/{{ project.id }}/controls/{{ control.id }}/details"
     hx-target="#control-details" hx-swap="innerHTML" class="grid grid-cols-1 xl:grid-cols-4 gap-6 mt-6 fade-in"
-    x-data='{ observations: {{ observations | map("dict") | list | tojson | safe }} || [], showToast: {{ "true" if saved else "false" }} }'
+    x-data='{ showToast: {{ "true" if saved else "false" }} }'
     x-init="if(showToast) { setTimeout(() => showToast = false, 3000) }"
     @submit="prepareObservationsData()">
 
@@ -330,9 +330,15 @@
                             <td class="px-6 py-4 text-sm text-slate-900 dark:text-white break-words">{{ obs.observation_text }}</td>
                             <td class="px-6 py-4 text-sm text-slate-700 dark:text-slate-300 break-words">{{ obs.recommendation_text }}</td>
                             <td class="px-6 py-4 text-sm">
-                                <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
-                                    {{ obs.evidence_files|length }} files
-                                </span>
+                                <button type="button"
+                                    hx-get="/projects/{{ project.id }}/observations/{{ obs.id }}/evidence"
+                                    hx-target="#modal-body"
+                                    hx-swap="innerHTML"
+                                    @click="$store.modal.show()"
+                                    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-800/50 transition-colors cursor-pointer">
+                                    <span class="material-symbols-outlined text-[12px]">attach_file</span>
+                                    {{ obs.evidence_files|length }} file{{ 's' if obs.evidence_files|length != 1 else '' }}
+                                </button>
                             </td>
                             <td class="px-6 py-4 text-center">
                                 <button type="button"
@@ -363,38 +369,33 @@
         </div>
         {% endif %}
 
-        <!-- Note: Evidence upload is managed per observation -->
-        <div class="text-sm text-slate-600 dark:text-slate-400 italic px-2">
-            Each observation can have associated text notes and image uploads. Click on an observation row to manage its
-            evidence.
-        </div>
     </div>
 
     <!-- Right Metadata Sidebar -->
     <div class="space-y-3 flex flex-col">
         <!-- Control Details Card -->
-        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm p-3">
-            <h3 class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3">Metadata</h3>
-            <div class="space-y-2.5">
+        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm p-4">
+            <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 mb-3">Metadata</h3>
+            <div class="space-y-3">
                 <div>
-                    <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Assigned To</p>
-                    <div class="flex items-center gap-1.5">
-                        <div class="h-5 w-5 rounded-full bg-primary flex items-center justify-center text-[9px] text-white font-bold flex-shrink-0">
+                    <p class="text-xs font-bold text-slate-400 uppercase mb-1.5">Assigned To</p>
+                    <div class="flex items-center gap-2">
+                        <div class="h-6 w-6 rounded-full bg-primary flex items-center justify-center text-[10px] text-white font-bold flex-shrink-0">
                             {{ user.email[0].upper() }}</div>
-                        <span class="text-[11px] font-semibold text-slate-700 dark:text-slate-300 truncate">{{ user.email }}</span>
+                        <span class="text-xs font-semibold text-slate-700 dark:text-slate-300 truncate">{{ user.email }}</span>
                     </div>
                 </div>
                 <div>
-                    <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Criticality</p>
+                    <p class="text-xs font-bold text-slate-400 uppercase mb-1.5">Criticality</p>
                     <div class="flex items-center gap-1.5">
-                        <span class="w-1.5 h-1.5 rounded-full bg-blue-500 flex-shrink-0"></span>
-                        <span class="text-[11px] font-semibold text-slate-700 dark:text-slate-300">Standard</span>
+                        <span class="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0"></span>
+                        <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">Standard</span>
                     </div>
                 </div>
                 <div class="pt-2 border-t border-slate-100 dark:border-slate-800">
                     <button type="button"
-                        class="w-full py-1.5 flex items-center justify-center gap-1.5 text-primary text-[11px] font-bold hover:bg-primary/5 rounded-lg transition-colors">
-                        <span class="material-symbols-outlined text-[13px]">visibility</span>
+                        class="w-full py-1.5 flex items-center justify-center gap-1.5 text-primary text-xs font-bold hover:bg-primary/5 rounded-lg transition-colors">
+                        <span class="material-symbols-outlined text-sm">visibility</span>
                         View Standard
                     </button>
                 </div>
@@ -402,20 +403,29 @@
         </div>
 
         <!-- Audit Trail Card -->
-        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm p-3">
-            <h3 class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3">Audit Trail</h3>
-            <div class="space-y-2.5">
+        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm p-4">
+            <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 mb-3">Audit Trail</h3>
+            <div>
                 {% if response and response.updated_at %}
-                <div class="relative pl-4 pb-2.5 border-l-2 border-slate-100 dark:border-slate-800">
-                    <div class="absolute -left-1 top-0 w-2 h-2 rounded-full bg-primary"></div>
-                    <p class="text-[11px] font-bold text-slate-900 dark:text-white leading-none">Updated</p>
-                    <p class="text-[10px] text-slate-500 mt-0.5">{{ response.updated_at.strftime('%b %d, %Y %H:%M') }}</p>
+                <div class="flex gap-3 pb-3">
+                    <div class="flex flex-col items-center flex-shrink-0">
+                        <div class="w-2.5 h-2.5 rounded-full bg-primary mt-0.5"></div>
+                        <div class="w-px flex-1 bg-slate-200 dark:bg-slate-700 mt-1"></div>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-900 dark:text-white">Updated</p>
+                        <p class="text-xs text-slate-500 mt-0.5">{{ response.updated_at.strftime('%b %d, %Y %H:%M') }}</p>
+                    </div>
                 </div>
                 {% endif %}
-                <div class="relative pl-4 border-l-2 border-transparent">
-                    <div class="absolute -left-1 top-0 w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-700"></div>
-                    <p class="text-[11px] font-bold text-slate-700 dark:text-slate-400 leading-none">Created</p>
-                    <p class="text-[10px] text-slate-500 mt-0.5">{{ project.created_at.strftime('%b %d, %Y') }}</p>
+                <div class="flex gap-3">
+                    <div class="flex flex-col items-center flex-shrink-0">
+                        <div class="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-600 mt-0.5"></div>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-700 dark:text-slate-400">Created</p>
+                        <p class="text-xs text-slate-500 mt-0.5">{{ project.created_at.strftime('%b %d, %Y') }}</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -442,22 +452,8 @@
         if (!observationId) return;
 
         // Get form Alpine data
-        const form = document.getElementById('control-form');
-        const alpineInstance = form.__x;
-
         // Create unique ID for new observation
         const newId = 'new_' + Date.now();
-
-        // Add to Alpine observations array
-        if (alpineInstance && alpineInstance.$data.observations) {
-            alpineInstance.$data.observations.push({
-                id: newId,
-                observation_text: label,
-                recommendation_text: recommendation,
-                evidence_files: [],
-                isNew: true
-            });
-        }
 
         // Create a new row
         const tbody = document.getElementById(`observations-tbody-${controlId}`);
@@ -474,9 +470,10 @@
         newRow.innerHTML = `
             <td class="px-6 py-4 text-sm text-slate-900 dark:text-white break-words">${label}</td>
             <td class="px-6 py-4 text-sm text-slate-700 dark:text-slate-300 break-words">${recommendation}</td>
-            <td class="px-6 py-4 text-sm">
-                <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
-                    0 files
+            <td class="px-6 py-4 text-sm" data-evidence-cell="true">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500">
+                    <span class="material-symbols-outlined" style="font-size:12px">attach_file</span>
+                    Save to add evidence
                 </span>
             </td>
             <td class="px-6 py-4 text-center">
@@ -496,14 +493,6 @@
         const row = document.querySelector(`tr[data-obs-id="${obsId}"]`);
         if (row) {
             row.remove();
-        }
-
-        // Get form Alpine data
-        const form = document.getElementById('control-form');
-        const alpineInstance = form.__x;
-
-        if (alpineInstance && alpineInstance.$data.observations) {
-            alpineInstance.$data.observations = alpineInstance.$data.observations.filter(o => o.id !== obsId);
         }
 
         // Show empty state if no observations
@@ -529,43 +518,28 @@
     }
 
     function prepareObservationsData() {
-        // Create hidden inputs for each observation when form is submitted
         const form = document.getElementById('control-form');
-
-        // Remove any existing observation inputs
+        // Remove any previously prepared hidden inputs
         form.querySelectorAll('input[name^="observation_"]').forEach(input => input.remove());
 
-        // Get Alpine observations
-        const alpineInstance = form.__x;
-        if (!alpineInstance || !alpineInstance.$data.observations) return;
+        const addInput = (name, value) => {
+            const inp = document.createElement('input');
+            inp.type = 'hidden';
+            inp.name = name;
+            inp.value = value;
+            form.appendChild(inp);
+        };
 
-        // Add hidden inputs for observations
-        alpineInstance.$data.observations.forEach((obs, idx) => {
-            const hiddenInput = document.createElement('input');
-            hiddenInput.type = 'hidden';
-            hiddenInput.name = `observation_${idx}_text`;
-            hiddenInput.value = obs.observation_text;
-            form.appendChild(hiddenInput);
-
-            const hiddenInput2 = document.createElement('input');
-            hiddenInput2.type = 'hidden';
-            hiddenInput2.name = `observation_${idx}_recommendation`;
-            hiddenInput2.value = obs.recommendation_text;
-            form.appendChild(hiddenInput2);
-
-            if (obs.id && obs.id.startsWith('new_')) {
-                const hiddenInput3 = document.createElement('input');
-                hiddenInput3.type = 'hidden';
-                hiddenInput3.name = `observation_${idx}_is_new`;
-                hiddenInput3.value = 'true';
-                form.appendChild(hiddenInput3);
-            } else {
-                const hiddenInput3 = document.createElement('input');
-                hiddenInput3.type = 'hidden';
-                hiddenInput3.name = `observation_${idx}_id`;
-                hiddenInput3.value = obs.id;
-                form.appendChild(hiddenInput3);
-            }
+        // Collect only NEW observations (data-obs-id starts with "new_") from table DOM
+        let idx = 0;
+        document.querySelectorAll('tbody[id^="observations-tbody-"] tr[data-obs-id]').forEach(row => {
+            const obsId = row.getAttribute('data-obs-id');
+            if (!obsId || !obsId.startsWith('new_')) return;
+            const cells = row.querySelectorAll('td');
+            addInput(`observation_${idx}_text`, cells[0]?.textContent?.trim() || '');
+            addInput(`observation_${idx}_recommendation`, cells[1]?.textContent?.trim() || '');
+            addInput(`observation_${idx}_is_new`, 'true');
+            idx++;
         });
     }
 </script>
