@@ -25,7 +25,7 @@
 - [x] Remove max-width constraints from clients and dashboard pages (too much whitespace)
 - [x] Fix version badge visibility (text-[10px] not compiled, dark mode color too faint)
 - [x] Fix dashboard project card progress bar — currently hardcoded to 0%
-- [ ] Add proper empty state to dashboard when no active projects exist
+- [x] Add proper empty state to dashboard when no active projects exist
 
 ## Features & Functionality
 
