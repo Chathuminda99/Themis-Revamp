@@ -311,11 +311,15 @@
                         </tr>
                         {% else %}
                         <tr id="empty-obs-{{ control.id }}">
-                            <td colspan="4" class="px-6 py-8 text-center text-slate-500 dark:text-slate-400">
-                                <div class="flex flex-col items-center gap-2">
-                                    <span class="material-symbols-outlined text-4xl text-slate-300">assignment</span>
-                                    <p class="text-sm">No observations added yet. Click "Add Observation" to get
-                                        started.</p>
+                            <td colspan="4" class="px-6 py-6">
+                                <div class="flex flex-col items-center gap-3 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl py-10 px-6 text-center">
+                                    <div class="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center">
+                                        <span class="material-symbols-outlined text-slate-400 dark:text-slate-500" style="font-size:24px">rate_review</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-slate-600 dark:text-slate-300">No observations yet</p>
+                                        <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Use "Add Observation" above to record findings for this control.</p>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
@@ -482,10 +486,15 @@
             const emptyRow = document.createElement('tr');
             emptyRow.id = `empty-obs-${controlId}`;
             emptyRow.innerHTML = `
-                <td colspan="4" class="px-6 py-8 text-center text-slate-500 dark:text-slate-400">
-                    <div class="flex flex-col items-center gap-2">
-                        <span class="material-symbols-outlined text-4xl text-slate-300">assignment</span>
-                        <p class="text-sm">No observations added yet. Click "Add Observation" to get started.</p>
+                <td colspan="4" class="px-6 py-6">
+                    <div class="flex flex-col items-center gap-3 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl py-10 px-6 text-center">
+                        <div class="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center">
+                            <span class="material-symbols-outlined text-slate-400 dark:text-slate-500" style="font-size:24px">rate_review</span>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-slate-600 dark:text-slate-300">No observations yet</p>
+                            <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Use "Add Observation" above to record findings for this control.</p>
+                        </div>
                     </div>
                 </td>
             `;
