@@ -8,8 +8,8 @@
 - [x] Improve visual weight of input fields and dropdowns (borders, focus rings, styling)
 - [x] Reduce dropdown list item size to match the rest of the app scale
 - [x] Highlight the active/selected item in the sidebar nav
-- [ ] Fix font color mismatch in the Frameworks detail view
-- [ ] Fix client name font color mismatch in the Clients list view
+- [x] Fix font color mismatch in the Frameworks detail view
+- [x] Fix client name font color mismatch in the Clients list view
 - [ ] Replace the Controls and Settings sidebar icons with better alternatives
 - [ ] Enhance the Icons of the client names and 
 
