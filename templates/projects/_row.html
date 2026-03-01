@@ -11,7 +11,7 @@
   <!-- Client -->
   <td class="px-6 py-4">
     <div class="flex items-center gap-2">
-      <div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold flex-shrink-0">
+      <div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/70 text-white flex items-center justify-center text-xs font-bold flex-shrink-0 shadow-sm shadow-primary/25 select-none">
         {{ project.client.name[0].upper() if project.client else "?" }}
       </div>
       <span class="text-sm text-slate-700 dark:text-slate-300 truncate">{{ project.client.name if project.client else "Unassigned" }}</span>

@@ -11,7 +11,7 @@
 - [x] Fix font color mismatch in the Frameworks detail view
 - [x] Fix client name font color mismatch in the Clients list view
 - [x] Replace the Controls and Settings sidebar icons with better alternatives
-- [ ] Enhance the Icons of the client names and 
+- [x] Enhance the Icons of the client names and avatars across all views
 
 ## Features & Functionality
 
