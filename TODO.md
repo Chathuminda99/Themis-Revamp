@@ -15,14 +15,17 @@
 
 ## UI / Styling (Backlog)
 
-- [ ] Fix Frameworks list page — old gray-* classes, no dark mode, cards need redesign to match app style
-- [ ] Audit and fix Admin controls page styling (likely same gray-* mismatch)
-- [ ] Sidebar collapse chevron should flip direction when sidebar is open/closed
-- [ ] Fix "Finalize & Submit Audit" button in project detail — use bg-primary instead of bg-slate-900
+- [x] Fix Frameworks list page — old gray-* classes, no dark mode, cards need redesign to match app style
+- [x] Audit and fix Admin controls page styling (likely same gray-* mismatch)
+- [x] Sidebar collapse chevron should flip direction when sidebar is open/closed
+- [x] Fix "Finalize & Submit Audit" button in project detail — use bg-primary instead of bg-slate-900
+- [x] Polish the login page to match the current design system
+- [x] The profile hovering model window not align with the theme
+- [x] Fix Frameworks detail page — redesign to match design system
+- [x] Remove max-width constraints from clients and dashboard pages (too much whitespace)
+- [x] Fix version badge visibility (text-[10px] not compiled, dark mode color too faint)
 - [ ] Fix dashboard project card progress bar — currently hardcoded to 0%
 - [ ] Add proper empty state to dashboard when no active projects exist
-- [ ] Polish the login page to match the current design system
-- [ ] The profile hovering model window not align with the theme
 
 ## Features & Functionality
 
