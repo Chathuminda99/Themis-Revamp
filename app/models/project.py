@@ -50,6 +50,9 @@ class Project(BaseModel, TimestampMixin):
     # Relationships
     client: Mapped["Client"] = relationship()
     framework: Mapped["Framework"] = relationship()
+    responses: Mapped[list["ProjectResponse"]] = relationship(
+        "ProjectResponse", cascade="all, delete-orphan", passive_deletes=True
+    )
     segments: Mapped[list["Project"]] = relationship(
         "Project",
         foreign_keys=[parent_project_id],
