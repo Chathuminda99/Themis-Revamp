@@ -66,5 +66,5 @@
 - [ ] Strengthen **navigation wayfinding**: highlight current location more clearly, add "recently viewed" section, and improve breadcrumb click targets.
 - [ ] Add **responsive behavior polish** for medium screens (tablet/laptop widths), especially table overflow, sidebar collapse defaults, and action button wrapping.
 - [ ] Improve **keyboard and accessibility support**: visible focus states everywhere, ARIA labels for icon-only controls, logical tab order, and color-contrast audit.
-- [ ] Refine **microcopy and labeling** (buttons, statuses, helper text) to use user outcomes instead of internal/system wording.
+- [x] Refine **microcopy and labeling** (buttons, statuses, helper text) to use user outcomes instead of internal/system wording.
 - [ ] Add **contextual onboarding hints** for first-time users (progressive tooltips/checklist) that can be dismissed and later reopened from Help.
