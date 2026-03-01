@@ -186,6 +186,31 @@
         }
     </style>
 
+    <script>
+        (function () {
+            const KEY = 'session_start_ts';
+            if (!sessionStorage.getItem(KEY)) {
+                sessionStorage.setItem(KEY, Date.now());
+            }
+            const start = parseInt(sessionStorage.getItem(KEY), 10);
+
+            function tick() {
+                const el = document.getElementById('session-timer');
+                if (!el) return;
+                const elapsed = Math.floor((Date.now() - start) / 1000);
+                const h = Math.floor(elapsed / 3600);
+                const m = Math.floor((elapsed % 3600) / 60);
+                const s = elapsed % 60;
+                el.textContent = h > 0
+                    ? `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+                    : `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+            }
+
+            tick();
+            setInterval(tick, 1000);
+        })();
+    </script>
+
     {% block scripts %}{% endblock %}
 </body>
 
