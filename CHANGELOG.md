@@ -9,6 +9,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and vers
 
 ---
 
+## [0.5.12] — 2026-03-02
+
+### Added
+- Audit timer in the project control sidebar (start / pause / stop) — persists across control navigation via `localStorage` per project
+
+### Changed
+- Removed browser-session elapsed timer from top nav bar (was added temporarily)
+
+---
+
 ## [0.5.11] — 2026-03-02
 
 ### Fixed
