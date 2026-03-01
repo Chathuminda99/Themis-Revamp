@@ -1,12 +1,16 @@
 <!-- Workspace Header & Breadcrumbs -->
 <div class="flex flex-col gap-4 fade-in">
-    <div class="flex items-center gap-2 text-xs text-slate-500 font-medium">
-        <span>{{ project.framework.name if project.framework else "Framework" }}</span>
-        <span class="material-symbols-outlined text-sm">chevron_right</span>
+    <div class="flex items-center gap-2 text-xs text-slate-500 font-medium overflow-x-auto pb-1">
+        <a href="/projects/{{ project.id }}" class="text-slate-600 dark:text-slate-300 hover:text-primary transition-colors whitespace-nowrap">
+            {{ project.name }}
+        </a>
+        <span class="material-symbols-outlined text-sm flex-shrink-0">chevron_right</span>
+        <span class="whitespace-nowrap">{{ project.framework.name if project.framework else "Framework" }}</span>
+        <span class="material-symbols-outlined text-sm flex-shrink-0">chevron_right</span>
         <!-- Find section name -->
-        <span>{{ section_name }}</span>
-        <span class="material-symbols-outlined text-sm">chevron_right</span>
-        <span class="text-primary">{{ control.control_id }} {{ control.name }}</span>
+        <span class="whitespace-nowrap">{{ section_name }}</span>
+        <span class="material-symbols-outlined text-sm flex-shrink-0">chevron_right</span>
+        <span class="text-primary whitespace-nowrap">{{ control.control_id }} {{ control.name }}</span>
     </div>
 
     <div class="flex flex-wrap items-start justify-between gap-4">
