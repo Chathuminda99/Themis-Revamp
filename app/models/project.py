@@ -51,7 +51,7 @@ class Project(BaseModel, TimestampMixin):
     client: Mapped["Client"] = relationship()
     framework: Mapped["Framework"] = relationship()
     responses: Mapped[list["ProjectResponse"]] = relationship(
-        "ProjectResponse", cascade="all, delete-orphan", passive_deletes=True
+        "ProjectResponse", cascade="all, delete-orphan"
     )
     segments: Mapped[list["Project"]] = relationship(
         "Project",
