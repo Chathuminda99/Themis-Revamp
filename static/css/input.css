@@ -4,8 +4,6 @@
 
 /* =====================================================================
    DROPDOWN COMPONENT STYLES
-   Matches the filter bar dropdown visual style (rounded-[14px] panel,
-   gradient active state, icon badges).
    ===================================================================== */
 @layer components {
   .dropdown-select {
@@ -16,7 +14,7 @@
   }
 
   .dropdown-select:hover:not(:disabled) {
-    @apply border-primary/60;
+    border-color: hsl(var(--primary) / 0.6);
   }
 
   .dropdown-wrapper {
@@ -82,72 +80,112 @@
 
 @layer base {
   :root {
-    --background: 0 0% 98.8235%;
-    --foreground: 0 0% 9.0196%;
-    --card: 0 0% 98.8235%;
-    --card-foreground: 0 0% 9.0196%;
-    --popover: 0 0% 98.8235%;
-    --popover-foreground: 0 0% 32.1569%;
-    --primary: 151.3274 66.8639% 66.8627%;
-    --primary-foreground: 153.3333 13.0435% 13.5294%;
-    --secondary: 0 0% 99.2157%;
-    --secondary-foreground: 0 0% 9.0196%;
-    --muted: 0 0% 92.9412%;
-    --muted-foreground: 0 0% 12.5490%;
-    --accent: 0 0% 92.9412%;
-    --accent-foreground: 0 0% 12.5490%;
-    --destructive: 9.8901 81.9820% 43.5294%;
-    --destructive-foreground: 0 100% 99.4118%;
-    --border: 0 0% 78%;
-    --input: 0 0% 75%;
-    --ring: 151.3274 66.8639% 66.8627%;
-    --chart-1: 151.3274 66.8639% 66.8627%;
-    --chart-2: 217.2193 91.2195% 59.8039%;
-    --chart-3: 258.3117 89.5349% 66.2745%;
-    --chart-4: 37.6923 92.1260% 50.1961%;
-    --chart-5: 160.1183 84.0796% 39.4118%;
-    --sidebar: 0 0% 98.8235%;
-    --sidebar-foreground: 0 0% 43.9216%;
-    --sidebar-primary: 151.3274 66.8639% 66.8627%;
-    --sidebar-primary-foreground: 153.3333 13.0435% 13.5294%;
-    --sidebar-accent: 0 0% 92.9412%;
-    --sidebar-accent-foreground: 0 0% 12.5490%;
-    --sidebar-border: 0 0% 87.4510%;
-    --sidebar-ring: 151.3274 66.8639% 66.8627%;
+    /* Jamaica Theme — Light Mode (HSL approximations of oklch values) */
+    --background: 86 28% 98%;
+    --foreground: 160 14% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 160 14% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 160 14% 12%;
+    --primary: 142 52% 50%;
+    --primary-foreground: 86 30% 97%;
+    --secondary: 88 50% 77%;
+    --secondary-foreground: 160 14% 12%;
+    --muted: 88 15% 94%;
+    --muted-foreground: 162 8% 42%;
+    --accent: 156 30% 93%;
+    --accent-foreground: 149 38% 44%;
+    --destructive: 22 65% 52%;
+    --destructive-foreground: 220 14% 96%;
+    --border: 164 12% 90%;
+    --input: 164 12% 90%;
+    --ring: 142 52% 50%;
+    --radius: 1.25rem;
+
+    /* Charts */
+    --chart-1: 142 52% 50%;
+    --chart-2: 88 50% 77%;
+    --chart-3: 158 18% 22%;
+    --chart-4: 220 44% 55%;
+    --chart-5: 44 52% 62%;
+
+    /* Sidebar (dark green) */
+    --sidebar: 162 10% 18%;
+    --sidebar-foreground: 86 28% 98%;
+    --sidebar-primary: 142 52% 50%;
+    --sidebar-primary-foreground: 86 28% 98%;
+    --sidebar-accent: 161 12% 22%;
+    --sidebar-accent-foreground: 88 50% 77%;
+    --sidebar-border: 161 13% 24%;
+    --sidebar-ring: 142 52% 50%;
+
+    /* Typography */
+    --font-sans: "Outfit", system-ui, sans-serif;
+    --font-serif: "Georgia", serif;
+    --font-mono: "JetBrains Mono", monospace;
+    --tracking-normal: -0.03em;
+
+    /* Shadows */
+    --shadow-sm: 0px 10px 30px 0px hsl(142 76% 10% / 0.10), 0px 1px 2px -1px hsl(142 76% 10% / 0.10);
+    --shadow-md: 0px 10px 30px 0px hsl(142 76% 10% / 0.10), 0px 2px 4px -1px hsl(142 76% 10% / 0.10);
+    --shadow-lg: 0px 10px 30px 0px hsl(142 76% 10% / 0.10), 0px 4px 6px -1px hsl(142 76% 10% / 0.10);
   }
 
   .dark {
-    --background: 0 0% 7.0588%;
-    --foreground: 214.2857 31.8182% 91.3725%;
-    --card: 0 0% 9.0196%;
-    --card-foreground: 214.2857 31.8182% 91.3725%;
-    --popover: 0 0% 14.1176%;
-    --popover-foreground: 0 0% 66.2745%;
-    --primary: 154.8980 100.0000% 19.2157%;
-    --primary-foreground: 152.7273 19.2982% 88.8235%;
-    --secondary: 0 0% 14.1176%;
-    --secondary-foreground: 0 0% 98.0392%;
-    --muted: 0 0% 12.1569%;
-    --muted-foreground: 0 0% 63.5294%;
-    --accent: 0 0% 19.2157%;
-    --accent-foreground: 0 0% 98.0392%;
-    --destructive: 6.6667 60.0000% 20.5882%;
-    --destructive-foreground: 12.0000 12.1951% 91.9608%;
-    --border: 0 0% 16.0784%;
-    --input: 0 0% 14.1176%;
-    --ring: 141.8919 69.1589% 58.0392%;
-    --chart-1: 141.8919 69.1589% 58.0392%;
-    --chart-2: 213.1169 93.9024% 67.8431%;
-    --chart-3: 255.1351 91.7355% 76.2745%;
-    --chart-4: 43.2558 96.4126% 56.2745%;
-    --chart-5: 172.4551 66.0079% 50.3922%;
-    --sidebar: 0 0% 7.0588%;
-    --sidebar-foreground: 0 0% 53.7255%;
-    --sidebar-primary: 154.8980 100.0000% 19.2157%;
-    --sidebar-primary-foreground: 152.7273 19.2982% 88.8235%;
-    --sidebar-accent: 0 0% 19.2157%;
-    --sidebar-accent-foreground: 0 0% 98.0392%;
-    --sidebar-border: 0 0% 16.0784%;
-    --sidebar-ring: 141.8919 69.1589% 58.0392%;
+    /* Jamaica Theme — Dark Mode (HSL approximations of oklch values) */
+    --background: 164 7% 8%;
+    --foreground: 88 8% 96%;
+    --card: 162 9% 11%;
+    --card-foreground: 88 8% 96%;
+    --popover: 163 9% 9%;
+    --popover-foreground: 88 8% 96%;
+    --primary: 142 60% 64%;
+    --primary-foreground: 164 7% 8%;
+    --secondary: 90 46% 76%;
+    --secondary-foreground: 164 7% 8%;
+    --muted: 162 8% 14%;
+    --muted-foreground: 164 6% 68%;
+    --accent: 153 18% 20%;
+    --accent-foreground: 142 60% 64%;
+    --destructive: 22 70% 47%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 163 9% 16%;
+    --input: 163 9% 16%;
+    --ring: 142 60% 64%;
+    --radius: 1.25rem;
+
+    /* Charts */
+    --chart-1: 142 60% 64%;
+    --chart-2: 90 46% 76%;
+    --chart-3: 210 40% 68%;
+    --chart-4: 310 52% 58%;
+    --chart-5: 30 58% 56%;
+
+    /* Sidebar */
+    --sidebar: 164 9% 7%;
+    --sidebar-foreground: 88 8% 96%;
+    --sidebar-primary: 142 60% 64%;
+    --sidebar-primary-foreground: 164 7% 8%;
+    --sidebar-accent: 162 10% 13%;
+    --sidebar-accent-foreground: 90 46% 76%;
+    --sidebar-border: 162 8% 14%;
+    --sidebar-ring: 142 60% 64%;
+
+    /* Typography */
+    --tracking-normal: -0.02em;
+
+    /* Shadows */
+    --shadow-sm: 0px 25px 50px -10px hsl(0 0% 0% / 0.60), 0px 1px 2px -11px hsl(0 0% 0% / 0.60);
+    --shadow-md: 0px 25px 50px -10px hsl(0 0% 0% / 0.60), 0px 2px 4px -11px hsl(0 0% 0% / 0.60);
+    --shadow-lg: 0px 25px 50px -10px hsl(0 0% 0% / 0.60), 0px 4px 6px -11px hsl(0 0% 0% / 0.60);
+  }
+
+  * {
+    @apply border-border;
+    letter-spacing: var(--tracking-normal);
+  }
+
+  body {
+    @apply bg-background text-foreground;
   }
 }
