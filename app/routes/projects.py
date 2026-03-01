@@ -1,5 +1,6 @@
 """Project management routes."""
 
+import uuid
 from fastapi import APIRouter, Request, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse
 
@@ -1188,4 +1189,126 @@ async def delete_observation(
         return HTMLResponse(content="Observation deleted", status_code=200)
     else:
         return HTMLResponse(content="Observation not found", status_code=404)
+
+
+# ── Evidence routes ────────────────────────────────────────────────────────────
+
+@router.get("/{project_id}/observations/{observation_id}/evidence", response_class=HTMLResponse)
+async def get_evidence_panel(
+    project_id: str, observation_id: str, request: Request, db: Session = Depends(get_db)
+):
+    """Return the evidence panel partial for a given observation."""
+    user = getattr(request.state, "user", None)
+    if not user:
+        return RedirectResponse(url="/auth/login", status_code=302)
+
+    from app.repositories.observation import ProjectObservationRepository
+    obs_repo = ProjectObservationRepository(db)
+    observation = obs_repo.get_observation(observation_id)
+    if not observation:
+        return HTMLResponse(content="Observation not found", status_code=404)
+
+    return templates.TemplateResponse(
+        "projects/_evidence_panel.html",
+        {"request": request, "observation": observation, "project_id": project_id},
+    )
+
+
+@router.post("/{project_id}/observations/{observation_id}/evidence/text", response_class=HTMLResponse)
+async def add_text_evidence(
+    project_id: str, observation_id: str, request: Request, db: Session = Depends(get_db)
+):
+    """Add a text note to an observation."""
+    user = getattr(request.state, "user", None)
+    if not user:
+        return RedirectResponse(url="/auth/login", status_code=302)
+
+    form_data = await request.form()
+    content = form_data.get("content", "").strip()
+    if not content:
+        return HTMLResponse(content="Content required", status_code=400)
+
+    from app.repositories.observation import ProjectObservationRepository
+    obs_repo = ProjectObservationRepository(db)
+    obs_repo.add_text_note(observation_id, content)
+    observation = obs_repo.get_observation(observation_id)
+
+    return templates.TemplateResponse(
+        "projects/_evidence_panel.html",
+        {"request": request, "observation": observation, "project_id": project_id},
+    )
+
+
+@router.post("/{project_id}/observations/{observation_id}/evidence/image", response_class=HTMLResponse)
+async def add_image_evidence(
+    project_id: str, observation_id: str, request: Request, db: Session = Depends(get_db)
+):
+    """Upload an image as evidence for an observation."""
+    import os, shutil
+    from fastapi import UploadFile
+    user = getattr(request.state, "user", None)
+    if not user:
+        return RedirectResponse(url="/auth/login", status_code=302)
+
+    form_data = await request.form()
+    file: UploadFile = form_data.get("file")
+    if not file or not file.filename:
+        return HTMLResponse(content="File required", status_code=400)
+
+    allowed = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".pdf"}
+    ext = os.path.splitext(file.filename)[1].lower()
+    if ext not in allowed:
+        return HTMLResponse(content="Unsupported file type", status_code=400)
+
+    upload_dir = "static/uploads/evidence"
+    os.makedirs(upload_dir, exist_ok=True)
+    safe_name = f"{uuid.uuid4()}{ext}"
+    dest = os.path.join(upload_dir, safe_name)
+
+    with open(dest, "wb") as f:
+        shutil.copyfileobj(file.file, f)
+
+    file_size = os.path.getsize(dest)
+    file_path = f"/static/uploads/evidence/{safe_name}"
+
+    from app.repositories.observation import ProjectObservationRepository
+    obs_repo = ProjectObservationRepository(db)
+    obs_repo.add_image(observation_id, file.filename, file_path, file_size)
+    observation = obs_repo.get_observation(observation_id)
+
+    return templates.TemplateResponse(
+        "projects/_evidence_panel.html",
+        {"request": request, "observation": observation, "project_id": project_id},
+    )
+
+
+@router.delete("/{project_id}/observations/{observation_id}/evidence/{evidence_id}", response_class=HTMLResponse)
+async def delete_evidence(
+    project_id: str, observation_id: str, evidence_id: str,
+    request: Request, db: Session = Depends(get_db)
+):
+    """Delete a single evidence item."""
+    import os
+    user = getattr(request.state, "user", None)
+    if not user:
+        return RedirectResponse(url="/auth/login", status_code=302)
+
+    from app.repositories.observation import ProjectObservationRepository
+    from app.models.project import ProjectEvidenceFile
+    obs_repo = ProjectObservationRepository(db)
+
+    # Delete file from disk if image
+    evidence = db.query(ProjectEvidenceFile).filter(ProjectEvidenceFile.id == evidence_id).first()
+    if evidence and evidence.evidence_type == "image" and evidence.file_path:
+        disk_path = evidence.file_path.lstrip("/")
+        if os.path.exists(disk_path):
+            os.remove(disk_path)
+
+    obs_repo.delete_evidence(evidence_id)
+    observation = obs_repo.get_observation(observation_id)
+
+    return templates.TemplateResponse(
+        "projects/_evidence_panel.html",
+        {"request": request, "observation": observation, "project_id": project_id},
+    )
 

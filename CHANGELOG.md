@@ -9,6 +9,15 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and vers
 
 ---
 
+## [0.5.13] — 2026-03-02
+
+### Added
+- Unsaved changes protection in control detail: "Unsaved changes" amber badge in the sticky save bar when status or observations change
+- Confirmation dialog when navigating to another control via the sidebar tree with unsaved edits
+- `window.beforeunload` warning on browser back/close when the form is dirty
+
+---
+
 ## [0.5.12] — 2026-03-02
 
 ### Added

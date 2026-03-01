@@ -1,6 +1,6 @@
 import uuid
 from sqlalchemy.orm import Session
-from app.models.project import ProjectObservation
+from app.models.project import ProjectObservation, ProjectEvidenceFile
 from app.repositories.base import BaseRepository
 
 
@@ -51,6 +51,47 @@ class ProjectObservationRepository(BaseRepository[ProjectObservation]):
         ).first()
         if observation:
             self.db.delete(observation)
+            self.db.commit()
+            return True
+        return False
+
+    def get_observation(self, observation_id: uuid.UUID) -> ProjectObservation | None:
+        return self.db.query(ProjectObservation).filter(
+            ProjectObservation.id == observation_id
+        ).first()
+
+    def add_text_note(self, observation_id: uuid.UUID, content: str) -> ProjectEvidenceFile:
+        evidence = ProjectEvidenceFile(
+            id=uuid.uuid4(),
+            project_observation_id=observation_id,
+            evidence_type="text_note",
+            content=content,
+        )
+        self.db.add(evidence)
+        self.db.commit()
+        return evidence
+
+    def add_image(
+        self, observation_id: uuid.UUID, filename: str, file_path: str, file_size: int
+    ) -> ProjectEvidenceFile:
+        evidence = ProjectEvidenceFile(
+            id=uuid.uuid4(),
+            project_observation_id=observation_id,
+            evidence_type="image",
+            filename=filename,
+            file_path=file_path,
+            file_size=file_size,
+        )
+        self.db.add(evidence)
+        self.db.commit()
+        return evidence
+
+    def delete_evidence(self, evidence_id: uuid.UUID) -> bool:
+        evidence = self.db.query(ProjectEvidenceFile).filter(
+            ProjectEvidenceFile.id == evidence_id
+        ).first()
+        if evidence:
+            self.db.delete(evidence)
             self.db.commit()
             return True
         return False

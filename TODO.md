@@ -34,6 +34,8 @@
 
 - [x] Evidence panel per observation — add text notes and upload images/files
 - [x] Audit timer in project controls sidebar — start, pause, stop with localStorage persistence
+- [ ] Access Controls
+  - [ ] Add Role based access controls to the application [Roles - Admins and Auditors](Admin can see all the projects, add clients, edit framework controls, add/approve/manage users | Auditors can't see the other users projects. If an audtor share his project with an antoehr auditor he can see that project. Admins can assign the autority of a project to an another auditor.)
 
 ## Antigravity UX/UI suggestions
 
@@ -54,7 +56,7 @@
 - [ ] Improve **form UX consistency**: inline helper text, validation timing rules (on blur + submit), field-level error summaries, and required/optional clarity.
 - [ ] Implement a **unified feedback language** for toasts/modals (success, warning, destructive) with predictable placement, duration, and copy style.
 - [ ] Standardize **loading states** across pages (skeletons for content + disabled actions with progress labels) to avoid layout shifts and uncertainty.
-- [ ] Add **unsaved changes protection** for long forms/workflows (dirty-state badge + confirmation on navigate/close).
+- [x] Add **unsaved changes protection** for long forms/workflows (dirty-state badge + confirmation on navigate/close).
 - [ ] Improve **project detail workflow readability** by grouping control assessment actions into clearer phases with persistent progress context.
 - [ ] Strengthen **navigation wayfinding**: highlight current location more clearly, add "recently viewed" section, and improve breadcrumb click targets.
 - [ ] Add **responsive behavior polish** for medium screens (tablet/laptop widths), especially table overflow, sidebar collapse defaults, and action button wrapping.
