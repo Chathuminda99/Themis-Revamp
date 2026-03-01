@@ -16,7 +16,3 @@
 
 - [ ] (Future items to be added)
 
-
-claude --resume ac216bad-f5e4-456d-b573-5d848fe7dec0
-
-Resume claude with this

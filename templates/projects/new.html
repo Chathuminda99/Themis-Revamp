@@ -87,7 +87,7 @@
                                     {% set color = colors[loop.index0 % colors|length] %}
                                     <li>
                                         <button type="button" @click='value = "{{ client.id }}"; open = false'
-                                            :class='value === "{{ client.id }}" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"'
+                                            :class='value === "{{ client.id }}" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-primary/15"'
                                             class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-sm font-medium transition-all">
                                             <span :class='value === "{{ client.id }}" ? "text-white" : "{{ color.text }} {{ color.bg }}"'
                                                 class="flex items-center justify-center w-6 h-6 rounded-full font-bold text-xs transition-colors flex-shrink-0">

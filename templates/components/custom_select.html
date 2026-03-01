@@ -94,7 +94,7 @@
               {% if on_change %}{{ on_change }};{% endif %}
             '
             :aria-selected='value === {{ option.value | string | tojson | safe }}'
-            :class='value === {{ option.value | string | tojson | safe }} ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"'
+            :class='value === {{ option.value | string | tojson | safe }} ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-primary/15"'
             class="dropdown-item"
           >
             {% if option.icon is defined %}

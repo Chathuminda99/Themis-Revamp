@@ -63,7 +63,7 @@
   }
 
   .dropdown-item:hover:not(:disabled) {
-    @apply bg-slate-50 dark:bg-slate-800/60;
+    @apply bg-primary/10 dark:bg-primary/15;
   }
 
   .dropdown-item.active {

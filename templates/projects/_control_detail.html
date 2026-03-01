@@ -43,7 +43,7 @@
                 <ul class="flex flex-col gap-1 p-0.5">
                     <li>
                         <button type="button" @click='value = "in_progress"; open = false'
-                            :class='value === "in_progress" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"'
+                            :class='value === "in_progress" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-primary/15"'
                             class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-all">
                             <span :class='value === "in_progress" ? "text-white" : "text-amber-600 bg-amber-50 dark:bg-amber-900/30 dark:text-amber-400"'
                                 class="flex items-center justify-center w-7 h-7 rounded-full transition-colors flex-shrink-0">
@@ -54,7 +54,7 @@
                     </li>
                     <li>
                         <button type="button" @click='value = "approved"; open = false'
-                            :class='value === "approved" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"'
+                            :class='value === "approved" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-primary/15"'
                             class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-all">
                             <span :class='value === "approved" ? "text-white" : "text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 dark:text-emerald-400"'
                                 class="flex items-center justify-center w-7 h-7 rounded-full transition-colors flex-shrink-0">
@@ -65,7 +65,7 @@
                     </li>
                     <li>
                         <button type="button" @click='value = "rejected"; open = false'
-                            :class='value === "rejected" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"'
+                            :class='value === "rejected" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-primary/15"'
                             class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-all">
                             <span :class='value === "rejected" ? "text-white" : "text-rose-600 bg-rose-50 dark:bg-rose-900/30 dark:text-rose-400"'
                                 class="flex items-center justify-center w-7 h-7 rounded-full transition-colors flex-shrink-0">
@@ -76,7 +76,7 @@
                     </li>
                     <li>
                         <button type="button" @click='value = "not_applicable"; open = false'
-                            :class='value === "not_applicable" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"'
+                            :class='value === "not_applicable" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-primary/15"'
                             class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-all">
                             <span :class='value === "not_applicable" ? "text-white" : "text-slate-500 bg-slate-100 dark:bg-slate-800 dark:text-slate-400"'
                                 class="flex items-center justify-center w-7 h-7 rounded-full transition-colors flex-shrink-0">
@@ -253,7 +253,7 @@
                                 <li>
                                     <button type="button"
                                         @click='addObservation(obs.id, "{{ control.id }}", obs.label, obs.recommendation); value = obs.id; open = false; $nextTick(() => { value = "" })'
-                                        :class='value === obs.id ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"'
+                                        :class='value === obs.id ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-primary/15"'
                                         class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-sm font-medium transition-all">
                                         <span :class='value === obs.id ? "text-white" : "text-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 dark:text-indigo-400"'
                                             class="flex items-center justify-center w-6 h-6 rounded-full transition-colors flex-shrink-0 text-[10px] font-bold"
