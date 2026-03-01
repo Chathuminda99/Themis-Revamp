@@ -10,7 +10,7 @@
 - [x] Highlight the active/selected item in the sidebar nav
 - [x] Fix font color mismatch in the Frameworks detail view
 - [x] Fix client name font color mismatch in the Clients list view
-- [ ] Replace the Controls and Settings sidebar icons with better alternatives
+- [x] Replace the Controls and Settings sidebar icons with better alternatives
 - [ ] Enhance the Icons of the client names and 
 
 ## Features & Functionality
