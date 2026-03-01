@@ -27,3 +27,20 @@
 
 - [ ] (Future items to be added)
 
+## Codex UX/UI suggestions
+
+- [ ] Create a **global page header pattern** (title + short context + primary CTA + secondary actions) so every screen starts with consistent orientation and task focus.
+- [ ] Add a **command palette / quick actions** launcher (e.g., `⌘K` / `Ctrl+K`) for frequent tasks such as creating project, jumping to clients/frameworks, and opening recent records.
+- [ ] Improve **information hierarchy on dashboard**: promote highest-priority KPIs, reduce decorative weight, and add "what changed since last visit" indicators.
+- [ ] Introduce **empty-state system** (illustration + guidance + one CTA) for all list/detail pages to reduce dead ends when data is missing.
+- [ ] Add **table usability upgrades**: sticky headers, column density toggle (comfortable/compact), saved filters, and visible sort state indicators.
+- [ ] Improve **form UX consistency**: inline helper text, validation timing rules (on blur + submit), field-level error summaries, and required/optional clarity.
+- [ ] Implement a **unified feedback language** for toasts/modals (success, warning, destructive) with predictable placement, duration, and copy style.
+- [ ] Standardize **loading states** across pages (skeletons for content + disabled actions with progress labels) to avoid layout shifts and uncertainty.
+- [ ] Add **unsaved changes protection** for long forms/workflows (dirty-state badge + confirmation on navigate/close).
+- [ ] Improve **project detail workflow readability** by grouping control assessment actions into clearer phases with persistent progress context.
+- [ ] Strengthen **navigation wayfinding**: highlight current location more clearly, add "recently viewed" section, and improve breadcrumb click targets.
+- [ ] Add **responsive behavior polish** for medium screens (tablet/laptop widths), especially table overflow, sidebar collapse defaults, and action button wrapping.
+- [ ] Improve **keyboard and accessibility support**: visible focus states everywhere, ARIA labels for icon-only controls, logical tab order, and color-contrast audit.
+- [ ] Refine **microcopy and labeling** (buttons, statuses, helper text) to use user outcomes instead of internal/system wording.
+- [ ] Add **contextual onboarding hints** for first-time users (progressive tooltips/checklist) that can be dismissed and later reopened from Help.
