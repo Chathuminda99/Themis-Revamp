@@ -76,6 +76,7 @@
 
 
     <!-- Project Grid -->
+    {% if active_projects %}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
         {% for item in active_projects %}
@@ -157,11 +158,29 @@
         <a href="/projects/new"
             class="group border-2 border-dashed border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 rounded-xl flex flex-col items-center justify-center p-8 hover:bg-slate-100 dark:hover:bg-slate-800 hover:border-primary/60 transition-all min-h-[300px]">
             <div class="bg-slate-200 dark:bg-slate-700 p-4 rounded-full mb-4 group-hover:bg-primary/20 transition-colors">
-                <span class="material-symbols-outlined text-slate-600 dark:text-slate-400 group-hover:text-primary transition-colors text-[32px]">add_circle</span>
+                <span class="material-symbols-outlined text-slate-600 dark:text-slate-400 group-hover:text-primary transition-colors" style="font-size:32px">add_circle</span>
             </div>
             <span class="text-base font-bold text-slate-900 dark:text-slate-100 group-hover:text-primary transition-colors">New Project</span>
             <span class="text-xs text-slate-500 dark:text-slate-400 mt-2">Start a compliance audit</span>
         </a>
     </div>
+
+    {% else %}
+    <!-- Empty State -->
+    <div class="bg-card border border-border rounded-xl shadow-sm flex flex-col items-center justify-center py-20 px-8 text-center">
+        <div class="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center mb-6">
+            <span class="material-symbols-outlined text-primary" style="font-size:40px">assignment</span>
+        </div>
+        <h3 class="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2">No active projects</h3>
+        <p class="text-slate-500 dark:text-slate-400 text-sm max-w-sm mb-8">
+            You have no in-progress audits right now. Start a new project to begin a compliance assessment.
+        </p>
+        <a href="/projects/new"
+            class="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-5 py-2.5 rounded-lg text-sm font-bold transition-all shadow-sm shadow-primary/20">
+            <span class="material-symbols-outlined" style="font-size:18px">add_circle</span>
+            New Project
+        </a>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
