@@ -9,6 +9,22 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and vers
 
 ---
 
+## [0.5.14] — 2026-03-02
+
+### Added
+- Project name context to control detail breadcrumb for better wayfinding
+
+### Improved
+- Control detail breadcrumb now shows full hierarchy: Project > Framework > Section > Control
+- Project name is clickable to navigate back to project overview
+- Microcopy refinement: user-outcome focused language in buttons, forms, and confirmations
+- Form titles and descriptions use business language (audit, compliance) instead of CRUD terminology
+- Empty states now actionable with clear guidance and next steps
+- Confirmation dialogs include consequences of destructive actions
+- Control detail metadata now displays project owner
+
+---
+
 ## [0.5.13] — 2026-03-02
 
 ### Added
