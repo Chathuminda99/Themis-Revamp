@@ -27,7 +27,7 @@
 - [x] Fix dashboard project card progress bar — currently hardcoded to 0%
 - [x] Add proper empty state to dashboard when no active projects exist
 - [ ] When an user add same observation multiple times, give him/her a warning.
-- [ ] Shrink the Control metadata and Audit trail section and give more room for observations table.
+- [x] Shrink the Control metadata and Audit trail section and give more room for observations table.
 - [ ] Add option to view commands/view path for some observations.
 
 ## Features & Functionality

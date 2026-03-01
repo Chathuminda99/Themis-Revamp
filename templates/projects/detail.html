@@ -26,7 +26,22 @@
 
     <!-- Tree View Items -->
     <div class="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600 p-2">
-      <div class="space-y-1" x-data="{ expandedSections: {} }">
+      <div class="space-y-1" x-data="{
+        get storageKey() { return 'expandedSections_{{ project.id }}'; },
+        get activeKey() { return 'activeControl_{{ project.id }}'; },
+        expandedSections: {},
+        init() {
+          try { this.expandedSections = JSON.parse(localStorage.getItem(this.storageKey) || '{}'); } catch(e) {}
+          this.$watch('expandedSections', v => { try { localStorage.setItem(this.storageKey, JSON.stringify(v)); } catch(e) {} });
+          this.$nextTick(() => {
+            const saved = localStorage.getItem(this.activeKey);
+            if (saved) {
+              const link = document.querySelector(`.control-link[data-control-id='${saved}']`);
+              if (link) link.click();
+            }
+          });
+        }
+      }">
         {% if framework %}
         {% for section in framework.sections %}
         <div class="mb-1">
@@ -49,7 +64,8 @@
             <!-- Link loads control detail via HTMX -->
             <a href="#" hx-get="/projects/{{ project.id }}/controls/{{ control.id }}/details"
               hx-target="#control-details" hx-swap="innerHTML"
-              @click="document.querySelectorAll('.control-link').forEach(el => el.classList.remove('bg-primary/5', 'text-primary', 'border-primary/10')); $el.classList.add('bg-primary/5', 'text-primary', 'border-primary/10')"
+              data-control-id="{{ control.id }}"
+              @click="document.querySelectorAll('.control-link').forEach(el => el.classList.remove('bg-primary/5', 'text-primary', 'border-primary/10')); $el.classList.add('bg-primary/5', 'text-primary', 'border-primary/10'); localStorage.setItem('activeControl_{{ project.id }}', '{{ control.id }}')"
               class="control-link flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 border border-transparent transition-colors">
               <span class="text-xs font-semibold truncate">{{ control.control_id }} {{ control.name }}</span>
               <span id="tree-icon-{{ control.id }}">
