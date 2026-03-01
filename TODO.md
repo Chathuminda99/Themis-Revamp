@@ -22,8 +22,17 @@
 - [ ] Fix dashboard project card progress bar — currently hardcoded to 0%
 - [ ] Add proper empty state to dashboard when no active projects exist
 - [ ] Polish the login page to match the current design system
+- [ ] The profile hovering model window not align with the theme
 
 ## Features & Functionality
 
 - [ ] (Future items to be added)
 
+## Antigravity UX/UI suggestions
+
+- [ ] **Sticky Action Buttons in Control Detail**: In `_control_detail.html`, move "Save & Continue" and "Cancel" buttons to a fixed bottom bar or sticky header so they remain accessible when long observations are added.
+- [ ] **Empty State Polish**: Elevate the "No observations added yet" empty state in `_control_detail.html` using a subtle icon illustration or dotted-border drop-zone style.
+- [ ] **Dropdown Positioning**: Custom Alpine.js dropdowns in filters (`list.html`) can be clipped by `overflow-hidden` containers. Consider adding Floating UI (Popper.js) for robust absolute positioning.
+- [ ] **Scrollable Content Friction**: Requirements and Testing Procedures in `_control_detail.html` use `max-h-64` with inner scrollbars. Consider an expandable "Read More / Show Less" toggle instead of forcing scroll within a small box.
+- [ ] **Dropdown Text Truncation**: Predefined observation dropdowns truncate text at ~60 characters, hiding crucial information. Consider a multi-line layout or adding a hover tooltip for long findings.
+- [ ] **Mobile Filter UX**: The filter bar in `list.html` stacks large dropdowns vertically on mobile/tablet. Consider hiding filters behind a "Filters" button that opens a slide-out drawer or modal on smaller screens.
