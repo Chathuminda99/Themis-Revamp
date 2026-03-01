@@ -26,6 +26,7 @@
 - [x] Fix version badge visibility (text-[10px] not compiled, dark mode color too faint)
 - [x] Fix dashboard project card progress bar — currently hardcoded to 0%
 - [x] Add proper empty state to dashboard when no active projects exist
+- [ ] When an user add same observation multiple times, give him/her a warning.
 
 ## Features & Functionality
 
