@@ -8,6 +8,7 @@ from app.services.auth_service import authenticate_user, create_session_token
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 from app.templates import templates
+from app.utils.htmx import htmx_toast
 settings = get_settings()
 
 
@@ -35,6 +36,7 @@ async def login(
                 "error": "Invalid email or password",
             },
             status_code=401,
+            headers=htmx_toast("Invalid email or password", "error")
         )
 
     # Create session token
@@ -59,7 +61,7 @@ async def login(
 @router.post("/logout")
 async def logout(request: Request):
     """Handle logout."""
-    response = RedirectResponse(url="/auth/login", status_code=302)
+    response = RedirectResponse(url="/auth/login", status_code=302, headers=htmx_toast("Logged out successfully"))
     response.delete_cookie(
         key=settings.session_cookie_name,
         httponly=settings.session_cookie_httponly,

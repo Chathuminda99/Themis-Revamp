@@ -1,67 +1,80 @@
-{# Shadcn Alert Component #}
-{# Semantic alerts for info, success, warning, error #}
+{# Custom Alert Component #}
+{# Semantic alerts for info, success, warning, error, tailored to the app theme #}
 {# Usage:
-   {% include "components/alert.html" with context %}
-   {# type="success", title="Success", message="...", dismissible=true #}
+{% include "components/alert.html" %}
+{# Requires variables via context: type (string), title (string), message (string), dismissible (boolean) #}
+{# Example: include "components/alert.html" with type="success", title="Created", message="Project created",
+dismissible=true %}
 #}
 
-<div
-  role="alert"
-  class="
-    rounded-lg border px-4 py-3 space-y-2
-    {%- if type == 'error' %}
-      bg-destructive/10 border-destructive/30 text-destructive
-    {%- elif type == 'warning' %}
-      bg-amber-900/20 border-amber-900/30 text-amber-700 dark:text-amber-400
-    {%- elif type == 'success' %}
-      bg-emerald-900/20 border-emerald-900/30 text-emerald-700 dark:text-emerald-400
-    {%- else %} {# info default #}
-      bg-blue-900/20 border-blue-900/30 text-blue-700 dark:text-blue-400
-    {%- endif %}
-  "
-  {% if dismissible %}x-data="{ open: true }" x-show="open" x-transition{% endif %}
->
-  <div class="flex gap-3">
-    {# Icon #}
-    <div class="flex-shrink-0 mt-0.5">
-      {%- if type == 'error' %}
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path>
-        </svg>
-      {%- elif type == 'warning' %}
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"></path>
-        </svg>
-      {%- elif type == 'success' %}
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
-        </svg>
-      {%- else %} {# info #}
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path>
-        </svg>
+{% set _t = type | default('info') %}
+
+<div role="alert" class="
+        relative overflow-hidden rounded-xl border bg-white shadow-sm dark:bg-slate-900 flex items-start p-4 gap-4 transition-all duration-300
+        {%- if _t == 'error' %} border-rose-200 dark:border-rose-900/50 
+        {%- elif _t == 'warning' %} border-amber-200 dark:border-amber-900/50 
+        {%- elif _t == 'success' %} border-emerald-200 dark:border-emerald-900/50 
+        {%- else %} border-blue-200 dark:border-blue-900/50 
+        {%- endif %}
+    " {% if dismissible %}x-data="{ open: true }" x-show="open" x-transition:enter="transition ease-out duration-300"
+  x-transition:enter-start="opacity-0 transform -translate-y-2"
+  x-transition:enter-end="opacity-100 transform translate-y-0" x-transition:leave="transition ease-in duration-200"
+  x-transition:leave-start="opacity-100 transform translate-y-0"
+  x-transition:leave-end="opacity-0 transform -translate-y-2" {% endif %}>
+
+  <!-- Accent Line -->
+  <div class="absolute top-0 left-0 w-1 h-full
+        {%- if _t == 'error' %} bg-rose-500
+        {%- elif _t == 'warning' %} bg-amber-500
+        {%- elif _t == 'success' %} bg-emerald-500
+        {%- else %} bg-blue-500
+        {%- endif %}"></div>
+
+  <!-- Icon -->
+  <div class="p-2 rounded-lg flex items-center justify-center flex-shrink-0
+        {%- if _t == 'error' %} bg-rose-100 dark:bg-rose-900/40 text-rose-600 dark:text-rose-400
+        {%- elif _t == 'warning' %} bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400
+        {%- elif _t == 'success' %} bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400
+        {%- else %} bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400
+        {%- endif %}">
+    <span class="material-symbols-outlined" style="font-size:20px">
+      {%- if _t == 'error' %}error
+      {%- elif _t == 'warning' %}warning
+      {%- elif _t == 'success' %}check_circle
+      {%- else %}info
       {%- endif %}
-    </div>
+    </span>
+  </div>
 
-    {# Content #}
-    <div class="flex-1">
-      {% if title %}
-        <h4 class="font-semibold text-sm">{{ title }}</h4>
-      {% endif %}
-      {% if message %}
-        <p class="text-sm {% if title %}mt-1{% endif %}">{{ message }}</p>
-      {% endif %}
-    </div>
-
-    {# Optional close button #}
-    {% if dismissible %}
-      <button
-        @click="open = false"
-        class="flex-shrink-0 opacity-70 hover:opacity-100 transition-opacity">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-        </svg>
-      </button>
+  <!-- Content -->
+  <div class="flex-1 py-0.5">
+    {% if title %}
+    <h4 class="text-xs font-bold uppercase tracking-wider mb-1.5
+            {%- if _t == 'error' %} text-rose-900 dark:text-rose-300
+            {%- elif _t == 'warning' %} text-amber-900 dark:text-amber-300
+            {%- elif _t == 'success' %} text-emerald-900 dark:text-emerald-300
+            {%- else %} text-blue-900 dark:text-blue-300
+            {%- endif %}">{{ title }}</h4>
+    {% endif %}
+    {% if message %}
+    <p class="text-sm leading-relaxed
+            {%- if _t == 'error' %} text-rose-700 dark:text-rose-400/80
+            {%- elif _t == 'warning' %} text-amber-700 dark:text-amber-400/80
+            {%- elif _t == 'success' %} text-emerald-700 dark:text-emerald-400/80
+            {%- else %} text-blue-700 dark:text-blue-400/80
+            {%- endif %}">{{ message }}</p>
     {% endif %}
   </div>
+
+  <!-- Dismiss Button -->
+  {% if dismissible %}
+  <button type="button" @click="open = false" class="flex-shrink-0 p-1 rounded-md transition-colors focus:outline-none focus:ring-2
+        {%- if _t == 'error' %} text-rose-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30 focus:ring-rose-200 dark:focus:ring-rose-700
+        {%- elif _t == 'warning' %} text-amber-400 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/30 focus:ring-amber-200 dark:focus:ring-amber-700
+        {%- elif _t == 'success' %} text-emerald-400 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 focus:ring-emerald-200 dark:focus:ring-emerald-700
+        {%- else %} text-blue-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 focus:ring-blue-200 dark:focus:ring-blue-700
+        {%- endif %}">
+    <span class="material-symbols-outlined" style="font-size:18px">close</span>
+  </button>
+  {% endif %}
 </div>

@@ -212,6 +212,15 @@ async def save_control(
     db.commit()
 
     # Redirect back to edit page with success message
+    import json
+    headers = {
+        "HX-Trigger": json.dumps({
+            "showMessage": {
+                "type": "success",
+                "message": "Template saved successfully!"
+            }
+        })
+    }
     return templates.TemplateResponse(
         "admin/control_edit.html",
         {
@@ -222,4 +231,5 @@ async def save_control(
             "framework": framework,
             "saved": True,
         },
+        headers=headers
     )

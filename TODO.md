@@ -63,3 +63,5 @@
 - [ ] Improve **keyboard and accessibility support**: visible focus states everywhere, ARIA labels for icon-only controls, logical tab order, and color-contrast audit.
 - [ ] Refine **microcopy and labeling** (buttons, statuses, helper text) to use user outcomes instead of internal/system wording.
 - [ ] Add **contextual onboarding hints** for first-time users (progressive tooltips/checklist) that can be dismissed and later reopened from Help.
+
+claude --resume ac216bad-f5e4-456d-b573-5d848fe7dec0

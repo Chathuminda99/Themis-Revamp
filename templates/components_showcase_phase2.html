@@ -28,10 +28,18 @@
         <table class="w-full">
           <thead class="bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800">
             <tr>
-              <th class="px-4 py-3 text-left font-semibold text-slate-700 dark:text-slate-300 text-xs uppercase tracking-wider">Name</th>
-              <th class="px-4 py-3 text-left font-semibold text-slate-700 dark:text-slate-300 text-xs uppercase tracking-wider">Status</th>
-              <th class="px-4 py-3 text-left font-semibold text-slate-700 dark:text-slate-300 text-xs uppercase tracking-wider">Email</th>
-              <th class="px-4 py-3 text-left font-semibold text-slate-700 dark:text-slate-300 text-xs uppercase tracking-wider">Actions</th>
+              <th
+                class="px-4 py-3 text-left font-semibold text-slate-700 dark:text-slate-300 text-xs uppercase tracking-wider">
+                Name</th>
+              <th
+                class="px-4 py-3 text-left font-semibold text-slate-700 dark:text-slate-300 text-xs uppercase tracking-wider">
+                Status</th>
+              <th
+                class="px-4 py-3 text-left font-semibold text-slate-700 dark:text-slate-300 text-xs uppercase tracking-wider">
+                Email</th>
+              <th
+                class="px-4 py-3 text-left font-semibold text-slate-700 dark:text-slate-300 text-xs uppercase tracking-wider">
+                Actions</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
@@ -117,20 +125,25 @@
       <h2 class="text-2xl font-semibold text-slate-900 dark:text-slate-50 mb-4">Alerts</h2>
       <div class="space-y-4">
         <!-- Info Alert -->
-        {% include "components/alert.html" with context %}
-        {# type="info", title="Information", message="This is an informational alert message." #}
+        {% with type="info", title="Information", message="This is an informational alert message." %}
+        {% include "components/alert.html" %}
+        {% endwith %}
 
         <!-- Success Alert -->
-        {% include "components/alert.html" with context %}
-        {# type="success", title="Success!", message="Your changes have been saved successfully." #}
+        {% with type="success", title="Success!", message="Your changes have been saved successfully." %}
+        {% include "components/alert.html" %}
+        {% endwith %}
 
         <!-- Warning Alert -->
-        {% include "components/alert.html" with context %}
-        {# type="warning", title="Warning", message="This action cannot be undone. Please proceed with caution." #}
+        {% with type="warning", title="Warning", message="This action cannot be undone. Please proceed with caution." %}
+        {% include "components/alert.html" %}
+        {% endwith %}
 
         <!-- Error Alert -->
-        {% include "components/alert.html" with context %}
-        {# type="error", title="Error", message="Something went wrong. Please try again later.", dismissible=true #}
+        {% with type="error", title="Error", message="Something went wrong. Please try again later.", dismissible=true
+        %}
+        {% include "components/alert.html" %}
+        {% endwith %}
       </div>
     </div>
   </section>
@@ -143,25 +156,33 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
           <!-- Small Spinner -->
           <div class="flex flex-col items-center justify-center">
-            <div class="animate-spin rounded-full w-4 h-4 border-2 border-slate-200 dark:border-slate-700 border-t-primary mb-2"></div>
+            <div
+              class="animate-spin rounded-full w-4 h-4 border-2 border-slate-200 dark:border-slate-700 border-t-primary mb-2">
+            </div>
             <p class="text-xs text-slate-500 dark:text-slate-400">Small</p>
           </div>
 
           <!-- Medium Spinner -->
           <div class="flex flex-col items-center justify-center">
-            <div class="animate-spin rounded-full w-8 h-8 border-4 border-slate-200 dark:border-slate-700 border-t-primary mb-2"></div>
+            <div
+              class="animate-spin rounded-full w-8 h-8 border-4 border-slate-200 dark:border-slate-700 border-t-primary mb-2">
+            </div>
             <p class="text-xs text-slate-500 dark:text-slate-400">Medium</p>
           </div>
 
           <!-- Large Spinner -->
           <div class="flex flex-col items-center justify-center">
-            <div class="animate-spin rounded-full w-12 h-12 border-4 border-slate-200 dark:border-slate-700 border-t-primary mb-2"></div>
+            <div
+              class="animate-spin rounded-full w-12 h-12 border-4 border-slate-200 dark:border-slate-700 border-t-primary mb-2">
+            </div>
             <p class="text-xs text-slate-500 dark:text-slate-400">Large</p>
           </div>
 
           <!-- With Label -->
           <div class="flex flex-col items-center justify-center">
-            <div class="animate-spin rounded-full w-8 h-8 border-4 border-slate-200 dark:border-slate-700 border-t-primary mb-2"></div>
+            <div
+              class="animate-spin rounded-full w-8 h-8 border-4 border-slate-200 dark:border-slate-700 border-t-primary mb-2">
+            </div>
             <p class="text-xs text-slate-500 dark:text-slate-400">Loading...</p>
           </div>
         </div>
@@ -177,27 +198,33 @@
         <div class="flex flex-wrap gap-8 justify-center">
           <!-- Top Tooltip -->
           <div x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" class="relative">
-            {% include "components/button.html" with context %}
-            {# button_text="Hover (Top)", button_variant="outline" #}
-            <div x-show="show" x-transition.opacity.duration.200ms class="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-3 py-2 text-xs font-medium text-white bg-slate-950 dark:bg-slate-800 rounded-md whitespace-nowrap pointer-events-none">
+            {% with button_text="Hover (Top)", button_variant="outline" %}
+            {% include "components/button.html" %}
+            {% endwith %}
+            <div x-show="show" x-transition.opacity.duration.200ms
+              class="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-3 py-2 text-xs font-medium text-white bg-slate-950 dark:bg-slate-800 rounded-md whitespace-nowrap pointer-events-none">
               Helpful tooltip text
             </div>
           </div>
 
           <!-- Right Tooltip -->
           <div x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" class="relative">
-            {% include "components/button.html" with context %}
-            {# button_text="Hover (Right)", button_variant="outline" #}
-            <div x-show="show" x-transition.opacity.duration.200ms class="absolute left-full ml-2 top-1/2 -translate-y-1/2 px-3 py-2 text-xs font-medium text-white bg-slate-950 dark:bg-slate-800 rounded-md whitespace-nowrap pointer-events-none">
+            {% with button_text="Hover (Right)", button_variant="outline" %}
+            {% include "components/button.html" %}
+            {% endwith %}
+            <div x-show="show" x-transition.opacity.duration.200ms
+              class="absolute left-full ml-2 top-1/2 -translate-y-1/2 px-3 py-2 text-xs font-medium text-white bg-slate-950 dark:bg-slate-800 rounded-md whitespace-nowrap pointer-events-none">
               Helpful tooltip
             </div>
           </div>
 
           <!-- Bottom Tooltip -->
           <div x-data="{ show: false }" @mouseenter="show = true" @mouseleave="show = false" class="relative">
-            {% include "components/button.html" with context %}
-            {# button_text="Hover (Bottom)", button_variant="outline" #}
-            <div x-show="show" x-transition.opacity.duration.200ms class="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-3 py-2 text-xs font-medium text-white bg-slate-950 dark:bg-slate-800 rounded-md whitespace-nowrap pointer-events-none">
+            {% with button_text="Hover (Bottom)", button_variant="outline" %}
+            {% include "components/button.html" %}
+            {% endwith %}
+            <div x-show="show" x-transition.opacity.duration.200ms
+              class="absolute top-full mt-2 left-1/2 -translate-x-1/2 px-3 py-2 text-xs font-medium text-white bg-slate-950 dark:bg-slate-800 rounded-md whitespace-nowrap pointer-events-none">
               Helpful tooltip
             </div>
           </div>
@@ -212,54 +239,36 @@
       <h2 class="text-2xl font-semibold text-slate-900 dark:text-slate-50 mb-4">Dialog/Modal</h2>
       <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-6">
         <div x-data="{ showDialog: false }">
-          {% include "components/button.html" with context %}
-          {# button_text="Open Dialog", button_variant="primary", button_class="@click=\"showDialog = true\"" #}
+          {% with button_text="Open Dialog", button_variant="primary", button_class="@click=\"showDialog = true\"" %}
+          {% include "components/button.html" %}
+          {% endwith %}
 
           <!-- Dialog Component -->
-          <div
-            x-show="showDialog"
-            x-cloak
-            x-transition.opacity
-            @keydown.escape.window="showDialog = false"
-            class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-            @click.self="showDialog = false">
-            <div
-              x-show="showDialog"
-              x-transition:enter="transition ease-out duration-300 transform"
-              x-transition:enter-start="opacity-0 scale-95 translate-y-8"
-              x-transition:enter-end="opacity-100 scale-100 translate-y-0"
-              x-transition:leave="transition ease-in duration-200 transform"
-              x-transition:leave-start="opacity-100 scale-100 translate-y-0"
-              x-transition:leave-end="opacity-0 scale-95 translate-y-8"
-              class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-2xl w-full max-w-lg mx-auto relative overflow-hidden">
+          {% set _footer %}
+          <button @click="showDialog = false"
+            class="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 border border-slate-300 dark:border-slate-700 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-300">
+            Cancel
+          </button>
+          <button @click="showDialog = false"
+            class="px-4 py-2 text-sm font-bold text-white bg-primary hover:bg-blue-600 rounded-md shadow-sm shadow-primary/20 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50">
+            Confirm
+          </button>
+          {% endset %}
 
-              <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-primary to-blue-400"></div>
+          {% set _content %}
+          <p>This action will affect your project settings.</p>
+          {% endset %}
 
-              <button
-                @click="showDialog = false"
-                class="absolute top-4 right-4 p-2 text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors z-10">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-              </button>
-
-              <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800">
-                <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-50">Confirm Action</h2>
-                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Are you sure you want to proceed?</p>
-              </div>
-
-              <div class="px-6 py-4">
-                <p class="text-slate-600 dark:text-slate-400">This action will affect your project settings.</p>
-              </div>
-
-              <div class="px-6 py-4 border-t border-slate-200 dark:border-slate-800 flex gap-2 justify-end">
-                {% include "components/button.html" with context %}
-                {# button_text="Cancel", button_variant="outline", button_size="sm", button_class="@click=\"showDialog = false\"" #}
-                {% include "components/button.html" with context %}
-                {# button_text="Confirm", button_variant="primary", button_size="sm", button_class="@click=\"showDialog = false\"" #}
-              </div>
-            </div>
-          </div>
+          {% with
+          dialog_open="showDialog",
+          dialog_type="info",
+          dialog_title="Confirm Action",
+          dialog_description="Are you sure you want to proceed?",
+          dialog_content=_content,
+          dialog_footer=_footer
+          %}
+          {% include "components/dialog.html" %}
+          {% endwith %}
         </div>
       </div>
     </div>
@@ -272,8 +281,10 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="bg-slate-50 dark:bg-slate-950 rounded-lg p-6">
           <h3 class="font-semibold text-slate-900 dark:text-slate-50 mb-2">📊 Table</h3>
-          <p class="text-sm text-slate-600 dark:text-slate-400 mb-3">Professional data tables with hover effects and responsive design</p>
-          <pre class="bg-white dark:bg-slate-900 p-2 rounded text-xs overflow-x-auto border border-slate-200 dark:border-slate-800"><code>&lt;table class="..."&gt;
+          <p class="text-sm text-slate-600 dark:text-slate-400 mb-3">Professional data tables with hover effects and
+            responsive design</p>
+          <pre
+            class="bg-white dark:bg-slate-900 p-2 rounded text-xs overflow-x-auto border border-slate-200 dark:border-slate-800"><code>&lt;table class="..."&gt;
   &lt;thead&gt;...&lt;/thead&gt;
   &lt;tbody&gt;...&lt;/tbody&gt;
 &lt;/table&gt;</code></pre>
@@ -281,36 +292,46 @@
 
         <div class="bg-slate-50 dark:bg-slate-950 rounded-lg p-6">
           <h3 class="font-semibold text-slate-900 dark:text-slate-50 mb-2">⏳ Progress</h3>
-          <p class="text-sm text-slate-600 dark:text-slate-400 mb-3">Smooth gradient progress bars with labels and animations</p>
-          <pre class="bg-white dark:bg-slate-900 p-2 rounded text-xs overflow-x-auto border border-slate-200 dark:border-slate-800"><code>{% include "components/progress.html" %}
+          <p class="text-sm text-slate-600 dark:text-slate-400 mb-3">Smooth gradient progress bars with labels and
+            animations</p>
+          <pre
+            class="bg-white dark:bg-slate-900 p-2 rounded text-xs overflow-x-auto border border-slate-200 dark:border-slate-800"><code>{% include "components/progress.html" %}
 {# progress_value=65 #}</code></pre>
         </div>
 
         <div class="bg-slate-50 dark:bg-slate-950 rounded-lg p-6">
           <h3 class="font-semibold text-slate-900 dark:text-slate-50 mb-2">⚠️ Alert</h3>
-          <p class="text-sm text-slate-600 dark:text-slate-400 mb-3">Semantic alerts with icons and dismissible options</p>
-          <pre class="bg-white dark:bg-slate-900 p-2 rounded text-xs overflow-x-auto border border-slate-200 dark:border-slate-800"><code>{% include "components/alert.html" %}
+          <p class="text-sm text-slate-600 dark:text-slate-400 mb-3">Semantic alerts with icons and dismissible options
+          </p>
+          <pre
+            class="bg-white dark:bg-slate-900 p-2 rounded text-xs overflow-x-auto border border-slate-200 dark:border-slate-800"><code>{% include "components/alert.html" %}
 {# type="success", title="..." #}</code></pre>
         </div>
 
         <div class="bg-slate-50 dark:bg-slate-950 rounded-lg p-6">
           <h3 class="font-semibold text-slate-900 dark:text-slate-50 mb-2">⚙️ Spinner</h3>
-          <p class="text-sm text-slate-600 dark:text-slate-400 mb-3">Animated loading spinners with multiple sizes and labels</p>
-          <pre class="bg-white dark:bg-slate-900 p-2 rounded text-xs overflow-x-auto border border-slate-200 dark:border-slate-800"><code>{% include "components/spinner.html" %}
+          <p class="text-sm text-slate-600 dark:text-slate-400 mb-3">Animated loading spinners with multiple sizes and
+            labels</p>
+          <pre
+            class="bg-white dark:bg-slate-900 p-2 rounded text-xs overflow-x-auto border border-slate-200 dark:border-slate-800"><code>{% include "components/spinner.html" %}
 {# spinner_size="md" #}</code></pre>
         </div>
 
         <div class="bg-slate-50 dark:bg-slate-950 rounded-lg p-6">
           <h3 class="font-semibold text-slate-900 dark:text-slate-50 mb-2">💬 Tooltip</h3>
-          <p class="text-sm text-slate-600 dark:text-slate-400 mb-3">Hover tooltips with smart positioning (top/bottom/left/right)</p>
-          <pre class="bg-white dark:bg-slate-900 p-2 rounded text-xs overflow-x-auto border border-slate-200 dark:border-slate-800"><code>x-data="{ show: false }"
+          <p class="text-sm text-slate-600 dark:text-slate-400 mb-3">Hover tooltips with smart positioning
+            (top/bottom/left/right)</p>
+          <pre
+            class="bg-white dark:bg-slate-900 p-2 rounded text-xs overflow-x-auto border border-slate-200 dark:border-slate-800"><code>x-data="{ show: false }"
 @mouseenter="show = true"</code></pre>
         </div>
 
         <div class="bg-slate-50 dark:bg-slate-950 rounded-lg p-6">
           <h3 class="font-semibold text-slate-900 dark:text-slate-50 mb-2">🔲 Dialog</h3>
-          <p class="text-sm text-slate-600 dark:text-slate-400 mb-3">Modal dialogs with glassmorphism and smooth animations</p>
-          <pre class="bg-white dark:bg-slate-900 p-2 rounded text-xs overflow-x-auto border border-slate-200 dark:border-slate-800"><code>x-data="{ open: false }"
+          <p class="text-sm text-slate-600 dark:text-slate-400 mb-3">Modal dialogs with glassmorphism and smooth
+            animations</p>
+          <pre
+            class="bg-white dark:bg-slate-900 p-2 rounded text-xs overflow-x-auto border border-slate-200 dark:border-slate-800"><code>x-data="{ open: false }"
 @click="open = true"</code></pre>
         </div>
       </div>

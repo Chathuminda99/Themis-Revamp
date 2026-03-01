@@ -11,6 +11,7 @@ from app.repositories import ClientRepository
 
 router = APIRouter(prefix="/clients", tags=["clients"])
 from app.templates import templates
+from app.utils.htmx import htmx_toast
 
 
 @router.get("", response_class=HTMLResponse)
@@ -105,6 +106,7 @@ async def create_client(request: Request, db: Session = Depends(get_db)):
             "user": user,
             "client": client,
         },
+        headers=htmx_toast("Client created successfully")
     )
 
 
@@ -140,6 +142,7 @@ async def update_client(
             "user": user,
             "client": client,
         },
+        headers=htmx_toast("Client updated successfully")
     )
 
 
@@ -156,7 +159,7 @@ async def delete_client(
     success = repo.delete(user.tenant_id, client_id)
 
     if success:
-        return HTMLResponse("")  # Empty response for successful delete
+        return HTMLResponse("", headers=htmx_toast("Client deleted successfully"))
     return RedirectResponse(url="/clients", status_code=302)
 
 

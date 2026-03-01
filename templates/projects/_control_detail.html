@@ -32,12 +32,12 @@
                 :class="colors[value]">
                 <span x-text="labels[value]"></span>
                 <svg class="w-3.5 h-3.5 transition-transform duration-150" :class="open ? 'rotate-180' : ''"
-                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
             </button>
-            <div x-show="open" x-cloak
-                x-transition:enter="transition ease-out duration-150"
+            <div x-show="open" x-cloak x-transition:enter="transition ease-out duration-150"
                 x-transition:enter-start="transform opacity-0 scale-95 translate-y-[-10px]"
                 x-transition:enter-end="transform opacity-100 scale-100 translate-y-0"
                 x-transition:leave="transition ease-in duration-100"
@@ -49,7 +49,8 @@
                         <button type="button" @click='value = "in_progress"; open = false'
                             :class='value === "in_progress" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-primary/15"'
                             class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-all">
-                            <span :class='value === "in_progress" ? "text-white" : "text-amber-600 bg-amber-50 dark:bg-amber-900/30 dark:text-amber-400"'
+                            <span
+                                :class='value === "in_progress" ? "text-white" : "text-amber-600 bg-amber-50 dark:bg-amber-900/30 dark:text-amber-400"'
                                 class="flex items-center justify-center w-7 h-7 rounded-full transition-colors flex-shrink-0">
                                 <span class="material-symbols-outlined text-[16px]">pending</span>
                             </span>
@@ -60,7 +61,8 @@
                         <button type="button" @click='value = "approved"; open = false'
                             :class='value === "approved" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-primary/15"'
                             class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-all">
-                            <span :class='value === "approved" ? "text-white" : "text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 dark:text-emerald-400"'
+                            <span
+                                :class='value === "approved" ? "text-white" : "text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 dark:text-emerald-400"'
                                 class="flex items-center justify-center w-7 h-7 rounded-full transition-colors flex-shrink-0">
                                 <span class="material-symbols-outlined text-[16px]">check_circle</span>
                             </span>
@@ -71,7 +73,8 @@
                         <button type="button" @click='value = "rejected"; open = false'
                             :class='value === "rejected" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-primary/15"'
                             class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-all">
-                            <span :class='value === "rejected" ? "text-white" : "text-rose-600 bg-rose-50 dark:bg-rose-900/30 dark:text-rose-400"'
+                            <span
+                                :class='value === "rejected" ? "text-white" : "text-rose-600 bg-rose-50 dark:bg-rose-900/30 dark:text-rose-400"'
                                 class="flex items-center justify-center w-7 h-7 rounded-full transition-colors flex-shrink-0">
                                 <span class="material-symbols-outlined text-[16px]">cancel</span>
                             </span>
@@ -82,7 +85,8 @@
                         <button type="button" @click='value = "not_applicable"; open = false'
                             :class='value === "not_applicable" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-primary/15"'
                             class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-all">
-                            <span :class='value === "not_applicable" ? "text-white" : "text-slate-500 bg-slate-100 dark:bg-slate-800 dark:text-slate-400"'
+                            <span
+                                :class='value === "not_applicable" ? "text-white" : "text-slate-500 bg-slate-100 dark:bg-slate-800 dark:text-slate-400"'
                                 class="flex items-center justify-center w-7 h-7 rounded-full transition-colors flex-shrink-0">
                                 <span class="material-symbols-outlined text-[16px]">do_not_disturb</span>
                             </span>
@@ -102,25 +106,28 @@
             <div class="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
             <button type="button" @click="open = !open"
                 class="w-full flex items-center justify-between px-5 py-2.5 text-left hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors">
-                <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
-                    <div class="bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 p-1.5 rounded-lg flex items-center justify-center">
+                <h4
+                    class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                    <div
+                        class="bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 p-1.5 rounded-lg flex items-center justify-center">
                         <span class="material-symbols-outlined" style="font-size:16px">description</span>
                     </div>
                     Requirements
                 </h4>
-                <span class="text-slate-400 transition-transform duration-200 flex-shrink-0" :class="open ? '' : '-rotate-90'">
-                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                <span class="text-slate-400 transition-transform duration-200 flex-shrink-0"
+                    :class="open ? '' : '-rotate-90'">
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
                 </span>
             </button>
-            <div x-show="open"
-                x-transition:enter="transition ease-out duration-200"
-                x-transition:enter-start="opacity-0"
-                x-transition:enter-end="opacity-100"
-                x-transition:leave="transition ease-in duration-150"
-                x-transition:leave-start="opacity-100"
-                x-transition:leave-end="opacity-0"
-                class="p-6 border-t border-slate-100 dark:border-slate-800">
-                <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-wrap break-words">{{- control.requirements_text }}</p>
+            <div x-show="open" x-transition:enter="transition ease-out duration-200"
+                x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0" class="p-6 border-t border-slate-100 dark:border-slate-800">
+                <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-wrap break-words">
+                    {{- control.requirements_text }}</p>
             </div>
         </div>
         {% endif %}
@@ -131,25 +138,28 @@
             <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
             <button type="button" @click="open = !open"
                 class="w-full flex items-center justify-between px-5 py-2.5 text-left hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors">
-                <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
-                    <div class="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 p-1.5 rounded-lg flex items-center justify-center">
+                <h4
+                    class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                    <div
+                        class="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 p-1.5 rounded-lg flex items-center justify-center">
                         <span class="material-symbols-outlined" style="font-size:16px">assignment_turned_in</span>
                     </div>
                     Testing Procedures
                 </h4>
-                <span class="text-slate-400 transition-transform duration-200 flex-shrink-0" :class="open ? '' : '-rotate-90'">
-                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                <span class="text-slate-400 transition-transform duration-200 flex-shrink-0"
+                    :class="open ? '' : '-rotate-90'">
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
                 </span>
             </button>
-            <div x-show="open"
-                x-transition:enter="transition ease-out duration-200"
-                x-transition:enter-start="opacity-0"
-                x-transition:enter-end="opacity-100"
-                x-transition:leave="transition ease-in duration-150"
-                x-transition:leave-start="opacity-100"
-                x-transition:leave-end="opacity-0"
-                class="p-6 border-t border-slate-100 dark:border-slate-800">
-                <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-wrap break-words">{{- control.testing_procedures_text }}</p>
+            <div x-show="open" x-transition:enter="transition ease-out duration-200"
+                x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0" class="p-6 border-t border-slate-100 dark:border-slate-800">
+                <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-wrap break-words">
+                    {{- control.testing_procedures_text }}</p>
             </div>
         </div>
         {% endif %}
@@ -159,8 +169,6 @@
 
 <form id="control-form" hx-post="/projects/{{ project.id }}/controls/{{ control.id }}/details"
     hx-target="#control-details" hx-swap="innerHTML" class="grid grid-cols-1 xl:grid-cols-4 gap-6 mt-6 fade-in"
-    x-data='{ showToast: {{ "true" if saved else "false" }} }'
-    x-init="if(showToast) { setTimeout(() => showToast = false, 3000) }"
     @submit="prepareObservationsData(); window.formDirty = false">
 
     <!-- Form Controls -->
@@ -175,87 +183,95 @@
                 <div class="absolute top-0 left-0 w-1 h-full bg-purple-500"></div>
                 <button type="button" @click="open = !open"
                     class="w-full flex items-center justify-between px-5 py-5 text-left hover:bg-purple-50/50 dark:hover:bg-purple-900/10 transition-colors">
-                    <h4 class="text-xs font-bold text-slate-900 dark:text-slate-50 uppercase tracking-wider flex items-center gap-2">
-                        <div class="bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 p-1.5 rounded-lg flex items-center justify-center">
+                    <h4
+                        class="text-xs font-bold text-slate-900 dark:text-slate-50 uppercase tracking-wider flex items-center gap-2">
+                        <div
+                            class="bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 p-1.5 rounded-lg flex items-center justify-center">
                             <span class="material-symbols-outlined" style="font-size:16px">checklist</span>
                         </div>
                         Check Points
-                        <span class="text-[10px] font-bold bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 px-1.5 py-0.5 rounded-full normal-case tracking-normal">Pinned</span>
+                        <span
+                            class="text-[10px] font-bold bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 px-1.5 py-0.5 rounded-full normal-case tracking-normal">Pinned</span>
                     </h4>
-                    <span class="text-slate-500 dark:text-slate-300 transition-transform duration-200 flex-shrink-0" :class="open ? '' : '-rotate-90'">
-                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    <span class="text-slate-500 dark:text-slate-300 transition-transform duration-200 flex-shrink-0"
+                        :class="open ? '' : '-rotate-90'">
+                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
                     </span>
                 </button>
-                <div x-show="open"
-                    x-transition:enter="transition ease-out duration-200"
-                    x-transition:enter-start="opacity-0"
-                    x-transition:enter-end="opacity-100"
-                    x-transition:leave="transition ease-in duration-150"
-                    x-transition:leave-start="opacity-100"
+                <div x-show="open" x-transition:enter="transition ease-out duration-200"
+                    x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                    x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100"
                     x-transition:leave-end="opacity-0"
                     class="border-t border-purple-100 dark:border-purple-900/40 px-8 py-6 max-h-52 overflow-y-auto scrollbar-thin scrollbar-thumb-purple-300 dark:scrollbar-thumb-purple-700">
                     <div class="space-y-1">
                         {% set lines = control.check_points_text.strip().split('\n') %}
                         {% for line in lines %}
-                            {% if line.strip() %}
-                                {% set indent_level = (line | length) - (line | trim | length) %}
-                                {% set indent_spaces = indent_level // 2 %}
-                                {% set clean_text = line.strip() | replace('• ', '') | replace('- ', '') | replace('* ', '') | replace('– ', '') | replace('◦ ', '') %}
-                                {% if indent_spaces == 0 %}
-                                    <div class="flex gap-2 items-start">
-                                {% elif indent_spaces == 1 %}
-                                    <div class="flex gap-2 items-start pl-4">
+                        {% if line.strip() %}
+                        {% set indent_level = (line | length) - (line | trim | length) %}
+                        {% set indent_spaces = indent_level // 2 %}
+                        {% set clean_text = line.strip() | replace('• ', '') | replace('- ', '') | replace('* ', '') |
+                        replace('– ', '') | replace('◦ ', '') %}
+                        {% if indent_spaces == 0 %}
+                        <div class="flex gap-2 items-start">
+                            {% elif indent_spaces == 1 %}
+                            <div class="flex gap-2 items-start pl-4">
                                 {% elif indent_spaces == 2 %}
-                                    <div class="flex gap-2 items-start pl-8">
-                                {% else %}
+                                <div class="flex gap-2 items-start pl-8">
+                                    {% else %}
                                     <div class="flex gap-2 items-start pl-12">
-                                {% endif %}
-                                    <div class="flex-shrink-0 mt-1">
-                                        {% if indent_spaces == 0 %}
-                                            <div class="w-2 h-2 rounded-full bg-purple-500"></div>
-                                        {% elif indent_spaces == 1 %}
-                                            <div class="w-1.5 h-1.5 rounded-full bg-purple-400"></div>
-                                        {% else %}
-                                            <div class="w-1 h-1 rounded-full bg-purple-300"></div>
                                         {% endif %}
+                                        <div class="flex-shrink-0 mt-1">
+                                            {% if indent_spaces == 0 %}
+                                            <div class="w-2 h-2 rounded-full bg-purple-500"></div>
+                                            {% elif indent_spaces == 1 %}
+                                            <div class="w-1.5 h-1.5 rounded-full bg-purple-400"></div>
+                                            {% else %}
+                                            <div class="w-1 h-1 rounded-full bg-purple-300"></div>
+                                            {% endif %}
+                                        </div>
+                                        <p class="text-sm text-slate-800 dark:text-slate-100 leading-relaxed flex-1">{{
+                                            clean_text }}</p>
                                     </div>
-                                    <p class="text-sm text-slate-800 dark:text-slate-100 leading-relaxed flex-1">{{ clean_text }}</p>
+                                    {% endif %}
+                                    {% endfor %}
                                 </div>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-            {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
 
-            {% if control.assessment_checklist %}
-            <!-- Observations toolbar (sticky) -->
-            <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
-                <div class="px-6 py-4 flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary">assignment_turned_in</span>
-                        <h3 class="font-bold text-slate-900 dark:text-white">Observations</h3>
-                    </div>
-                    <button type="button"
-                        class="px-4 py-2 text-sm font-bold text-white bg-primary hover:bg-primary/90 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-primary/50 flex items-center gap-2"
-                        onclick="document.getElementById('observation-dropdown-{{ control.id }}').classList.toggle('hidden')">
-                        <span class="material-symbols-outlined text-[14px]">add</span>
-                        Add Observation
-                    </button>
-                </div>
+                        {% if control.assessment_checklist %}
+                        <!-- Observations toolbar (sticky) -->
+                        <div
+                            class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
+                            <div class="px-6 py-4 flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-primary">assignment_turned_in</span>
+                                    <h3 class="font-bold text-slate-900 dark:text-white">Observations</h3>
+                                </div>
+                                <button type="button"
+                                    class="px-4 py-2 text-sm font-bold text-white bg-primary hover:bg-primary/90 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-primary/50 flex items-center gap-2"
+                                    onclick="document.getElementById('observation-dropdown-{{ control.id }}').classList.toggle('hidden')">
+                                    <span class="material-symbols-outlined text-[14px]">add</span>
+                                    Add Observation
+                                </button>
+                            </div>
 
-                <!-- Dropdown to select predefined observations -->
-                <div id="observation-dropdown-{{ control.id }}"
-                    class="hidden border-t border-slate-100 dark:border-slate-800 p-6 bg-slate-50 dark:bg-slate-800/50">
-                    <label
-                        class="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-3">
-                        Select Observation
-                    </label>
-                    {% set obs_list = [] %}
-                    {% for obs in control.assessment_checklist.observations %}
-                    {% set _ = obs_list.append({"id": obs.id|string, "label": obs.label, "recommendation": obs.recommendation or ""}) %}
-                    {% endfor %}
-                    <div x-data='{
+                            <!-- Dropdown to select predefined observations -->
+                            <div id="observation-dropdown-{{ control.id }}"
+                                class="hidden border-t border-slate-100 dark:border-slate-800 p-6 bg-slate-50 dark:bg-slate-800/50">
+                                <label
+                                    class="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-3">
+                                    Select Observation
+                                </label>
+                                {% set obs_list = [] %}
+                                {% for obs in control.assessment_checklist.observations %}
+                                {% set _ = obs_list.append({"id": obs.id|string, "label": obs.label, "recommendation":
+                                obs.recommendation or ""}) %}
+                                {% endfor %}
+                                <div x-data='{
                         open: false,
                         value: "",
                         obsData: {{ obs_list | tojson | safe }},
@@ -271,174 +287,204 @@
                             }
                         }
                     }' @click.away="open = false" @scroll.window="open = false" class="relative">
-                        <button type="button" x-ref="trigger" @click="toggleDropdown()"
-                            class="w-full flex items-center justify-between h-10 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30">
-                            <span x-text="value ? (obsData.find(o => o.id === value)?.label || '').substring(0, 60) : '-- Choose an observation --'"
-                                :class="value ? 'text-slate-900 dark:text-white' : 'text-slate-400 dark:text-slate-500'"
-                                class="truncate text-left flex-1"></span>
-                            <span class="pointer-events-none text-slate-400 ml-2 transition-transform duration-200" :class="open ? 'rotate-180' : ''">
-                                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="6 9 12 15 18 9"></polyline>
-                                </svg>
-                            </span>
-                        </button>
-                        <div x-show="open" x-cloak
-                            x-transition:enter="transition ease-out duration-150"
-                            x-transition:enter-start="transform opacity-0 scale-95 translate-y-[-10px]"
-                            x-transition:enter-end="transform opacity-100 scale-100 translate-y-0"
-                            x-transition:leave="transition ease-in duration-100"
-                            x-transition:leave-start="transform opacity-100 scale-100 translate-y-0"
-                            x-transition:leave-end="transform opacity-0 scale-95 translate-y-[-10px]"
-                            :style="ddStyle" class="bg-white dark:bg-slate-900 rounded-[14px] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] dark:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] border border-slate-100 dark:border-slate-800 p-2 overflow-hidden">
-                            <ul class="flex flex-col gap-1 max-h-64 overflow-y-auto p-0.5" @scroll.stop>
-                                <template x-for="(obs, idx) in obsData" :key="obs.id">
-                                    <li>
-                                        <button type="button"
-                                            @click='addObservation(obs.id, "{{ control.id }}", obs.label, obs.recommendation); value = obs.id; open = false; $nextTick(() => { value = "" })'
-                                            :class='value === obs.id ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-primary/15"'
-                                            class="w-full flex items-start gap-2.5 px-2.5 py-2 rounded-lg text-sm font-medium transition-all text-left">
-                                            <span :class='value === obs.id ? "text-white" : "text-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 dark:text-indigo-400"'
-                                                class="flex items-center justify-center w-6 h-6 rounded-full transition-colors flex-shrink-0 text-xs font-bold mt-0.5"
-                                                x-text="(obs.label || '')[0]?.toUpperCase() || '?'"></span>
-                                            <span class="leading-snug" x-text="obs.label"></span>
-                                        </button>
-                                    </li>
-                                </template>
-                            </ul>
+                                    <button type="button" x-ref="trigger" @click="toggleDropdown()"
+                                        class="w-full flex items-center justify-between h-10 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30">
+                                        <span
+                                            x-text="value ? (obsData.find(o => o.id === value)?.label || '').substring(0, 60) : '-- Choose an observation --'"
+                                            :class="value ? 'text-slate-900 dark:text-white' : 'text-slate-400 dark:text-slate-500'"
+                                            class="truncate text-left flex-1"></span>
+                                        <span
+                                            class="pointer-events-none text-slate-400 ml-2 transition-transform duration-200"
+                                            :class="open ? 'rotate-180' : ''">
+                                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <polyline points="6 9 12 15 18 9"></polyline>
+                                            </svg>
+                                        </span>
+                                    </button>
+                                    <div x-show="open" x-cloak x-transition:enter="transition ease-out duration-150"
+                                        x-transition:enter-start="transform opacity-0 scale-95 translate-y-[-10px]"
+                                        x-transition:enter-end="transform opacity-100 scale-100 translate-y-0"
+                                        x-transition:leave="transition ease-in duration-100"
+                                        x-transition:leave-start="transform opacity-100 scale-100 translate-y-0"
+                                        x-transition:leave-end="transform opacity-0 scale-95 translate-y-[-10px]"
+                                        :style="ddStyle"
+                                        class="bg-white dark:bg-slate-900 rounded-[14px] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] dark:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] border border-slate-100 dark:border-slate-800 p-2 overflow-hidden">
+                                        <ul class="flex flex-col gap-1 max-h-64 overflow-y-auto p-0.5" @scroll.stop>
+                                            <template x-for="(obs, idx) in obsData" :key="obs.id">
+                                                <li>
+                                                    <button type="button"
+                                                        @click='addObservation(obs.id, "{{ control.id }}", obs.label, obs.recommendation); value = obs.id; open = false; $nextTick(() => { value = "" })'
+                                                        :class='value === obs.id ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-primary/15"'
+                                                        class="w-full flex items-start gap-2.5 px-2.5 py-2 rounded-lg text-sm font-medium transition-all text-left">
+                                                        <span
+                                                            :class='value === obs.id ? "text-white" : "text-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 dark:text-indigo-400"'
+                                                            class="flex items-center justify-center w-6 h-6 rounded-full transition-colors flex-shrink-0 text-xs font-bold mt-0.5"
+                                                            x-text="(obs.label || '')[0]?.toUpperCase() || '?'"></span>
+                                                        <span class="leading-snug" x-text="obs.label"></span>
+                                                    </button>
+                                                </li>
+                                            </template>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                    </div><!-- end sticky wrapper -->
+
+                    {% if control.assessment_checklist %}
+                    <!-- Observations Table (scrolls normally) -->
+                    <div
+                        class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm" id="observations-table-{{ control.id }}">
+                                <thead
+                                    class="bg-slate-50/80 dark:bg-slate-800/80 border-b border-slate-100 dark:border-slate-700">
+                                    <tr>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                                            Observation</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                                            Recommendation</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                                            Evidence</th>
+                                        <th
+                                            class="px-6 py-3 text-center text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                                            Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="observations-tbody-{{ control.id }}">
+                                    {% for obs in observations %}
+                                    <tr class="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors"
+                                        data-obs-id="{{ obs.id }}">
+                                        <td class="px-6 py-4 text-sm text-slate-900 dark:text-white break-words">{{
+                                            obs.observation_text }}</td>
+                                        <td class="px-6 py-4 text-sm text-slate-700 dark:text-slate-300 break-words">{{
+                                            obs.recommendation_text }}</td>
+                                        <td class="px-6 py-4 text-sm">
+                                            <button type="button"
+                                                hx-get="/projects/{{ project.id }}/observations/{{ obs.id }}/evidence"
+                                                hx-target="#modal-body" hx-swap="innerHTML" @click="$store.modal.show()"
+                                                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-800/50 transition-colors cursor-pointer">
+                                                <span class="material-symbols-outlined text-[12px]">attach_file</span>
+                                                {{ obs.evidence_files|length }} file{{ 's' if obs.evidence_files|length
+                                                != 1 else '' }}
+                                            </button>
+                                        </td>
+                                        <td class="px-6 py-4 text-center">
+                                            <button type="button" @click="deleteObservation('{{ obs.id }}')"
+                                                class="text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors">
+                                                <span class="material-symbols-outlined">delete</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% else %}
+                                    <tr id="empty-obs-{{ control.id }}">
+                                        <td colspan="4" class="p-4 w-full">
+                                            <div
+                                                class="w-full flex flex-col items-center gap-3 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl py-8 text-center">
+                                                <div
+                                                    class="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center">
+                                                    <span
+                                                        class="material-symbols-outlined text-slate-400 dark:text-slate-500"
+                                                        style="font-size:24px">rate_review</span>
+                                                </div>
+                                                <div>
+                                                    <p class="text-sm font-semibold text-slate-600 dark:text-slate-300">
+                                                        No observations yet</p>
+                                                    <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Use
+                                                        "Add Observation" above to record findings for this control.</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                </div>
+
+                <!-- Right Metadata Sidebar -->
+                <div class="space-y-3 flex flex-col">
+                    <!-- Control Details Card -->
+                    <div
+                        class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm p-4">
+                        <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 mb-3">Metadata</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <p class="text-xs font-bold text-slate-400 uppercase mb-1.5">Assigned To</p>
+                                <div class="flex items-center gap-2">
+                                    <div
+                                        class="h-6 w-6 rounded-full bg-primary flex items-center justify-center text-[10px] text-white font-bold flex-shrink-0">
+                                        {{ user.email[0].upper() }}</div>
+                                    <span class="text-xs font-semibold text-slate-700 dark:text-slate-300 truncate">{{
+                                        user.email }}</span>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-slate-400 uppercase mb-1.5">Criticality</p>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0"></span>
+                                    <span
+                                        class="text-xs font-semibold text-slate-700 dark:text-slate-300">Standard</span>
+                                </div>
+                            </div>
+                            <div class="pt-2 border-t border-slate-100 dark:border-slate-800">
+                                <button type="button"
+                                    class="w-full py-1.5 flex items-center justify-center gap-1.5 text-primary text-xs font-bold hover:bg-primary/5 rounded-lg transition-colors">
+                                    <span class="material-symbols-outlined text-sm">visibility</span>
+                                    View Standard
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Audit Trail Card -->
+                    <div
+                        class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm p-4">
+                        <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 mb-3">Audit Trail</h3>
+                        <div>
+                            {% if response and response.updated_at %}
+                            <div class="flex gap-3 pb-3">
+                                <div class="flex flex-col items-center flex-shrink-0">
+                                    <div class="w-2.5 h-2.5 rounded-full bg-primary mt-0.5"></div>
+                                    <div class="w-px flex-1 bg-slate-200 dark:bg-slate-700 mt-1"></div>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-900 dark:text-white">Updated</p>
+                                    <p class="text-xs text-slate-500 mt-0.5">{{ response.updated_at.strftime('%b %d, %Y
+                                        %H:%M') }}</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                            <div class="flex gap-3">
+                                <div class="flex flex-col items-center flex-shrink-0">
+                                    <div class="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-600 mt-0.5"></div>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-700 dark:text-slate-400">Created</p>
+                                    <p class="text-xs text-slate-500 mt-0.5">{{ project.created_at.strftime('%b %d, %Y')
+                                        }}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            {% endif %}
-
-        </div><!-- end sticky wrapper -->
-
-        {% if control.assessment_checklist %}
-        <!-- Observations Table (scrolls normally) -->
-        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm" id="observations-table-{{ control.id }}">
-                    <thead class="bg-slate-50/80 dark:bg-slate-800/80 border-b border-slate-100 dark:border-slate-700">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Observation</th>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Recommendation</th>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Evidence</th>
-                            <th class="px-6 py-3 text-center text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="observations-tbody-{{ control.id }}">
-                        {% for obs in observations %}
-                        <tr
-                            class="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors"
-                            data-obs-id="{{ obs.id }}">
-                            <td class="px-6 py-4 text-sm text-slate-900 dark:text-white break-words">{{ obs.observation_text }}</td>
-                            <td class="px-6 py-4 text-sm text-slate-700 dark:text-slate-300 break-words">{{ obs.recommendation_text }}</td>
-                            <td class="px-6 py-4 text-sm">
-                                <button type="button"
-                                    hx-get="/projects/{{ project.id }}/observations/{{ obs.id }}/evidence"
-                                    hx-target="#modal-body"
-                                    hx-swap="innerHTML"
-                                    @click="$store.modal.show()"
-                                    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-800/50 transition-colors cursor-pointer">
-                                    <span class="material-symbols-outlined text-[12px]">attach_file</span>
-                                    {{ obs.evidence_files|length }} file{{ 's' if obs.evidence_files|length != 1 else '' }}
-                                </button>
-                            </td>
-                            <td class="px-6 py-4 text-center">
-                                <button type="button"
-                                    @click="deleteObservation('{{ obs.id }}')"
-                                    class="text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors">
-                                    <span class="material-symbols-outlined">delete</span>
-                                </button>
-                            </td>
-                        </tr>
-                        {% else %}
-                        <tr id="empty-obs-{{ control.id }}">
-                            <td colspan="4" class="p-4 w-full">
-                                <div class="w-full flex flex-col items-center gap-3 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl py-8 text-center">
-                                    <div class="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center">
-                                        <span class="material-symbols-outlined text-slate-400 dark:text-slate-500" style="font-size:24px">rate_review</span>
-                                    </div>
-                                    <div>
-                                        <p class="text-sm font-semibold text-slate-600 dark:text-slate-300">No observations yet</p>
-                                        <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Use "Add Observation" above to record findings for this control.</p>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        {% endif %}
-
-    </div>
-
-    <!-- Right Metadata Sidebar -->
-    <div class="space-y-3 flex flex-col">
-        <!-- Control Details Card -->
-        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm p-4">
-            <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 mb-3">Metadata</h3>
-            <div class="space-y-3">
-                <div>
-                    <p class="text-xs font-bold text-slate-400 uppercase mb-1.5">Assigned To</p>
-                    <div class="flex items-center gap-2">
-                        <div class="h-6 w-6 rounded-full bg-primary flex items-center justify-center text-[10px] text-white font-bold flex-shrink-0">
-                            {{ user.email[0].upper() }}</div>
-                        <span class="text-xs font-semibold text-slate-700 dark:text-slate-300 truncate">{{ user.email }}</span>
-                    </div>
-                </div>
-                <div>
-                    <p class="text-xs font-bold text-slate-400 uppercase mb-1.5">Criticality</p>
-                    <div class="flex items-center gap-1.5">
-                        <span class="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0"></span>
-                        <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">Standard</span>
-                    </div>
-                </div>
-                <div class="pt-2 border-t border-slate-100 dark:border-slate-800">
-                    <button type="button"
-                        class="w-full py-1.5 flex items-center justify-center gap-1.5 text-primary text-xs font-bold hover:bg-primary/5 rounded-lg transition-colors">
-                        <span class="material-symbols-outlined text-sm">visibility</span>
-                        View Standard
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Audit Trail Card -->
-        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm p-4">
-            <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 mb-3">Audit Trail</h3>
-            <div>
-                {% if response and response.updated_at %}
-                <div class="flex gap-3 pb-3">
-                    <div class="flex flex-col items-center flex-shrink-0">
-                        <div class="w-2.5 h-2.5 rounded-full bg-primary mt-0.5"></div>
-                        <div class="w-px flex-1 bg-slate-200 dark:bg-slate-700 mt-1"></div>
-                    </div>
-                    <div>
-                        <p class="text-xs font-bold text-slate-900 dark:text-white">Updated</p>
-                        <p class="text-xs text-slate-500 mt-0.5">{{ response.updated_at.strftime('%b %d, %Y %H:%M') }}</p>
-                    </div>
-                </div>
-                {% endif %}
-                <div class="flex gap-3">
-                    <div class="flex flex-col items-center flex-shrink-0">
-                        <div class="w-2.5 h-2.5 rounded-full bg-slate-300 dark:bg-slate-600 mt-0.5"></div>
-                    </div>
-                    <div>
-                        <p class="text-xs font-bold text-slate-700 dark:text-slate-400">Created</p>
-                        <p class="text-xs text-slate-500 mt-0.5">{{ project.created_at.strftime('%b %d, %Y') }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </form>
 
 <!-- Sticky Save Bar -->
-<div class="sticky bottom-0 left-0 right-0 z-20 mt-6 bg-white/90 dark:bg-slate-900/90 backdrop-blur border-t border-slate-200 dark:border-slate-800 px-4 py-3 flex items-center gap-3">
-    <span id="dirty-badge" class="hidden inline-flex items-center gap-1.5 text-xs font-semibold text-amber-600 dark:text-amber-400">
+<div
+    class="sticky bottom-0 left-0 right-0 z-20 mt-6 bg-white/90 dark:bg-slate-900/90 backdrop-blur border-t border-slate-200 dark:border-slate-800 px-4 py-3 flex items-center gap-3">
+    <span id="dirty-badge"
+        class="hidden inline-flex items-center gap-1.5 text-xs font-semibold text-amber-600 dark:text-amber-400">
         <span class="material-symbols-outlined" style="font-size:14px">edit_note</span>
         Unsaved changes
     </span>
@@ -460,12 +506,12 @@
 <script>
     // Reset dirty state when a new control loads
     window.formDirty = false;
-    (function() {
+    (function () {
         const badge = document.getElementById('dirty-badge');
         if (badge) badge.classList.add('hidden');
     })();
 
-    window.setFormDirty = function() {
+    window.setFormDirty = function () {
         window.formDirty = true;
         const badge = document.getElementById('dirty-badge');
         if (badge) badge.classList.remove('hidden');

@@ -1,28 +1,25 @@
 {# Shadcn Progress Component #}
 {# Progress bar for showing completion percentage #}
 {# Usage:
-   {% include "components/progress.html" with context %}
-   {# progress_value=65, progress_max=100, progress_label="65%" #}
+{% include "components/progress.html" with context %}
+{# progress_value=65, progress_max=100, progress_label="65%" #}
 #}
 
 <div class="w-full space-y-2">
   {% if progress_label %}
-    <div class="flex items-center justify-between">
-      <p class="text-sm font-medium text-muted-foreground">{{ progress_label_text }}</p>
-      <p class="text-sm font-semibold text-foreground">{{ progress_label }}</p>
-    </div>
+  <div class="flex items-center justify-between">
+    <p class="text-sm font-medium text-muted-foreground">{{ progress_label_text }}</p>
+    <p class="text-sm font-semibold text-foreground">{{ progress_label }}</p>
+  </div>
   {% endif %}
 
   <div class="
     w-full h-3 bg-muted rounded-full overflow-hidden
     {{ progress_class }}
   ">
-    <div
-      class="
+    <div class="
         h-full bg-gradient-to-r from-primary to-blue-500 rounded-full
         transition-all duration-500 ease-out
-      "
-      style="width: {{ progress_value / progress_max * 100 }}%"
-    ></div>
+      " style="width: {{ (progress_value | default(0)) / (progress_max | default(100)) * 100 }}%"></div>
   </div>
 </div>

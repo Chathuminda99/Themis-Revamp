@@ -1,65 +1,82 @@
-{# Shadcn Dialog Component #}
-{# Modal dialog with title, description, and content #}
+{# Custom Dialog Component #}
+{# Premium modal dialog tailored to the new app theme (glassmorphism/accent lines) #}
 {# Usage:
-   {% include "components/dialog.html" with context %}
-   {# dialog_open=true, dialog_title="Confirm Action", dialog_content="...", dialog_on_close="..." #}
+{% include "components/dialog.html" %}
+{# Requires variables via context:
+dialog_open (boolean Expression)
+dialog_type (string): 'info', 'success', 'warning', 'error' (default info)
+dialog_title (string)
+dialog_description (string)
+dialog_content (raw HTML block)
+dialog_footer (raw HTML block)
+#}
 #}
 
-<div
-  x-show="dialog_open"
-  x-cloak
-  x-transition.opacity
-  @keydown.escape.window="dialog_open = false"
-  class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-  @click.self="dialog_open = false">
+{% set _t = dialog_type | default('info') %}
 
-  <div
-    x-show="dialog_open"
-    x-transition:enter="transition ease-out duration-300 transform"
+<div x-show="{{ dialog_open }}" x-cloak x-transition.opacity @keydown.escape.window="{{ dialog_open }} = false"
+  class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+  @click.self="{{ dialog_open }} = false">
+
+  <div x-show="{{ dialog_open }}" x-transition:enter="transition ease-out duration-300 transform"
     x-transition:enter-start="opacity-0 scale-95 translate-y-8"
     x-transition:enter-end="opacity-100 scale-100 translate-y-0"
     x-transition:leave="transition ease-in duration-200 transform"
     x-transition:leave-start="opacity-100 scale-100 translate-y-0"
     x-transition:leave-end="opacity-0 scale-95 translate-y-8"
-    class="
-      bg-card text-card-foreground border border-border
-      rounded-lg shadow-2xl w-full max-w-lg mx-auto relative overflow-hidden
-    ">
+    class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl w-full max-w-lg mx-auto relative overflow-hidden">
 
-    <!-- Top accent gradient -->
-    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-primary to-blue-400"></div>
+    <!-- Top Accent Line -->
+    <div class="absolute top-0 left-0 w-full h-1
+        {%- if _t == 'error' %} bg-gradient-to-r from-rose-500 via-rose-400 to-red-400
+        {%- elif _t == 'warning' %} bg-gradient-to-r from-amber-500 via-amber-400 to-orange-400
+        {%- elif _t == 'success' %} bg-gradient-to-r from-emerald-500 via-emerald-400 to-green-400
+        {%- else %} bg-gradient-to-r from-primary via-primary to-blue-400
+        {%- endif %}"></div>
 
     <!-- Close button -->
-    <button
-      @click="dialog_open = false"
-      class="
-        absolute top-4 right-4 p-2 text-muted-foreground
-        hover:text-foreground
-        hover:bg-muted
-        rounded-lg transition-colors z-10
-      ">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-      </svg>
+    <button @click="{{ dialog_open }} = false"
+      class="absolute top-4 right-4 p-2 text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors z-10 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:focus:ring-slate-700">
+      <span class="material-symbols-outlined" style="font-size:20px">close</span>
     </button>
 
-    <!-- Dialog header -->
-    <div class="px-6 py-4 border-b border-border">
-      <h2 class="text-lg font-semibold text-foreground">{{ dialog_title }}</h2>
-      {% if dialog_description %}
-        <p class="text-sm text-muted-foreground mt-1">{{ dialog_description }}</p>
-      {% endif %}
+    <!-- Dialog Header -->
+    <div class="px-6 pt-6 pb-4 border-b border-slate-100 dark:border-slate-800">
+      <div class="flex items-start gap-4">
+        <!-- Themed Icon based on dialog type -->
+        <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0
+            {%- if _t == 'error' %} bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400
+            {%- elif _t == 'warning' %} bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400
+            {%- elif _t == 'success' %} bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400
+            {%- else %} bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400
+            {%- endif %}">
+          <span class="material-symbols-outlined" style="font-size:20px">
+            {%- if _t == 'error' %}error
+            {%- elif _t == 'warning' %}warning
+            {%- elif _t == 'success' %}check_circle
+            {%- else %}info
+            {%- endif %}
+          </span>
+        </div>
+        <div class="flex-1 min-w-0 pt-0.5">
+          <h3 class="text-base font-bold text-slate-900 dark:text-white">{{ dialog_title | safe }}</h3>
+          {% if dialog_description %}
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">{{ dialog_description }}</p>
+          {% endif %}
+        </div>
+      </div>
     </div>
 
-    <!-- Dialog content -->
-    <div class="px-6 py-4">
-      {{ dialog_content }}
+    <!-- Dialog Content -->
+    <div class="px-6 py-5 text-sm text-slate-600 dark:text-slate-400">
+      {{ dialog_content | safe }}
     </div>
 
-    <!-- Dialog footer (optional) -->
+    <!-- Dialog Footer (Optional) -->
     {% if dialog_footer %}
-    <div class="px-6 py-4 border-t border-border flex gap-2 justify-end">
-      {{ dialog_footer }}
+    <div
+      class="px-6 py-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-3 bg-slate-50/50 dark:bg-slate-900/50">
+      {{ dialog_footer | safe }}
     </div>
     {% endif %}
 

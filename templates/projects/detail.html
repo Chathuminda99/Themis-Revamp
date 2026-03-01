@@ -47,7 +47,8 @@
         <div class="mb-1">
           <button @click="expandedSections['{{ section.id }}'] = !expandedSections['{{ section.id }}']"
             class="w-full flex items-center gap-2 px-3 py-2 text-slate-900 dark:text-white font-bold text-sm hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors group">
-            <span class="text-slate-400 group-hover:text-primary transition-colors" x-show="!expandedSections['{{ section.id }}']">
+            <span class="text-slate-400 group-hover:text-primary transition-colors"
+              x-show="!expandedSections['{{ section.id }}']">
               {{ icon_macro.icon('chevron-right', 'currentColor', '20') }}
             </span>
             <span class="text-primary" x-show="expandedSections['{{ section.id }}']">
@@ -63,13 +64,12 @@
             {% set resp = responses.get(control.id|string) %}
             <!-- Link loads control detail via HTMX -->
             <a href="#" hx-get="/projects/{{ project.id }}/controls/{{ control.id }}/details"
-              hx-target="#control-details" hx-swap="innerHTML"
-              data-control-id="{{ control.id }}"
+              hx-target="#control-details" hx-swap="innerHTML" data-control-id="{{ control.id }}"
               @click="document.querySelectorAll('.control-link').forEach(el => el.classList.remove('bg-primary/5', 'text-primary', 'border-primary/10')); $el.classList.add('bg-primary/5', 'text-primary', 'border-primary/10'); localStorage.setItem('activeControl_{{ project.id }}', '{{ control.id }}')"
               class="control-link flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 border border-transparent transition-colors">
               <span class="text-xs font-semibold truncate">{{ control.control_id }} {{ control.name }}</span>
               <span id="tree-icon-{{ control.id }}">
-              {% if resp %}
+                {% if resp %}
                 {% if resp.status.value == 'approved' %}
                 <span class="text-green-500">{{ icon_macro.icon('check-circle', 'currentColor', '18') }}</span>
                 {% elif resp.status.value == 'rejected' %}
@@ -77,9 +77,10 @@
                 {% else %}
                 <span class="text-amber-500">{{ icon_macro.icon('alert-triangle', 'currentColor', '18') }}</span>
                 {% endif %}
-              {% else %}
-                <span class="text-slate-300 dark:text-slate-600">{{ icon_macro.icon('circle', 'currentColor', '18') }}</span>
-              {% endif %}
+                {% else %}
+                <span class="text-slate-300 dark:text-slate-600">{{ icon_macro.icon('circle', 'currentColor', '18')
+                  }}</span>
+                {% endif %}
               </span>
             </a>
             {% endfor %}
@@ -91,8 +92,7 @@
     </div>
 
     <!-- Audit Timer -->
-    <div class="px-4 py-3 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950"
-      x-data="{
+    <div class="px-4 py-3 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950" x-data="{
         elapsed: 0,
         running: false,
         _iv: null,
@@ -144,21 +144,19 @@
       }">
       <div class="flex items-center gap-2">
         <!-- Play / Pause -->
-        <button @click="toggle()" type="button"
-          :title="running ? 'Pause timer' : 'Start timer'"
-          class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-colors"
-          :class="running
+        <button @click="toggle()" type="button" :title="running ? 'Pause timer' : 'Start timer'"
+          class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-colors" :class="running
             ? 'bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 hover:bg-amber-200 dark:hover:bg-amber-900/60'
             : 'bg-primary/15 text-primary hover:bg-primary/25'">
-          <span class="material-symbols-outlined" style="font-size:18px" x-text="running ? 'pause' : 'play_arrow'"></span>
+          <span class="material-symbols-outlined" style="font-size:18px"
+            x-text="running ? 'pause' : 'play_arrow'"></span>
         </button>
         <!-- Display -->
         <span class="flex-1 text-center font-mono text-sm font-bold tabular-nums"
           :class="running ? 'text-slate-800 dark:text-slate-100' : 'text-slate-400 dark:text-slate-500'"
           x-text="display"></span>
         <!-- Stop / Reset -->
-        <button @click="stop()" type="button" title="Stop &amp; reset"
-          :disabled="elapsed === 0 && !running"
+        <button @click="stop()" type="button" title="Stop &amp; reset" :disabled="elapsed === 0 && !running"
           class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-colors"
           :class="(elapsed === 0 && !running)
             ? 'bg-slate-100 dark:bg-slate-800 text-slate-300 dark:text-slate-600 cursor-not-allowed'
@@ -166,7 +164,8 @@
           <span class="material-symbols-outlined" style="font-size:18px">stop</span>
         </button>
       </div>
-      <p class="text-[10px] text-slate-400 dark:text-slate-600 text-center mt-1.5 uppercase tracking-wider">Audit Timer</p>
+      <p class="text-[10px] text-slate-400 dark:text-slate-600 text-center mt-1.5 uppercase tracking-wider">Audit Timer
+      </p>
     </div>
 
     <div class="p-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
@@ -194,30 +193,32 @@
     </div>
   </section>
 </div>
+
+<!-- Custom Confirm Dialog -->
 {% endblock %}
 
 {% block scripts %}
 <script>
-    // Unsaved changes protection for control detail forms
-    window.formDirty = false;
+  // Unsaved changes protection for control detail forms
+  window.formDirty = false;
 
-    document.addEventListener('htmx:beforeRequest', function(e) {
-        const cfg = e.detail.requestConfig;
-        if (!cfg) return;
-        if (cfg.verb === 'get' && /\/controls\/[^/]+\/details/.test(cfg.path) && window.formDirty) {
-            e.preventDefault();
-            if (confirm('You have unsaved changes. Leave without saving?')) {
-                window.formDirty = false;
-                e.detail.elt.click();
-            }
-        }
-    });
+  document.addEventListener('htmx:beforeRequest', function (e) {
+    const cfg = e.detail.requestConfig;
+    if (!cfg) return;
+    if (cfg.verb === 'get' && /\/controls\/[^/]+\/details/.test(cfg.path) && window.formDirty) {
+      e.preventDefault();
+      if (confirm('You have unsaved changes. Leave without saving?')) {
+        window.formDirty = false;
+        e.detail.elt.click();
+      }
+    }
+  });
 
-    window.addEventListener('beforeunload', function(e) {
-        if (window.formDirty) {
-            e.preventDefault();
-            e.returnValue = '';
-        }
-    });
+  window.addEventListener('beforeunload', function (e) {
+    if (window.formDirty) {
+      e.preventDefault();
+      e.returnValue = '';
+    }
+  });
 </script>
 {% endblock %}

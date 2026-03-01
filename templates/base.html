@@ -66,11 +66,9 @@
             class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4"
             @click.self="$store.modal.hide()">
             <div x-transition:enter="transition ease-out duration-300 transform"
-                x-transition:enter-start="scale-95 translate-y-4"
-                x-transition:enter-end="scale-100 translate-y-0"
+                x-transition:enter-start="scale-95 translate-y-4" x-transition:enter-end="scale-100 translate-y-0"
                 x-transition:leave="transition ease-in duration-200 transform"
-                x-transition:leave-start="scale-100 translate-y-0"
-                x-transition:leave-end="scale-95 translate-y-4"
+                x-transition:leave-start="scale-100 translate-y-0" x-transition:leave-end="scale-95 translate-y-4"
                 class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl w-full max-w-lg mx-auto relative overflow-hidden">
 
                 <!-- Top accent gradient line — clips cleanly via parent overflow-hidden -->
@@ -154,6 +152,11 @@
                 button.addEventListener('click', () => clearTimeout(timeout));
             }
         };
+
+        // Listen for HTMX triggered messages from the backend
+        document.body.addEventListener('showMessage', function (evt) {
+            window.showToast(evt.detail.message, evt.detail.type || 'success');
+        });
     </script>
 
     <style>
@@ -185,6 +188,64 @@
             animation: slideIn 0.3s ease-out;
         }
     </style>
+
+    <!-- Global Confirm Dialog Container -->
+    <div id="global-confirm-dialog" x-data="{
+        open: false,
+        title: '',
+        message: '',
+        _cb: null,
+        show(title, message, cb) {
+          this.title = title || 'Confirm Action';
+          this.message = message;
+          this._cb = cb;
+          this.open = true;
+        },
+        confirm() { this.open = false; if (this._cb) this._cb(); this._cb = null; },
+        cancel()  { this.open = false; this._cb = null; }
+      }" @show-confirm.window="show($event.detail.title, $event.detail.message, $event.detail.onConfirm)">
+
+        {% set _footer %}
+        <button @click="cancel()"
+            class="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 border border-slate-300 dark:border-slate-700 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-300">
+            Cancel
+        </button>
+        <button @click="confirm()"
+            class="px-4 py-2 text-sm font-bold text-white bg-amber-500 hover:bg-amber-600 rounded-md shadow-sm shadow-amber-500/20 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500/50">
+            Confirm
+        </button>
+        {% endset %}
+
+        {% set _content %}
+        <p x-text="message"></p>
+        {% endset %}
+
+        {% with
+        dialog_open="open",
+        dialog_type="warning",
+        dialog_title="<span x-text='title'></span>",
+        dialog_content=_content,
+        dialog_footer=_footer
+        %}
+        {% include 'components/dialog.html' %}
+        {% endwith %}
+    </div>
+
+    <script>
+        // Global handler for htmx:confirm to use our custom dialog instead of native window.confirm
+        document.addEventListener('htmx:confirm', function (e) {
+            e.preventDefault();
+            window.dispatchEvent(new CustomEvent('show-confirm', {
+                detail: {
+                    title: 'Confirm Action',
+                    message: e.detail.question,
+                    onConfirm: function () {
+                        e.detail.issueRequest(true); // pass true to skip future confirms for this request
+                    }
+                }
+            }));
+        });
+    </script>
 
     {% block scripts %}{% endblock %}
 </body>

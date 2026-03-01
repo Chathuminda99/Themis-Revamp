@@ -21,6 +21,7 @@ from app.services import workflow_engine
 
 router = APIRouter(prefix="/projects", tags=["projects"])
 from app.templates import templates
+from app.utils.htmx import htmx_toast
 
 
 @router.get("", response_class=HTMLResponse)
@@ -159,7 +160,13 @@ async def create_project(request: Request, db: Session = Depends(get_db)):
     # Refresh to get related objects
     db.refresh(project, ["client", "framework"])
 
-    return RedirectResponse(url=f"/projects/{project.id}", status_code=303)
+    # Redirect isn't natively caught by HTMX headers, so we set a cookie or 
+    # use hx-redirect instead, but since we're using RedirectResponse it will be a 200 via HTMX's transparent redirect.
+    return RedirectResponse(
+        url=f"/projects/{project.id}", 
+        status_code=303,
+        headers=htmx_toast("Project created successfully")
+    )
 
 
 @router.get("/{project_id}/edit", response_class=HTMLResponse)
@@ -245,6 +252,7 @@ async def update_project(
             "user": user,
             "project": project,
         },
+        headers=htmx_toast("Project updated successfully")
     )
 
 
@@ -261,7 +269,7 @@ async def delete_project(
     success = repo.delete(user.tenant_id, project_id)
 
     if success:
-        return HTMLResponse("")  # Empty response for successful delete
+        return HTMLResponse("", headers=htmx_toast("Project deleted successfully"))
     return RedirectResponse(url="/projects", status_code=302)
 
 
@@ -325,6 +333,7 @@ async def create_segment(
             "responded_count": 0,
             "progress_pct": 0,
         },
+        headers=htmx_toast("Segment created successfully")
     )
 
 
@@ -341,7 +350,7 @@ async def delete_segment(
     success = repo.delete(user.tenant_id, segment_id)
 
     if success:
-        return HTMLResponse("")  # Empty response for successful delete
+        return HTMLResponse("", headers=htmx_toast("Segment deleted successfully"))
     return RedirectResponse(url=f"/projects/{project_id}", status_code=302)
 
 
@@ -511,6 +520,7 @@ async def save_control_response(
             "control": control,
             "responses": {str(control.id): response_repo.get_by_control(project.id, control.id)},
         },
+        headers=htmx_toast("Response saved successfully")
     )
 
 
@@ -625,6 +635,7 @@ async def submit_assessment_choice(
             "control": control,
             "responses": responses_dict,
         },
+        headers=htmx_toast("Assessment completed successfully")
     )
 
 
@@ -781,6 +792,7 @@ async def submit_workflow_answer(
             "finding": finding,
             "response": response,
         },
+        headers=htmx_toast("Answer recorded successfully")
     )
 
 
@@ -831,6 +843,7 @@ async def reset_workflow(
             "finding": None,
             "response": response,
         },
+        headers=htmx_toast("Workflow reset successfully")
     )
 
 
@@ -1137,6 +1150,7 @@ async def save_control_details(
             "observations": observations,
             "saved": True,
         },
+        headers=htmx_toast("Details saved successfully")
     )
 
 
@@ -1164,7 +1178,7 @@ async def create_observation(
         project.id, control_id, observation_text, recommendation_text
     )
 
-    return HTMLResponse(content="Observation created", status_code=200)
+    return HTMLResponse(content="Observation created", status_code=200, headers=htmx_toast("Observation created successfully"))
 
 
 @router.delete("/{project_id}/observations/{observation_id}", response_class=HTMLResponse)
@@ -1186,9 +1200,9 @@ async def delete_observation(
     success = obs_repo.delete_observation(observation_id)
 
     if success:
-        return HTMLResponse(content="Observation deleted", status_code=200)
+        return HTMLResponse(content="Observation deleted", status_code=200, headers=htmx_toast("Observation deleted successfully"))
     else:
-        return HTMLResponse(content="Observation not found", status_code=404)
+        return HTMLResponse(content="Observation not found", status_code=404, headers=htmx_toast("Observation not found", "error"))
 
 
 # ── Evidence routes ────────────────────────────────────────────────────────────
@@ -1236,6 +1250,7 @@ async def add_text_evidence(
     return templates.TemplateResponse(
         "projects/_evidence_panel.html",
         {"request": request, "observation": observation, "project_id": project_id},
+        headers=htmx_toast("Note added successfully")
     )
 
 
@@ -1279,6 +1294,7 @@ async def add_image_evidence(
     return templates.TemplateResponse(
         "projects/_evidence_panel.html",
         {"request": request, "observation": observation, "project_id": project_id},
+        headers=htmx_toast("File uploaded successfully")
     )
 
 
