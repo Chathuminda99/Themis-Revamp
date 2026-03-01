@@ -76,7 +76,7 @@
         <a href="/admin/controls" title="Controls"
             class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors {% if request.url.path.startswith('/admin/controls') %}bg-primary text-white{% else %}text-slate-600 dark:text-slate-400 hover:bg-primary/10 dark:hover:bg-primary/15 hover:text-primary{% endif %}"
             :class="sidebarOpen ? 'justify-start' : 'justify-center'">
-            <span class="flex-shrink-0">{{ icon_macro.icon('settings', 'currentColor', '18') }}</span>
+            <span class="flex-shrink-0">{{ icon_macro.icon('clipboard-list', 'currentColor', '18') }}</span>
             <span x-show="sidebarOpen" x-transition.opacity class="text-sm font-semibold tracking-wide">Controls</span>
         </a>
     </nav>
@@ -86,7 +86,7 @@
         <a href="#" title="Settings"
             class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-primary/10 dark:hover:bg-primary/15 hover:text-primary transition-colors"
             :class="sidebarOpen ? 'justify-start' : 'justify-center'">
-            <span class="flex-shrink-0">{{ icon_macro.icon('settings', 'currentColor', '18') }}</span>
+            <span class="flex-shrink-0">{{ icon_macro.icon('sliders', 'currentColor', '18') }}</span>
             <span x-show="sidebarOpen" x-transition.opacity class="text-sm font-semibold tracking-wide">Settings</span>
         </a>
         <!-- Sidebar toggler -->

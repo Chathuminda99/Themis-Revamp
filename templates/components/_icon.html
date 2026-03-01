@@ -209,6 +209,23 @@
       <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
       <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
     </svg>
+  {%- elif name == 'clipboard-list' -%}
+    <svg class="inline-block {{ class }}" style="width: {{ size }}px; height: {{ size }}px;" viewBox="0 0 24 24" fill="none" stroke="{{ color }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+      <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+      <line x1="9" y1="12" x2="15" y2="12"></line>
+      <line x1="9" y1="16" x2="15" y2="16"></line>
+      <polyline points="9 8 10.5 9.5 13 7"></polyline>
+    </svg>
+  {%- elif name == 'sliders' -%}
+    <svg class="inline-block {{ class }}" style="width: {{ size }}px; height: {{ size }}px;" viewBox="0 0 24 24" fill="none" stroke="{{ color }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="4" y1="6" x2="20" y2="6"></line>
+      <line x1="4" y1="12" x2="20" y2="12"></line>
+      <line x1="4" y1="18" x2="20" y2="18"></line>
+      <circle cx="8" cy="6" r="2" fill="{{ color }}"></circle>
+      <circle cx="16" cy="12" r="2" fill="{{ color }}"></circle>
+      <circle cx="10" cy="18" r="2" fill="{{ color }}"></circle>
+    </svg>
   {%- elif name == 'layers' -%}
     <svg class="inline-block {{ class }}" style="width: {{ size }}px; height: {{ size }}px;" viewBox="0 0 24 24" fill="none" stroke="{{ color }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <polygon points="12 2 20 7 20 17 12 22 4 17 4 7 12 2"></polygon>
