@@ -197,28 +197,4 @@
 <!-- Custom Confirm Dialog -->
 {% endblock %}
 
-{% block scripts %}
-<script>
-  // Unsaved changes protection for control detail forms
-  window.formDirty = false;
-
-  document.addEventListener('htmx:beforeRequest', function (e) {
-    const cfg = e.detail.requestConfig;
-    if (!cfg) return;
-    if (cfg.verb === 'get' && /\/controls\/[^/]+\/details/.test(cfg.path) && window.formDirty) {
-      e.preventDefault();
-      if (confirm('You have unsaved changes. Leave without saving?')) {
-        window.formDirty = false;
-        e.detail.elt.click();
-      }
-    }
-  });
-
-  window.addEventListener('beforeunload', function (e) {
-    if (window.formDirty) {
-      e.preventDefault();
-      e.returnValue = '';
-    }
-  });
-</script>
-{% endblock %}
+{% block scripts %}{% endblock %}

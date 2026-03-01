@@ -234,6 +234,7 @@
     <script>
         // Global handler for htmx:confirm to use our custom dialog instead of native window.confirm
         document.addEventListener('htmx:confirm', function (e) {
+            if (!e.detail.question) return; // only intercept requests with hx-confirm
             e.preventDefault();
             window.dispatchEvent(new CustomEvent('show-confirm', {
                 detail: {
