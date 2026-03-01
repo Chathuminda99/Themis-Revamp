@@ -93,7 +93,7 @@
         <button @click="sidebarOpen = !sidebarOpen" type="button"
             class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-primary/10 dark:hover:bg-primary/15 hover:text-primary transition-colors"
             :class="sidebarOpen ? 'justify-start' : 'justify-center'" title="Collapse sidebar">
-            <span class="flex-shrink-0">{{ icon_macro.icon('chevron-right', 'currentColor', '18') }}</span>
+            <span class="flex-shrink-0 transition-transform duration-300" :class="sidebarOpen ? 'rotate-180' : ''">{{ icon_macro.icon('chevron-right', 'currentColor', '18') }}</span>
             <span x-show="sidebarOpen" x-transition.opacity class="text-sm font-semibold tracking-wide">Collapse</span>
         </button>
     </div>

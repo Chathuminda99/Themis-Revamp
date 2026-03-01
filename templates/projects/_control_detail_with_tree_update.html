@@ -1,0 +1,15 @@
+{%- import "components/_icon.html" as icon_macro -%}
+{% include "projects/_control_detail.html" %}
+<span id="tree-icon-{{ control.id }}" hx-swap-oob="outerHTML">
+  {% if response %}
+    {% if response.status.value == 'approved' %}
+    <span class="text-green-500">{{ icon_macro.icon('check-circle', 'currentColor', '18') }}</span>
+    {% elif response.status.value == 'rejected' %}
+    <span class="text-red-500">{{ icon_macro.icon('alert-circle', 'currentColor', '18') }}</span>
+    {% else %}
+    <span class="text-amber-500">{{ icon_macro.icon('alert-triangle', 'currentColor', '18') }}</span>
+    {% endif %}
+  {% else %}
+    <span class="text-slate-300 dark:text-slate-600">{{ icon_macro.icon('circle', 'currentColor', '18') }}</span>
+  {% endif %}
+</span>

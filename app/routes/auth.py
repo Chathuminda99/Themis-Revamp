@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Request, Form, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.templating import Jinja2Templates
+
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.config import get_settings
 from app.services.auth_service import authenticate_user, create_session_token
 
 router = APIRouter(prefix="/auth", tags=["auth"])
-templates = Jinja2Templates(directory="templates")
+from app.templates import templates
 settings = get_settings()
 
 

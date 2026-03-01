@@ -1,12 +1,12 @@
 """Admin routes for template management."""
 from fastapi import APIRouter, Request, Depends, HTTPException, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.templating import Jinja2Templates
+
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.repositories.framework import FrameworkRepository
 
-templates = Jinja2Templates(directory="templates")
+from app.templates import templates
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 

@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter, Request, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.templating import Jinja2Templates
+
 from sqlalchemy.orm import Session
 
 from app.database import get_db
@@ -19,7 +19,7 @@ from app.repositories import (
 from app.services import workflow_engine
 
 router = APIRouter(prefix="/projects", tags=["projects"])
-templates = Jinja2Templates(directory="templates")
+from app.templates import templates
 
 
 @router.get("", response_class=HTMLResponse)
@@ -500,9 +500,9 @@ async def save_control_response(
     if not control:
         return RedirectResponse(url=f"/projects/{project_id}", status_code=302)
 
-    # Return the updated row
+    # Return the updated row + OOB tree icon update
     return templates.TemplateResponse(
-        "projects/_control_row.html",
+        "projects/_control_save_response.html",
         {
             "request": request,
             "user": user,
@@ -1125,7 +1125,7 @@ async def save_control_details(
     observations = obs_repo.get_for_control(project.id, control.id)
 
     return templates.TemplateResponse(
-        "projects/_control_detail.html",
+        "projects/_control_detail_with_tree_update.html",
         {
             "request": request,
             "user": user,
