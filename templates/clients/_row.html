@@ -33,7 +33,7 @@
   </td>
   <td class="px-6 py-4 text-sm text-right">
     <div class="flex items-center justify-end gap-3 opacity-60 group-hover:opacity-100 transition-opacity">
-      <button hx-get="/clients/{{ client.id }}/edit" hx-target="#modal-body" @click="$store.modal.show()"
+      <button hx-get="/clients/{{ client.id }}/edit" hx-target="#modal-body" @click="document.getElementById('modal-body').innerHTML = ''; $store.modal.show()"
         class="text-blue-600 hover:text-blue-700 transition-colors p-1.5 hover:bg-blue-50 rounded-md"
         title="Edit Client">
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

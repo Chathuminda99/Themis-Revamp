@@ -65,16 +65,16 @@
         <div x-show="$store.modal.open" x-cloak x-transition.opacity @keydown.escape.window="$store.modal.hide()"
             class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4"
             @click.self="$store.modal.hide()">
-            <div x-show="$store.modal.open" x-transition:enter="transition ease-out duration-300 transform"
-                x-transition:enter-start="opacity-0 scale-95 translate-y-8"
-                x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+            <div x-transition:enter="transition ease-out duration-300 transform"
+                x-transition:enter-start="scale-95 translate-y-4"
+                x-transition:enter-end="scale-100 translate-y-0"
                 x-transition:leave="transition ease-in duration-200 transform"
-                x-transition:leave-start="opacity-100 scale-100 translate-y-0"
-                x-transition:leave-end="opacity-0 scale-95 translate-y-8"
-                class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl w-full max-w-lg mx-auto relative overflow-hidden">
+                x-transition:leave-start="scale-100 translate-y-0"
+                x-transition:leave-end="scale-95 translate-y-4"
+                class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl w-full max-w-lg mx-auto relative">
 
                 <!-- Top accent gradient line -->
-                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-primary to-blue-400">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-primary to-blue-400 rounded-t-xl">
                 </div>
 
                 <!-- Close button -->
@@ -97,7 +97,13 @@
             Alpine.store('modal', {
                 open: false,
                 show() { this.open = true; },
-                hide() { this.open = false; }
+                hide() {
+                    this.open = false;
+                    setTimeout(() => {
+                        const body = document.getElementById('modal-body');
+                        if (body) body.innerHTML = '';
+                    }, 250);
+                }
             })
         })
 

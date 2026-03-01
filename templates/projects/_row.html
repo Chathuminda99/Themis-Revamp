@@ -46,7 +46,7 @@
   <!-- Actions -->
   <td class="px-6 py-4">
     <div class="flex items-center justify-end gap-1">
-      <button hx-get="/projects/{{ project.id }}/edit" hx-target="#modal-body" @click="$store.modal.show()"
+      <button hx-get="/projects/{{ project.id }}/edit" hx-target="#modal-body" @click="document.getElementById('modal-body').innerHTML = ''; $store.modal.show()"
         class="p-2 text-slate-500 dark:text-slate-400 hover:text-primary hover:bg-primary/10 dark:hover:bg-primary/20 rounded-lg transition-colors"
         title="Edit Project">
         <span class="material-symbols-outlined text-[18px]">edit</span>

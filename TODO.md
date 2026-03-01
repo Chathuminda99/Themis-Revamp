@@ -2,8 +2,8 @@
 
 ## UI / Styling
 
-- [ ] Fix the glitchiness of the Edit Project popup (animation / overlay jank)
-- [ ] Fix UI issues in the Edit Project and Add/Edit Client popups (layout, spacing)
+- [x] Fix the glitchiness of the Edit Project popup (animation / overlay jank)
+- [x] Fix UI issues in the Edit Project and Add/Edit Client popups (layout, spacing)
 - [x] Match dropdown colors with the main color theme (active item uses bg-primary)
 - [x] Improve visual weight of input fields and dropdowns (borders, focus rings, styling)
 - [x] Reduce dropdown list item size to match the rest of the app scale
