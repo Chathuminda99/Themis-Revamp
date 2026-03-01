@@ -22,6 +22,13 @@
           open: false,
           value: "{{ active_filters.get("industry", "") }}",
           label: {{ active_filters.get("industry", "All Industries") | tojson | safe }},
+          ddStyle: {},
+          toggleDropdown() {
+              if (this.open) { this.open = false; return; }
+              const rect = this.$refs.trigger.getBoundingClientRect();
+              this.ddStyle = { position: "fixed", top: (rect.bottom + 6) + "px", left: rect.left + "px", width: rect.width + "px", zIndex: 9999 };
+              this.open = true;
+          },
           updateValue(val, newLabel) {
               this.value = val;
               this.label = newLabel;
@@ -29,13 +36,13 @@
               this.open = false;
               this.$refs.input.dispatchEvent(new Event("change", { bubbles: true }));
           }
-      }' @click.away="open = false">
+      }' @click.away="open = false" @scroll.window="open = false">
         <label class="text-sm font-medium text-foreground block">Industry</label>
         <div class="relative">
           <input type="hidden" name="industry" x-ref="input"
             value="{{ active_filters.get('industry', '') }}"
             hx-get="/clients" hx-target="#clients-table" hx-swap="innerHTML" hx-push-url="true" hx-include="#client-filters">
-          <button type="button" @click="open = !open"
+          <button type="button" x-ref="trigger" @click="toggleDropdown()"
             class="w-full flex items-center justify-between h-10 rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-colors">
             <span x-text="label" class="truncate block text-left flex-1 text-slate-700 dark:text-slate-300"></span>
             <span class="pointer-events-none text-muted-foreground ml-2 transition-transform duration-200" :class="open ? 'rotate-180' : ''">
@@ -51,7 +58,7 @@
             x-transition:leave="transition ease-in duration-100"
             x-transition:leave-start="transform opacity-100 scale-100 translate-y-0"
             x-transition:leave-end="transform opacity-0 scale-95 translate-y-[-10px]"
-            class="absolute z-50 w-full mt-2 bg-white dark:bg-slate-900 rounded-[14px] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] dark:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] border border-slate-100 dark:border-slate-800 p-2 overflow-hidden">
+            :style="ddStyle" class="bg-white dark:bg-slate-900 rounded-[14px] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] dark:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] border border-slate-100 dark:border-slate-800 p-2 overflow-hidden">
             <ul class="flex flex-col gap-1 max-h-64 overflow-y-auto p-0.5">
               <li>
                 <button type="button" @click="updateValue('', 'All Industries')"

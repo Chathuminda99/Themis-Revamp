@@ -239,9 +239,16 @@
                 <div x-data='{
                     open: false,
                     value: "",
-                    obsData: {{ obs_list | tojson | safe }}
-                }' @click.away="open = false" class="relative">
-                    <button type="button" @click="open = !open"
+                    obsData: {{ obs_list | tojson | safe }},
+                    ddStyle: {},
+                    toggleDropdown() {
+                        if (this.open) { this.open = false; return; }
+                        const rect = this.$refs.trigger.getBoundingClientRect();
+                        this.ddStyle = { position: "fixed", top: (rect.bottom + 6) + "px", left: rect.left + "px", width: rect.width + "px", zIndex: 9999 };
+                        this.open = true;
+                    }
+                }' @click.away="open = false" @scroll.window="open = false" class="relative">
+                    <button type="button" x-ref="trigger" @click="toggleDropdown()"
                         class="w-full flex items-center justify-between h-10 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30">
                         <span x-text="value ? (obsData.find(o => o.id === value)?.label || '').substring(0, 60) : '-- Choose an observation --'"
                             :class="value ? 'text-slate-900 dark:text-white' : 'text-slate-400 dark:text-slate-500'"
@@ -259,7 +266,7 @@
                         x-transition:leave="transition ease-in duration-100"
                         x-transition:leave-start="transform opacity-100 scale-100 translate-y-0"
                         x-transition:leave-end="transform opacity-0 scale-95 translate-y-[-10px]"
-                        class="absolute z-50 w-full mt-2 bg-white dark:bg-slate-900 rounded-[14px] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] dark:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] border border-slate-100 dark:border-slate-800 p-2 overflow-hidden">
+                        :style="ddStyle" class="bg-white dark:bg-slate-900 rounded-[14px] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] dark:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] border border-slate-100 dark:border-slate-800 p-2 overflow-hidden">
                         <ul class="flex flex-col gap-1 max-h-64 overflow-y-auto p-0.5">
                             <template x-for="(obs, idx) in obsData" :key="obs.id">
                                 <li>
