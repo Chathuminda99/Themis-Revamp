@@ -7,7 +7,7 @@
 - [x] Match dropdown colors with the main color theme (active item uses bg-primary)
 - [x] Improve visual weight of input fields and dropdowns (borders, focus rings, styling)
 - [x] Reduce dropdown list item size to match the rest of the app scale
-- [ ] Highlight the active/selected item in the sidebar nav
+- [x] Highlight the active/selected item in the sidebar nav
 - [ ] Fix font color mismatch in the Frameworks detail view
 - [ ] Fix client name font color mismatch in the Clients list view
 - [ ] Replace the Controls and Settings sidebar icons with better alternatives
