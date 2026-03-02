@@ -90,6 +90,83 @@
       </button>
       {% endfor %}
     </div>
+
+    <!-- Audit Timer -->
+    <div class="px-4 py-3 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950" x-data="{
+        elapsed: 0,
+        running: false,
+        _iv: null,
+        _key: 'session_timer_{{ session.id }}',
+        init() {
+          const s = JSON.parse(localStorage.getItem(this._key) || '{}');
+          this.elapsed = s.elapsed || 0;
+          if (s.running && s.lastStart) {
+            this.elapsed += Math.floor((Date.now() - s.lastStart) / 1000);
+            this.running = true;
+            this._tick();
+          }
+        },
+        get display() {
+          const h = Math.floor(this.elapsed / 3600);
+          const m = Math.floor((this.elapsed % 3600) / 60);
+          const s = this.elapsed % 60;
+          return (h > 0 ? String(h).padStart(2,'0') + ':' : '') +
+                 String(m).padStart(2,'0') + ':' +
+                 String(s).padStart(2,'0');
+        },
+        toggle() { this.running ? this.pause() : this.start(); },
+        start() {
+          this.running = true;
+          this._save({ lastStart: Date.now() });
+          this._tick();
+        },
+        pause() {
+          this.running = false;
+          clearInterval(this._iv);
+          this._save({});
+        },
+        stop() {
+          this.running = false;
+          this.elapsed = 0;
+          clearInterval(this._iv);
+          localStorage.removeItem(this._key);
+        },
+        _tick() {
+          this._iv = setInterval(() => {
+            this.elapsed++;
+            this._save({});
+          }, 1000);
+        },
+        _save(extra) {
+          const prev = JSON.parse(localStorage.getItem(this._key) || '{}');
+          localStorage.setItem(this._key, JSON.stringify({ ...prev, elapsed: this.elapsed, running: this.running, ...extra }));
+        }
+      }">
+      <div class="flex items-center gap-2">
+        <!-- Play / Pause -->
+        <button @click="toggle()" type="button" :title="running ? 'Pause timer' : 'Start timer'"
+          class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-colors" :class="running
+            ? 'bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 hover:bg-amber-200 dark:hover:bg-amber-900/60'
+            : 'bg-primary/15 text-primary hover:bg-primary/25'">
+          <span class="material-symbols-outlined" style="font-size:18px"
+            x-text="running ? 'pause' : 'play_arrow'"></span>
+        </button>
+        <!-- Display -->
+        <span class="flex-1 text-center font-mono text-sm font-bold tabular-nums"
+          :class="running ? 'text-slate-800 dark:text-slate-100' : 'text-slate-400 dark:text-slate-500'"
+          x-text="display"></span>
+        <!-- Stop / Reset -->
+        <button @click="stop()" type="button" title="Stop &amp; reset" :disabled="elapsed === 0 && !running"
+          class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-colors"
+          :class="(elapsed === 0 && !running)
+            ? 'bg-slate-100 dark:bg-slate-800 text-slate-300 dark:text-slate-600 cursor-not-allowed'
+            : 'bg-red-100 dark:bg-red-900/30 text-red-500 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-900/50'">
+          <span class="material-symbols-outlined" style="font-size:18px">stop</span>
+        </button>
+      </div>
+      <p class="text-[10px] text-slate-400 dark:text-slate-600 text-center mt-1.5 uppercase tracking-wider">Session Timer
+      </p>
+    </div>
   </div>
 
   <!-- RIGHT PANEL: Assessment Form -->
