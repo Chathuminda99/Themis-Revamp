@@ -1,7 +1,8 @@
 <!-- Workspace Header & Breadcrumbs -->
 <div class="flex flex-col gap-4 fade-in">
     <div class="flex items-center gap-2 text-xs text-slate-500 font-medium overflow-x-auto pb-1">
-        <a href="/projects/{{ project.id }}" class="text-slate-600 dark:text-slate-300 hover:text-primary transition-colors whitespace-nowrap">
+        <a href="/projects/{{ project.id }}"
+            class="text-slate-600 dark:text-slate-300 hover:text-primary transition-colors whitespace-nowrap">
             {{ project.name }}
         </a>
         <span class="material-symbols-outlined text-sm flex-shrink-0">chevron_right</span>
@@ -9,19 +10,25 @@
         <span class="material-symbols-outlined text-sm flex-shrink-0">chevron_right</span>
         <span class="whitespace-nowrap">{{ session.name }}</span>
         <span class="material-symbols-outlined text-sm flex-shrink-0">chevron_right</span>
-        <span class="text-primary whitespace-nowrap">{{ instance.control_id_snapshot }} {{ instance.control_title_snapshot }}</span>
+        <span class="text-primary whitespace-nowrap">{{ instance.control_id_snapshot }} {{
+            instance.control_title_snapshot }}</span>
     </div>
 
     <div class="flex flex-wrap items-start justify-between gap-4">
         <div class="max-w-2xl">
-            <h1 class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight leading-snug">{{ instance.control_id_snapshot }} {{ instance.control_title_snapshot }}</h1>
+            <h1 class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight leading-snug">{{
+                instance.control_id_snapshot }} {{ instance.control_title_snapshot }}</h1>
         </div>
 
         <div x-data='{
             open: false,
             value: "{{ instance.status.value }}",
-            colors: {"pass": "text-emerald-600 dark:text-emerald-500", "fail": "text-red-600 dark:text-red-500", "in_progress": "text-amber-600 dark:text-amber-500", "na": "text-slate-500 dark:text-slate-400"},
-            labels: {"pass": "Pass", "fail": "Fail", "in_progress": "In Progress", "na": "N/A"}
+            instanceId: "{{ instance.id }}",
+            colors: {"not_started": "text-slate-500 dark:text-slate-400", "pass": "text-emerald-600 dark:text-emerald-500", "fail": "text-red-600 dark:text-red-500", "in_progress": "text-amber-600 dark:text-amber-500", "na": "text-slate-500 dark:text-slate-400"},
+            labels: {"not_started": "Not Started", "pass": "Pass", "fail": "Fail", "in_progress": "In Progress", "na": "N/A"},
+            init() {
+                this.$watch("value", (v) => updateSidebarStatus(this.instanceId, v));
+            }
         }' @click.outside="open = false" class="relative">
             <input type="hidden" name="status" form="control-form" :value="value" />
             <button type="button" @click="open = !open"
@@ -42,6 +49,18 @@
                 x-transition:leave-end="transform opacity-0 scale-95 translate-y-[-10px]"
                 class="absolute right-0 top-full z-50 mt-2 w-48 bg-white dark:bg-slate-900 rounded-[14px] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] dark:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] border border-slate-100 dark:border-slate-800 p-2 overflow-hidden">
                 <ul class="flex flex-col gap-1 p-0.5">
+                    <li>
+                        <button type="button" @click='value = "not_started"; open = false'
+                            :class='value === "not_started" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-primary/15"'
+                            class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-all">
+                            <span
+                                :class='value === "not_started" ? "text-white" : "text-slate-500 bg-slate-100 dark:bg-slate-800 dark:text-slate-400"'
+                                class="flex items-center justify-center w-7 h-7 rounded-full transition-colors flex-shrink-0">
+                                <span class="material-symbols-outlined text-[16px]">radio_button_unchecked</span>
+                            </span>
+                            <span>Not Started</span>
+                        </button>
+                    </li>
                     <li>
                         <button type="button" @click='value = "in_progress"; open = false'
                             :class='value === "in_progress" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-primary/15"'
@@ -103,8 +122,10 @@
             <div class="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
             <button type="button" @click="open = !open"
                 class="w-full flex items-center justify-between px-5 py-2.5 text-left hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors">
-                <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
-                    <div class="bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 p-1.5 rounded-lg flex items-center justify-center">
+                <h4
+                    class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                    <div
+                        class="bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 p-1.5 rounded-lg flex items-center justify-center">
                         <span class="material-symbols-outlined" style="font-size:16px">description</span>
                     </div>
                     Requirements
@@ -126,11 +147,14 @@
             </div>
         </div>
         {% else %}
-        <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm relative overflow-hidden">
+        <div
+            class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm relative overflow-hidden">
             <div class="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
             <div class="px-5 py-4">
-                <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
-                    <div class="bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 p-1.5 rounded-lg flex items-center justify-center">
+                <h4
+                    class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                    <div
+                        class="bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 p-1.5 rounded-lg flex items-center justify-center">
                         <span class="material-symbols-outlined" style="font-size:16px">description</span>
                     </div>
                     Requirements
@@ -146,8 +170,10 @@
             <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
             <button type="button" @click="open = !open"
                 class="w-full flex items-center justify-between px-5 py-2.5 text-left hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors">
-                <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
-                    <div class="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 p-1.5 rounded-lg flex items-center justify-center">
+                <h4
+                    class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                    <div
+                        class="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 p-1.5 rounded-lg flex items-center justify-center">
                         <span class="material-symbols-outlined" style="font-size:16px">assignment_turned_in</span>
                     </div>
                     Testing Procedures
@@ -169,11 +195,14 @@
             </div>
         </div>
         {% else %}
-        <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm relative overflow-hidden">
+        <div
+            class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm relative overflow-hidden">
             <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
             <div class="px-5 py-4">
-                <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
-                    <div class="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 p-1.5 rounded-lg flex items-center justify-center">
+                <h4
+                    class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                    <div
+                        class="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 p-1.5 rounded-lg flex items-center justify-center">
                         <span class="material-symbols-outlined" style="font-size:16px">assignment_turned_in</span>
                     </div>
                     Testing Procedures
@@ -186,7 +215,8 @@
 
 </div>
 
-<form id="control-form" hx-post="/projects/{{ project.id }}/domains/{{ domain.id }}/sessions/{{ session.id }}/controls/{{ instance.id }}"
+<form id="control-form"
+    hx-post="/projects/{{ project.id }}/domains/{{ domain.id }}/sessions/{{ session.id }}/controls/{{ instance.id }}"
     hx-target="#control-panel" hx-swap="innerHTML" class="grid grid-cols-1 xl:grid-cols-4 gap-6 mt-6 fade-in"
     @submit="prepareObservationsData()">
 
@@ -202,12 +232,15 @@
                 <div class="absolute top-0 left-0 w-1 h-full bg-purple-500"></div>
                 <button type="button" @click="open = !open"
                     class="w-full flex items-center justify-between px-5 py-5 text-left hover:bg-purple-50/50 dark:hover:bg-purple-900/10 transition-colors">
-                    <h4 class="text-xs font-bold text-slate-900 dark:text-slate-50 uppercase tracking-wider flex items-center gap-2">
-                        <div class="bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 p-1.5 rounded-lg flex items-center justify-center">
+                    <h4
+                        class="text-xs font-bold text-slate-900 dark:text-slate-50 uppercase tracking-wider flex items-center gap-2">
+                        <div
+                            class="bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 p-1.5 rounded-lg flex items-center justify-center">
                             <span class="material-symbols-outlined" style="font-size:16px">checklist</span>
                         </div>
                         Check Points
-                        <span class="text-[10px] font-bold bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 px-1.5 py-0.5 rounded-full normal-case tracking-normal">Pinned</span>
+                        <span
+                            class="text-[10px] font-bold bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 px-1.5 py-0.5 rounded-full normal-case tracking-normal">Pinned</span>
                     </h4>
                     <span class="text-slate-500 dark:text-slate-300 transition-transform duration-200 flex-shrink-0"
                         :class="open ? '' : '-rotate-90'">
@@ -223,12 +256,14 @@
                     x-transition:leave-end="opacity-0"
                     class="border-t border-purple-100 dark:border-purple-900/40 px-8 py-6 max-h-52 overflow-y-auto scrollbar-thin scrollbar-thumb-purple-300 dark:scrollbar-thumb-purple-700">
                     <div class="space-y-1">
-                        {% set lines = instance.assessment_checklist_snapshot.check_points_text.strip().split('\n') if instance.assessment_checklist_snapshot.check_points_text else [] %}
+                        {% set lines = instance.assessment_checklist_snapshot.check_points_text.strip().split('\n') if
+                        instance.assessment_checklist_snapshot.check_points_text else [] %}
                         {% for line in lines %}
                         {% if line.strip() %}
                         {% set indent_level = (line | length) - (line | trim | length) %}
                         {% set indent_spaces = indent_level // 2 %}
-                        {% set clean_text = line.strip() | replace('• ', '') | replace('- ', '') | replace('* ', '') | replace('– ', '') | replace('◦ ', '') %}
+                        {% set clean_text = line.strip() | replace('• ', '') | replace('- ', '') | replace('* ', '') |
+                        replace('– ', '') | replace('◦ ', '') %}
                         {% if indent_spaces == 0 %}
                         <div class="flex gap-2 items-start">
                             {% elif indent_spaces == 1 %}
@@ -247,7 +282,8 @@
                                             <div class="w-1 h-1 rounded-full bg-purple-300"></div>
                                             {% endif %}
                                         </div>
-                                        <p class="text-sm text-slate-800 dark:text-slate-100 leading-relaxed flex-1">{{ clean_text }}</p>
+                                        <p class="text-sm text-slate-800 dark:text-slate-100 leading-relaxed flex-1">{{
+                                            clean_text }}</p>
                                     </div>
                                     {% endif %}
                                     {% endfor %}
@@ -255,13 +291,15 @@
                             </div>
                         </div>
                         {% else %}
-                        <div class="rounded-xl border border-purple-200 dark:border-purple-800/60 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-lg shadow-purple-100/60 dark:shadow-purple-900/20 relative overflow-hidden p-4">
+                        <div
+                            class="rounded-xl border border-purple-200 dark:border-purple-800/60 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-lg shadow-purple-100/60 dark:shadow-purple-900/20 relative overflow-hidden p-4">
                             <p class="text-sm text-slate-500 dark:text-slate-400 italic">No check points specified</p>
                         </div>
                         {% endif %}
 
                         <!-- Observations toolbar (sticky) -->
-                        <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden mt-3">
+                        <div
+                            class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden mt-3">
                             <div class="px-6 py-4 flex items-center justify-between">
                                 <div class="flex items-center gap-2">
                                     <span class="material-symbols-outlined text-primary">assignment_turned_in</span>
@@ -278,13 +316,16 @@
                             <!-- Dropdown to select predefined observations -->
                             <div id="observation-dropdown-{{ instance.id }}"
                                 class="hidden border-t border-slate-100 dark:border-slate-800 p-6 bg-slate-50 dark:bg-slate-800/50">
-                                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-3">
+                                <label
+                                    class="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-3">
                                     Select Observation
                                 </label>
                                 {% set obs_list = [] %}
-                                {% if instance.assessment_checklist_snapshot and instance.assessment_checklist_snapshot.observations %}
+                                {% if instance.assessment_checklist_snapshot and
+                                instance.assessment_checklist_snapshot.observations %}
                                 {% for obs in instance.assessment_checklist_snapshot.observations %}
-                                {% set _ = obs_list.append({"id": obs.id|string, "label": obs.label, "recommendation": obs.recommendation or ""}) %}
+                                {% set _ = obs_list.append({"id": obs.id|string, "label": obs.label, "recommendation":
+                                obs.recommendation or ""}) %}
                                 {% endfor %}
                                 {% endif %}
                                 <div x-data='{
@@ -350,43 +391,56 @@
 
                     </div><!-- end sticky wrapper -->
 
-                    {% if instance.assessment_checklist_snapshot and instance.assessment_checklist_snapshot.observations %}
+                    {% if instance.assessment_checklist_snapshot and instance.assessment_checklist_snapshot.observations
+                    %}
                     <!-- Observations Table (scrolls normally) -->
-                    <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                    <div
+                        class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
                         <div class="overflow-x-auto">
                             <table class="w-full text-sm" id="observations-table-{{ instance.id }}">
-                                <thead class="bg-slate-50/80 dark:bg-slate-800/80 border-b border-slate-100 dark:border-slate-700">
+                                <thead
+                                    class="bg-slate-50/80 dark:bg-slate-800/80 border-b border-slate-100 dark:border-slate-700">
                                     <tr>
-                                        <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
                                             Observation
                                         </th>
-                                        <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
                                             Recommendation
                                         </th>
-                                        <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
                                             Evidence
                                         </th>
-                                        <th class="px-6 py-3 text-center text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
+                                        <th
+                                            class="px-6 py-3 text-center text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
                                             Actions
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody id="observations-tbody-{{ instance.id }}">
                                     {% for obs in observations %}
-                                    <tr class="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors" data-obs-id="{{ obs.id }}">
-                                        <td class="px-6 py-4 text-sm text-slate-900 dark:text-white break-words">{{ obs.observation_text }}</td>
-                                        <td class="px-6 py-4 text-sm text-slate-700 dark:text-slate-300 break-words">{{ obs.recommendation_text }}</td>
+                                    <tr class="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors"
+                                        data-obs-id="{{ obs.id }}">
+                                        <td class="px-6 py-4 text-sm text-slate-900 dark:text-white break-words">{{
+                                            obs.observation_text }}</td>
+                                        <td class="px-6 py-4 text-sm text-slate-700 dark:text-slate-300 break-words">{{
+                                            obs.recommendation_text }}</td>
                                         <td class="px-6 py-4 text-sm">
                                             <button type="button"
                                                 hx-get="/projects/{{ project.id }}/domains/{{ domain.id }}/sessions/{{ session.id }}/observations/{{ obs.id }}/evidence"
                                                 hx-target="#modal-body" hx-swap="innerHTML" @click="$store.modal.show()"
                                                 class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-800/50 transition-colors cursor-pointer">
                                                 <span class="material-symbols-outlined text-[12px]">attach_file</span>
-                                                {{ obs.evidence_files|length }} file{{ 's' if obs.evidence_files|length != 1 else '' }}
+                                                {{ obs.evidence_files|length }} file{{ 's' if obs.evidence_files|length
+                                                != 1 else '' }}
                                             </button>
                                         </td>
                                         <td class="px-6 py-4 text-center">
-                                            <button type="button" hx-delete="/projects/{{ project.id }}/domains/{{ domain.id }}/sessions/{{ session.id }}/observations/{{ obs.id }}" hx-target="#control-panel" hx-swap="innerHTML"
+                                            <button type="button"
+                                                hx-delete="/projects/{{ project.id }}/domains/{{ domain.id }}/sessions/{{ session.id }}/observations/{{ obs.id }}"
+                                                hx-target="#control-panel" hx-swap="innerHTML"
                                                 class="text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors">
                                                 <span class="material-symbols-outlined">delete</span>
                                             </button>
@@ -395,13 +449,20 @@
                                     {% else %}
                                     <tr id="empty-obs-{{ instance.id }}">
                                         <td colspan="4" class="p-4 w-full">
-                                            <div class="w-full flex flex-col items-center gap-3 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl py-8 text-center">
-                                                <div class="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center">
-                                                    <span class="material-symbols-outlined text-slate-400 dark:text-slate-500" style="font-size:24px">rate_review</span>
+                                            <div
+                                                class="w-full flex flex-col items-center gap-3 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl py-8 text-center">
+                                                <div
+                                                    class="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center">
+                                                    <span
+                                                        class="material-symbols-outlined text-slate-400 dark:text-slate-500"
+                                                        style="font-size:24px">rate_review</span>
                                                 </div>
                                                 <div>
-                                                    <p class="text-sm font-semibold text-slate-600 dark:text-slate-300">No observations documented yet</p>
-                                                    <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Document your findings and recommendations by selecting an observation above.</p>
+                                                    <p class="text-sm font-semibold text-slate-600 dark:text-slate-300">
+                                                        No observations documented yet</p>
+                                                    <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
+                                                        Document your findings and recommendations by selecting an
+                                                        observation above.</p>
                                                 </div>
                                             </div>
                                         </td>
@@ -418,32 +479,39 @@
                 <!-- Right Metadata Sidebar -->
                 <div class="space-y-3 flex flex-col">
                     <!-- Control Details Card -->
-                    <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm p-4">
-                        <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 mb-3">Asset Information</h3>
+                    <div
+                        class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm p-4">
+                        <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 mb-3">Asset Information
+                        </h3>
                         <div class="space-y-3">
                             <div>
                                 <p class="text-xs font-bold text-slate-400 uppercase mb-1.5">Application Name</p>
-                                <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ session.name }}</span>
+                                <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ session.name
+                                    }}</span>
                             </div>
                             {% if session.asset_identifier %}
                             <div>
                                 <p class="text-xs font-bold text-slate-400 uppercase mb-1.5">IP / Identifier</p>
-                                <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ session.asset_identifier }}</span>
+                                <span class="text-sm font-semibold text-slate-900 dark:text-white">{{
+                                    session.asset_identifier }}</span>
                             </div>
                             {% endif %}
                             <div>
                                 <p class="text-xs font-bold text-slate-400 uppercase mb-1.5">Domain</p>
-                                <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ domain.label or domain.audit_domain_type.name }}</span>
+                                <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ domain.label or
+                                    domain.audit_domain_type.name }}</span>
                             </div>
                             <div>
                                 <p class="text-xs font-bold text-slate-400 uppercase mb-1.5">Control ID</p>
-                                <span class="text-sm font-semibold text-slate-900 dark:text-white">{{ instance.control_id_snapshot }}</span>
+                                <span class="text-sm font-semibold text-slate-900 dark:text-white">{{
+                                    instance.control_id_snapshot }}</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Audit Trail Card -->
-                    <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm p-4">
+                    <div
+                        class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm p-4">
                         <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 mb-3">Audit Trail</h3>
                         <div>
                             {% if instance.updated_at %}
@@ -454,7 +522,8 @@
                                 </div>
                                 <div>
                                     <p class="text-xs font-bold text-slate-900 dark:text-white">Updated</p>
-                                    <p class="text-xs text-slate-500 mt-0.5">{{ instance.updated_at.strftime('%b %d, %Y %H:%M') }}</p>
+                                    <p class="text-xs text-slate-500 mt-0.5">{{ instance.updated_at.strftime('%b %d, %Y
+                                        %H:%M') }}</p>
                                 </div>
                             </div>
                             {% endif %}
@@ -464,7 +533,8 @@
                                 </div>
                                 <div>
                                     <p class="text-xs font-bold text-slate-700 dark:text-slate-400">Created</p>
-                                    <p class="text-xs text-slate-500 mt-0.5">{{ instance.created_at.strftime('%b %d, %Y') }}</p>
+                                    <p class="text-xs text-slate-500 mt-0.5">{{ instance.created_at.strftime('%b %d,
+                                        %Y') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -473,10 +543,10 @@
 </form>
 
 <!-- Sticky Save Bar -->
-<div class="sticky bottom-0 left-0 right-0 z-20 mt-6 bg-white/90 dark:bg-slate-900/90 backdrop-blur border-t border-slate-200 dark:border-slate-800 px-4 py-3 flex items-center gap-3">
-<div class="ml-auto flex items-center gap-3">
-        <button type="button"
-            onclick="document.getElementById('control-form').dispatchEvent(new Event('htmx:abort'))"
+<div
+    class="sticky bottom-0 left-0 right-0 z-20 mt-6 bg-white/90 dark:bg-slate-900/90 backdrop-blur border-t border-slate-200 dark:border-slate-800 px-4 py-3 flex items-center gap-3">
+    <div class="ml-auto flex items-center gap-3">
+        <button type="button" onclick="document.getElementById('control-form').dispatchEvent(new Event('htmx:abort'))"
             class="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors bg-white dark:bg-slate-800 hover:bg-slate-50">
             Cancel
         </button>
@@ -490,7 +560,7 @@
 
 
 <script>
-function addObservation(observationId, instanceId, label, recommendation) {
+    function addObservation(observationId, instanceId, label, recommendation) {
         if (!observationId) return;
 
         // Create unique ID for new observation
