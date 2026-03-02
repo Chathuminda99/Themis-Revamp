@@ -1,15 +1,16 @@
-{# Custom Dialog Component #}
-{# Premium modal dialog tailored to the new app theme (glassmorphism/accent lines) #}
-{# Usage:
+{# Custom Dialog Component
+Premium modal dialog tailored to the new app theme (glassmorphism/accent lines)
+
+Usage:
 {% include "components/dialog.html" %}
-{# Requires variables via context:
-dialog_open (boolean Expression)
-dialog_type (string): 'info', 'success', 'warning', 'error' (default info)
-dialog_title (string)
-dialog_description (string)
-dialog_content (raw HTML block)
-dialog_footer (raw HTML block)
-#}
+
+Requires variables via context:
+- dialog_open (boolean Expression)
+- dialog_type (string): 'info', 'success', 'warning', 'error' (default info)
+- dialog_title (string)
+- dialog_description (string)
+- dialog_content (raw HTML block)
+- dialog_footer (raw HTML block)
 #}
 
 {% set _t = dialog_type | default('info') %}
