@@ -202,8 +202,9 @@
 
 <form id="control-form"
     hx-post="/projects/{{ project.id }}/domains/{{ domain.id }}/sessions/{{ session.id }}/controls/{{ instance.id }}/details"
-    hx-target="#control-panel" hx-swap="innerHTML" class="mt-6 fade-in"
-    @submit="prepareObservationsData()">
+    hx-target="#control-panel" hx-swap="innerHTML" hx-ext="response-targets" class="mt-6 fade-in"
+    @submit="prepareObservationsData()"
+    @htmx:afterSwap="htmx.process(document.getElementById('control-panel'))">
 
     <!-- Form Controls -->
     <div class="space-y-6">
@@ -472,6 +473,7 @@
                                                     hx-delete="/projects/{{ project.id }}/domains/{{ domain.id }}/sessions/{{ session.id }}/observations/{{ obs.id }}"
                                                     hx-target="#control-panel" hx-swap="innerHTML"
                                                     hx-confirm="Delete this observation?"
+                                                    hx-indicator="#control-panel"
                                                     class="px-3 py-1.5 text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors">
                                                     Delete
                                                 </button>
