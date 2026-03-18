@@ -1,23 +1,8 @@
-<!-- Workspace Header & Breadcrumbs -->
+<!-- Header -->
 <div class="flex flex-col gap-4 fade-in">
-    <div class="flex items-center gap-2 text-xs text-slate-500 font-medium overflow-x-auto pb-1">
-        <a href="/projects/{{ project.id }}"
-            class="text-slate-600 dark:text-slate-300 hover:text-primary transition-colors whitespace-nowrap">
-            {{ project.name }}
-        </a>
-        <span class="material-symbols-outlined text-sm flex-shrink-0">chevron_right</span>
-        <span class="whitespace-nowrap">{{ domain.label or domain.audit_domain_type.name }}</span>
-        <span class="material-symbols-outlined text-sm flex-shrink-0">chevron_right</span>
-        <span class="whitespace-nowrap">{{ session.name }}</span>
-        <span class="material-symbols-outlined text-sm flex-shrink-0">chevron_right</span>
-        <span class="text-primary whitespace-nowrap">{{ instance.control_id_snapshot }} {{
-            instance.control_title_snapshot }}</span>
-    </div>
-
     <div class="flex flex-wrap items-start justify-between gap-4">
-        <div class="max-w-2xl">
-            <h1 class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight leading-snug">{{
-                instance.control_id_snapshot }} {{ instance.control_title_snapshot }}</h1>
+        <div>
+            <h1 class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight whitespace-nowrap">{{ instance.control_id_snapshot }} {{ instance.control_title_snapshot }}</h1>
         </div>
 
         <div x-data='{
