@@ -1210,7 +1210,7 @@ async def delete_observation(
 
     # Reload instance with updated observations
     instance = hc_repo.get_control_instance_with_observations(instance.id)
-    domain = hc_repo.get_domain_with_sessions(instance.audit_domain_id)
+    domain = hc_repo.get_domain_with_sessions(instance.audit_session.audit_domain_id)
 
     return templates.TemplateResponse(
         "projects/health_check/_control_panel.html",
