@@ -216,7 +216,7 @@
 </div>
 
 <form id="control-form"
-    hx-post="/projects/{{ project.id }}/domains/{{ domain.id }}/sessions/{{ session.id }}/controls/{{ instance.id }}"
+    hx-post="/projects/{{ project.id }}/domains/{{ domain.id }}/sessions/{{ session.id }}/controls/{{ instance.id }}/details"
     hx-target="#control-panel" hx-swap="innerHTML" class="grid grid-cols-1 xl:grid-cols-4 gap-6 mt-6 fade-in"
     @submit="prepareObservationsData()">
 
