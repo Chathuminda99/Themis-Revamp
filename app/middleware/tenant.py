@@ -1,7 +1,13 @@
+import logging
+
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
+
 from app.database import SessionLocal
+from app.logging_config import bind_log_context
 from app.models import Tenant
+
+APP_LOGGER = logging.getLogger("themis.app")
 
 
 class TenantMiddleware(BaseHTTPMiddleware):
@@ -20,6 +26,14 @@ class TenantMiddleware(BaseHTTPMiddleware):
                 tenant = db.query(Tenant).filter(Tenant.id == user.tenant_id).first()
             finally:
                 db.close()
+
+            if tenant:
+                bind_log_context(tenant_id=tenant.id)
+            else:
+                APP_LOGGER.error(
+                    "authenticated_user_missing_tenant user_id=%s",
+                    user.id,
+                )
 
         # Inject tenant into request state
         request.state.tenant = tenant

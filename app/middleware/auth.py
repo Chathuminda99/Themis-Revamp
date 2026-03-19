@@ -1,7 +1,13 @@
+import logging
+
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
+
 from app.config import get_settings
+from app.logging_config import bind_log_context
 from app.services.auth_service import get_user_from_token
+
+SECURITY_LOGGER = logging.getLogger("themis.security")
 
 
 class AuthMiddleware(BaseHTTPMiddleware):
@@ -18,6 +24,10 @@ class AuthMiddleware(BaseHTTPMiddleware):
         if session_token:
             # Decode token and load user
             user = await get_user_from_token(session_token)
+            if user:
+                bind_log_context(user_id=user.id, tenant_id=user.tenant_id)
+            else:
+                SECURITY_LOGGER.warning("invalid_or_expired_session_cookie")
 
         # Inject user into request state
         request.state.user = user

@@ -1,15 +1,20 @@
+import logging
+
 from fastapi import APIRouter, Request, Form, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse
 
 from sqlalchemy.orm import Session
+
 from app.database import get_db
 from app.config import get_settings
+from app.logging_config import bind_log_context
 from app.services.auth_service import authenticate_user, create_session_token
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 from app.templates import templates
 from app.utils.htmx import htmx_toast
 settings = get_settings()
+SECURITY_LOGGER = logging.getLogger("themis.security")
 
 
 @router.get("/login", response_class=HTMLResponse)
@@ -26,9 +31,11 @@ async def login(
     db: Session = Depends(get_db),
 ):
     """Handle login form submission."""
+    normalized_email = email.strip().lower()
     user = authenticate_user(email, password, db)
 
     if not user:
+        SECURITY_LOGGER.warning("login_failed email=%s", normalized_email)
         return templates.TemplateResponse(
             "auth/login.html",
             {
@@ -40,6 +47,8 @@ async def login(
         )
 
     # Create session token
+    bind_log_context(user_id=user.id, tenant_id=user.tenant_id)
+    SECURITY_LOGGER.info("login_success email=%s", user.email)
     token = create_session_token(user)
 
     # Create redirect response
@@ -61,6 +70,13 @@ async def login(
 @router.post("/logout")
 async def logout(request: Request):
     """Handle logout."""
+    user = getattr(request.state, "user", None)
+    if user:
+        bind_log_context(user_id=user.id, tenant_id=user.tenant_id)
+        SECURITY_LOGGER.info("logout_success")
+    else:
+        SECURITY_LOGGER.info("logout_without_authenticated_user")
+
     response = RedirectResponse(url="/auth/login", status_code=302, headers=htmx_toast("Logged out successfully"))
     response.delete_cookie(
         key=settings.session_cookie_name,
