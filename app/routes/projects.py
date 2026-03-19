@@ -1806,11 +1806,11 @@ async def submit_assessment_choice(
     # Extract finding type to determine status
     finding_type = selected_scenario.get("finding_type", "observation")
     if finding_type == "pass":
-        status = ResponseStatus.APPROVED
+        status = ResponseStatus.COMPLIED
     elif finding_type == "fail":
-        status = ResponseStatus.REJECTED
+        status = ResponseStatus.NOT_COMPLIED
     else:  # observation
-        status = ResponseStatus.SUBMITTED
+        status = ResponseStatus.DRAFT
 
     # Save the response
     response_repo = ProjectResponseRepository(db)
@@ -2321,12 +2321,12 @@ async def save_control_details(
 
     form_data = await request.form()
     response_text = form_data.get("response_text", "")
-    status_value = form_data.get("status", ResponseStatus.IN_PROGRESS.value)
+    status_value = form_data.get("status", ResponseStatus.DRAFT.value)
 
     try:
         status = ResponseStatus(status_value)
     except ValueError:
-        status = ResponseStatus.IN_PROGRESS
+        status = ResponseStatus.DRAFT
 
     response_repo = ProjectResponseRepository(db)
     response_repo.upsert(
@@ -2354,6 +2354,7 @@ async def save_control_details(
                 observation_data[idx][field] = form_data.get(key)
 
     # Create new observations
+    new_obs_created = False
     for idx, obs_data in observation_data.items():
         if obs_data.get("is_new") == "true":
             obs_repo.create_observation(
@@ -2362,6 +2363,12 @@ async def save_control_details(
                 obs_data.get("text", ""),
                 obs_data.get("recommendation", ""),
             )
+            new_obs_created = True
+
+    # Auto-promote NOT_STARTED → DRAFT when new observations are added
+    if new_obs_created and status == ResponseStatus.NOT_STARTED:
+        status = ResponseStatus.DRAFT
+        response_repo.upsert(project.id, uuid.UUID(control_id), response_text, status)
 
     framework_repo = FrameworkRepository(db)
     framework = framework_repo.get_by_id_with_sections(user.tenant_id, project.framework_id)
@@ -2422,6 +2429,12 @@ async def create_observation(
     obs_repo.create_observation(
         project.id, control_id, observation_text, recommendation_text
     )
+
+    # Auto-promote NOT_STARTED → DRAFT when an observation is added
+    response_repo = ProjectResponseRepository(db)
+    existing_response = response_repo.get_by_control(project.id, uuid.UUID(control_id))
+    if not existing_response or existing_response.status == ResponseStatus.NOT_STARTED:
+        response_repo.upsert(project.id, uuid.UUID(control_id), status=ResponseStatus.DRAFT)
 
     return HTMLResponse(content="Observation created", status_code=200, headers=htmx_toast("Observation created successfully"))
 

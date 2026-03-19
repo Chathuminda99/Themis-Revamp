@@ -79,7 +79,7 @@
             <div x-data='{
                 open: false,
                 value: "{{ response.status.value if response else "not_started" }}",
-                labels: {"not_started": "Not Started", "in_progress": "In Progress", "submitted": "Submitted", "approved": "Approved", "rejected": "Rejected"}
+                labels: {"not_started": "Not Started", "draft": "Draft", "complied": "Complied", "not_complied": "Not Complied"}
             }' @click.outside="open = false" class="relative max-w-xs">
               <input type="hidden" name="status" :value="value" />
               <button type="button" @click="open = !open" class="dropdown-select">
@@ -109,47 +109,36 @@
                     </button>
                   </li>
                   <li>
-                    <button type="button" @click='value = "in_progress"; open = false'
-                      :class='value === "in_progress" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-primary/15"'
+                    <button type="button" @click='value = "draft"; open = false'
+                      :class='value === "draft" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-primary/15"'
                       class="dropdown-item">
-                      <span :class='value === "in_progress" ? "text-white" : "text-amber-600 bg-amber-50 dark:bg-amber-900/30 dark:text-amber-400"'
+                      <span :class='value === "draft" ? "text-white" : "text-amber-600 bg-amber-50 dark:bg-amber-900/30 dark:text-amber-400"'
                         class="flex items-center justify-center w-6 h-6 rounded-full transition-colors flex-shrink-0">
-                        <span class="material-symbols-outlined text-[14px]">pending</span>
+                        <span class="material-symbols-outlined text-[14px]">edit_note</span>
                       </span>
-                      <span>In Progress</span>
+                      <span>Draft</span>
                     </button>
                   </li>
                   <li>
-                    <button type="button" @click='value = "submitted"; open = false'
-                      :class='value === "submitted" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-primary/15"'
+                    <button type="button" @click='value = "complied"; open = false'
+                      :class='value === "complied" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-primary/15"'
                       class="dropdown-item">
-                      <span :class='value === "submitted" ? "text-white" : "text-blue-600 bg-blue-50 dark:bg-blue-900/30 dark:text-blue-400"'
-                        class="flex items-center justify-center w-6 h-6 rounded-full transition-colors flex-shrink-0">
-                        <span class="material-symbols-outlined text-[14px]">upload</span>
-                      </span>
-                      <span>Submitted</span>
-                    </button>
-                  </li>
-                  <li>
-                    <button type="button" @click='value = "approved"; open = false'
-                      :class='value === "approved" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-primary/15"'
-                      class="dropdown-item">
-                      <span :class='value === "approved" ? "text-white" : "text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 dark:text-emerald-400"'
+                      <span :class='value === "complied" ? "text-white" : "text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 dark:text-emerald-400"'
                         class="flex items-center justify-center w-6 h-6 rounded-full transition-colors flex-shrink-0">
                         <span class="material-symbols-outlined text-[14px]">check_circle</span>
                       </span>
-                      <span>Approved</span>
+                      <span>Complied</span>
                     </button>
                   </li>
                   <li>
-                    <button type="button" @click='value = "rejected"; open = false'
-                      :class='value === "rejected" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-primary/15"'
+                    <button type="button" @click='value = "not_complied"; open = false'
+                      :class='value === "not_complied" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-primary/15"'
                       class="dropdown-item">
-                      <span :class='value === "rejected" ? "text-white" : "text-red-600 bg-red-50 dark:bg-red-900/30 dark:text-red-400"'
+                      <span :class='value === "not_complied" ? "text-white" : "text-red-600 bg-red-50 dark:bg-red-900/30 dark:text-red-400"'
                         class="flex items-center justify-center w-6 h-6 rounded-full transition-colors flex-shrink-0">
                         <span class="material-symbols-outlined text-[14px]">cancel</span>
                       </span>
-                      <span>Rejected</span>
+                      <span>Not Complied</span>
                     </button>
                   </li>
                 </ul>

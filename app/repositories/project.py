@@ -158,7 +158,7 @@ class ProjectRepository(BaseRepository[Project]):
             framework_id=parent.framework_id,
             name=name,
             description=description,
-            status=ProjectStatus.DRAFT,
+            status=ProjectStatus.NOT_STARTED,
         )
         self.db.add(segment)
         self.db.commit()

@@ -20,20 +20,19 @@ class ProjectType(str, Enum):
 class ProjectStatus(str, Enum):
     """Project status enumeration."""
 
+    NOT_STARTED = "not_started"
     DRAFT = "draft"
     IN_PROGRESS = "in_progress"
     COMPLETED = "completed"
-    ARCHIVED = "archived"
 
 
 class ResponseStatus(str, Enum):
     """Response status for controls."""
 
     NOT_STARTED = "not_started"
-    IN_PROGRESS = "in_progress"
-    SUBMITTED = "submitted"
-    APPROVED = "approved"
-    REJECTED = "rejected"
+    DRAFT = "draft"
+    COMPLIED = "complied"
+    NOT_COMPLIED = "not_complied"
 
 
 class Project(BaseModel, TimestampMixin):
@@ -59,7 +58,7 @@ class Project(BaseModel, TimestampMixin):
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str] = mapped_column(Text, nullable=True)
     status: Mapped[ProjectStatus] = mapped_column(
-        SQLEnum(ProjectStatus), nullable=False, default=ProjectStatus.DRAFT
+        SQLEnum(ProjectStatus), nullable=False, default=ProjectStatus.NOT_STARTED
     )
     project_type: Mapped[ProjectType] = mapped_column(
         SQLEnum(ProjectType, values_callable=lambda x: [e.value for e in x]),

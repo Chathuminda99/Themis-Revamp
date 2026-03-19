@@ -3,9 +3,9 @@
 {% set resp = responses.get(control.id|string) %}
 <span id="tree-icon-{{ control.id }}" hx-swap-oob="outerHTML">
   {% if resp %}
-    {% if resp.status.value == 'approved' %}
+    {% if resp.status.value == 'complied' %}
     <span class="text-green-500">{{ icon_macro.icon('check-circle', 'currentColor', '18') }}</span>
-    {% elif resp.status.value == 'rejected' %}
+    {% elif resp.status.value == 'not_complied' %}
     <span class="text-red-500">{{ icon_macro.icon('alert-circle', 'currentColor', '18') }}</span>
     {% else %}
     <span class="text-amber-500">{{ icon_macro.icon('alert-triangle', 'currentColor', '18') }}</span>

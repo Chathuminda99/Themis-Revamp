@@ -22,9 +22,9 @@
 
         <div x-data='{
             open: false,
-            value: "{{ response.status.value if response and response.status.value in ["approved","rejected","not_applicable"] else "in_progress" }}",
-            colors: {"in_progress": "text-amber-600 dark:text-amber-500", "approved": "text-emerald-600 dark:text-emerald-500", "rejected": "text-rose-600 dark:text-rose-500", "not_applicable": "text-slate-500 dark:text-slate-400"},
-            labels: {"in_progress": "In Progress", "approved": "Compliant", "rejected": "Non-Compliant", "not_applicable": "N/A"}
+            value: "{{ response.status.value if response and response.status.value in ["complied","not_complied","not_applicable"] else "draft" }}",
+            colors: {"draft": "text-amber-600 dark:text-amber-500", "complied": "text-emerald-600 dark:text-emerald-500", "not_complied": "text-rose-600 dark:text-rose-500", "not_applicable": "text-slate-500 dark:text-slate-400"},
+            labels: {"draft": "Draft", "complied": "Compliant", "not_complied": "Non-Compliant", "not_applicable": "N/A"}
         }' @click.outside="open = false" class="relative">
             <input type="hidden" name="status" form="control-form" :value="value" />
             <button type="button" @click="open = !open"
@@ -46,23 +46,23 @@
                 class="absolute right-0 top-full z-50 mt-2 w-48 bg-white dark:bg-slate-900 rounded-[14px] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] dark:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] border border-slate-100 dark:border-slate-800 p-2 overflow-hidden">
                 <ul class="flex flex-col gap-1 p-0.5">
                     <li>
-                        <button type="button" @click='value = "in_progress"; open = false'
-                            :class='value === "in_progress" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-primary/15"'
+                        <button type="button" @click='value = "draft"; open = false'
+                            :class='value === "draft" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-primary/15"'
                             class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-all">
                             <span
-                                :class='value === "in_progress" ? "text-white" : "text-amber-600 bg-amber-50 dark:bg-amber-900/30 dark:text-amber-400"'
+                                :class='value === "draft" ? "text-white" : "text-amber-600 bg-amber-50 dark:bg-amber-900/30 dark:text-amber-400"'
                                 class="flex items-center justify-center w-7 h-7 rounded-full transition-colors flex-shrink-0">
-                                <span class="material-symbols-outlined text-[16px]">pending</span>
+                                <span class="material-symbols-outlined text-[16px]">edit_note</span>
                             </span>
-                            <span>In Progress</span>
+                            <span>Draft</span>
                         </button>
                     </li>
                     <li>
-                        <button type="button" @click='value = "approved"; open = false'
-                            :class='value === "approved" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-primary/15"'
+                        <button type="button" @click='value = "complied"; open = false'
+                            :class='value === "complied" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-primary/15"'
                             class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-all">
                             <span
-                                :class='value === "approved" ? "text-white" : "text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 dark:text-emerald-400"'
+                                :class='value === "complied" ? "text-white" : "text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 dark:text-emerald-400"'
                                 class="flex items-center justify-center w-7 h-7 rounded-full transition-colors flex-shrink-0">
                                 <span class="material-symbols-outlined text-[16px]">check_circle</span>
                             </span>
@@ -70,11 +70,11 @@
                         </button>
                     </li>
                     <li>
-                        <button type="button" @click='value = "rejected"; open = false'
-                            :class='value === "rejected" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-primary/15"'
+                        <button type="button" @click='value = "not_complied"; open = false'
+                            :class='value === "not_complied" ? "bg-primary text-white shadow-md shadow-primary/25" : "text-slate-700 dark:text-slate-300 hover:bg-primary/10 dark:hover:bg-primary/15"'
                             class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-all">
                             <span
-                                :class='value === "rejected" ? "text-white" : "text-rose-600 bg-rose-50 dark:bg-rose-900/30 dark:text-rose-400"'
+                                :class='value === "not_complied" ? "text-white" : "text-rose-600 bg-rose-50 dark:bg-rose-900/30 dark:text-rose-400"'
                                 class="flex items-center justify-center w-7 h-7 rounded-full transition-colors flex-shrink-0">
                                 <span class="material-symbols-outlined text-[16px]">cancel</span>
                             </span>

@@ -121,13 +121,13 @@
     <!-- Status Select -->
     {% set select_id = "status" %}
     {% set select_name = "status" %}
-    {% set select_value = project.status.value if project else 'draft' %}
+    {% set select_value = project.status.value if project else 'not_started' %}
     {% set select_label = "Status" %}
     {% set select_options = [
+      {"value": "not_started", "label": "Not Started", "icon": "radio_button_unchecked", "color": "text-slate-500 dark:text-slate-400", "icon_bg": "bg-slate-100 dark:bg-slate-800"},
       {"value": "draft", "label": "Draft", "icon": "edit_document", "color": "text-slate-600 dark:text-slate-400", "icon_bg": "bg-slate-100 dark:bg-slate-800"},
       {"value": "in_progress", "label": "In Progress", "icon": "pending", "color": "text-amber-600 dark:text-amber-400", "icon_bg": "bg-amber-50 dark:bg-amber-900/30"},
-      {"value": "completed", "label": "Completed", "icon": "check_circle", "color": "text-emerald-600 dark:text-emerald-400", "icon_bg": "bg-emerald-50 dark:bg-emerald-900/30"},
-      {"value": "archived", "label": "Archived", "icon": "inventory_2", "color": "text-slate-600 dark:text-slate-400", "icon_bg": "bg-slate-100 dark:bg-slate-800"}
+      {"value": "completed", "label": "Completed", "icon": "check_circle", "color": "text-emerald-600 dark:text-emerald-400", "icon_bg": "bg-emerald-50 dark:bg-emerald-900/30"}
     ] %}
     {% include "components/custom_select.html" with context %}
 

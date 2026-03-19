@@ -76,14 +76,12 @@
                 class="w-full appearance-none px-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-900 rounded-lg hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-colors sm:text-sm font-medium">
                 <option value="not_started" {% if not response or response.status.value=='not_started' %}selected{%
                   endif %}>Not Started</option>
-                <option value="in_progress" {% if response and response.status.value=='in_progress' %}selected{% endif
-                  %}>In Progress</option>
-                <option value="submitted" {% if response and response.status.value=='submitted' %}selected{% endif %}>
-                  Submitted</option>
-                <option value="approved" {% if response and response.status.value=='approved' %}selected{% endif %}>
-                  Approved</option>
-                <option value="rejected" {% if response and response.status.value=='rejected' %}selected{% endif %}>
-                  Rejected</option>
+                <option value="draft" {% if response and response.status.value=='draft' %}selected{% endif
+                  %}>Draft</option>
+                <option value="complied" {% if response and response.status.value=='complied' %}selected{% endif %}>
+                  Complied</option>
+                <option value="not_complied" {% if response and response.status.value=='not_complied' %}selected{% endif %}>
+                  Not Complied</option>
               </select>
               <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

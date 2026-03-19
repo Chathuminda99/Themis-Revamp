@@ -81,14 +81,14 @@ class ProjectResponseRepository(BaseRepository[ProjectResponse]):
         return response
 
     def count_pending_for_tenant(self, tenant_id: UUID) -> int:
-        """Count pending/in_progress responses for a tenant across all projects."""
+        """Count pending/draft responses for a tenant across all projects."""
         return self.db.query(ProjectResponse).join(
             Project, ProjectResponse.project_id == Project.id
         ).filter(
             and_(
                 Project.tenant_id == tenant_id,
                 ProjectResponse.status.in_(
-                    [ResponseStatus.NOT_STARTED, ResponseStatus.IN_PROGRESS]
+                    [ResponseStatus.NOT_STARTED, ResponseStatus.DRAFT]
                 ),
             )
         ).count()

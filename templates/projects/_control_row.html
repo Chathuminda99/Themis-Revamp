@@ -7,20 +7,17 @@
     <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border
         {% if response.status.value == 'not_started' %}
           bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700
-        {% elif response.status.value == 'in_progress' %}
+        {% elif response.status.value == 'draft' %}
           bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800
-        {% elif response.status.value == 'submitted' %}
-          bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800
-        {% elif response.status.value == 'approved' %}
+        {% elif response.status.value == 'complied' %}
           bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800
-        {% elif response.status.value == 'rejected' %}
+        {% elif response.status.value == 'not_complied' %}
           bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800
         {% endif %}
       ">
-      {% if response.status.value == 'in_progress' %}<span class="w-1.5 h-1.5 rounded-full bg-blue-500 dark:bg-blue-400 mr-1.5 animate-pulse"></span>
-      {% elif response.status.value == 'submitted' %}<span class="w-1.5 h-1.5 rounded-full bg-amber-500 dark:bg-amber-400 mr-1.5"></span>
-      {% elif response.status.value == 'approved' %}<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 mr-1.5"></span>
-      {% elif response.status.value == 'rejected' %}<span class="w-1.5 h-1.5 rounded-full bg-red-500 dark:bg-red-400 mr-1.5"></span>
+      {% if response.status.value == 'draft' %}<span class="w-1.5 h-1.5 rounded-full bg-blue-500 dark:bg-blue-400 mr-1.5 animate-pulse"></span>
+      {% elif response.status.value == 'complied' %}<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 mr-1.5"></span>
+      {% elif response.status.value == 'not_complied' %}<span class="w-1.5 h-1.5 rounded-full bg-red-500 dark:bg-red-400 mr-1.5"></span>
       {% else %}<span class="w-1.5 h-1.5 rounded-full bg-slate-500 dark:bg-slate-400 mr-1.5"></span>{% endif %}
       {{ response.status.value|replace('_', ' ')|title }}
     </span>
