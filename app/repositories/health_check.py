@@ -16,6 +16,7 @@ from app.models.health_check import (
     ControlInstanceStatus,
 )
 from app.repositories.base import BaseRepository
+from app.utils.rich_text import sanitize_rich_text
 
 
 class HealthCheckRepository(BaseRepository[ReviewScope]):
@@ -298,7 +299,7 @@ class HealthCheckRepository(BaseRepository[ReviewScope]):
         obs = SessionControlObservation(
             session_control_instance_id=instance_id,
             observation_text=observation_text,
-            recommendation_text=recommendation_text,
+            recommendation_text=sanitize_rich_text(recommendation_text),
         )
         self.db.add(obs)
         self.db.commit()
@@ -312,7 +313,7 @@ class HealthCheckRepository(BaseRepository[ReviewScope]):
         ).first()
         if not obs:
             return False
-        obs.recommendation_text = recommendation_text
+        obs.recommendation_text = sanitize_rich_text(recommendation_text)
         self.db.commit()
         return True
 

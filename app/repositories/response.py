@@ -7,6 +7,7 @@ from sqlalchemy import and_
 from app.models.project import ProjectResponse, ResponseStatus
 from app.models.project import Project
 from app.repositories.base import BaseRepository
+from app.utils.rich_text import sanitize_rich_text
 
 
 class ProjectResponseRepository(BaseRepository[ProjectResponse]):
@@ -48,6 +49,11 @@ class ProjectResponseRepository(BaseRepository[ProjectResponse]):
         auditor_notes: str | None = None,
     ) -> ProjectResponse:
         """Create or update a response for a control."""
+        response_text = sanitize_rich_text(response_text)
+        finding = sanitize_rich_text(finding)
+        recommendation = sanitize_rich_text(recommendation)
+        auditor_notes = sanitize_rich_text(auditor_notes)
+
         response = self.get_by_control(project_id, control_id)
 
         if response:

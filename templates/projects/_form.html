@@ -1,4 +1,5 @@
 <form hx-post="{% if project %}/projects/{{ project.id }}{% else %}/projects{% endif %}" {% if project %}hx-target="#project-row-{{ project.id }}" hx-swap="outerHTML" {% else %}hx-target="#projects-table" hx-swap="beforeend" {% endif %}
+  data-draft-persist="true"
   @submit="if (htmx.config.refreshOnHistoryMiss) htmx.ajax('GET', '/projects', {target: '#projects-table', swap: 'innerHTML'}); $store.modal.hide()">
 
   <div class="space-y-6">

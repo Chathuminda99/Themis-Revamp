@@ -205,6 +205,7 @@
     hx-target="#control-panel" hx-swap="innerHTML" hx-ext="response-targets" class="mt-6 fade-in"
     @submit="prepareObservationsData()"
     @htmx:afterSwap="htmx.process(document.getElementById('control-panel'))"
+    data-draft-persist="true"
     x-data="{
         deleteConfirm: { open: false, url: '', deleting: false },
         openDeleteConfirm(obsId, url) {
@@ -388,7 +389,20 @@
                             <div class="space-y-3">
                                 <!-- Saved Observations -->
                                 {% for obs in observations %}
-                                <div x-data="{ expanded: false, deleting: false }"
+                                <div x-data="{
+                                    expanded: false,
+                                    deleting: false,
+                                    init() {
+                                        const form = document.getElementById('control-form');
+                                        if (
+                                            form &&
+                                            typeof window.formDraftHasUnsavedValue === 'function' &&
+                                            window.formDraftHasUnsavedValue(form, 'observation_recommendation_{{ obs.id }}')
+                                        ) {
+                                            this.expanded = true;
+                                        }
+                                    }
+                                }"
                                     class="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden hover:shadow-md transition-shadow"
                                     data-obs-id="{{ obs.id }}" data-obs-saved="true">
                                     <!-- Collapsed Header -->
@@ -413,7 +427,9 @@
                                             <div>
                                                 <label class="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider block mb-2">Recommendation</label>
                                                 <textarea class="obs-recommendation w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none transition-colors"
-                                                    rows="2" placeholder="Add recommendation...">{{ obs.recommendation_text or '' }}</textarea>
+                                                    data-rich-text="true" data-rich-text-min-height="10rem"
+                                                    data-draft-name="observation_recommendation_{{ obs.id }}"
+                                                    rows="5" placeholder="Add recommendation...">{{ obs.recommendation_text or '' }}</textarea>
                                             </div>
 
                                             <!-- Evidence Section -->
@@ -535,7 +551,9 @@
                                                     <label class="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider block mb-2">Recommendation</label>
                                                     <textarea x-model="obs.recommendation"
                                                         class="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none transition-colors"
-                                                        rows="2" placeholder="Edit recommendation..."></textarea>
+                                                        data-rich-text="true" data-rich-text-min-height="10rem"
+                                                        :data-draft-name="'new_observation_recommendation_' + obs.id"
+                                                        rows="5" placeholder="Edit recommendation..."></textarea>
                                                 </div>
 
                                                 <!-- Text Note -->
@@ -543,6 +561,7 @@
                                                     <label class="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider block mb-2">Quick Note</label>
                                                     <textarea x-model="obs.note"
                                                         class="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none transition-colors"
+                                                        :data-draft-name="'new_observation_note_' + obs.id"
                                                         rows="2" placeholder="Add text note..."></textarea>
                                                     <p class="text-[11px] text-slate-400 dark:text-slate-500 flex items-center gap-1 mt-1">
                                                         <span class="material-symbols-outlined text-[13px]">info</span>
@@ -702,7 +721,7 @@
         let idx = 0;
 
         // Collect recommendation updates for existing saved observations
-        document.querySelectorAll('tr[data-obs-saved="true"]').forEach(row => {
+        form.querySelectorAll('[data-obs-saved="true"]').forEach(row => {
             const obsId = row.getAttribute('data-obs-id');
             if (!obsId) return;
             const rec = row.querySelector('.obs-recommendation')?.value?.trim() || '';

@@ -19,6 +19,7 @@
   <form x-show="tab === 'text_note'" hx-post="/projects/{{ project.id }}/review-scopes/{{ session.review_scope.id }}/sessions/{{ session.id }}/evidence?instance_id={{ instance.id }}"
     hx-target="#evidence-list-{{ instance.id }}" hx-swap="innerHTML"
     @submit="$store.modal.hide()"
+    data-draft-persist="true"
     class="space-y-4">
     <input type="hidden" name="evidence_type" value="text_note">
     <div>

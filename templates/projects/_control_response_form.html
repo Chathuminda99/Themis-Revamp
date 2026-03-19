@@ -17,7 +17,8 @@
 
       <form hx-post="/projects/{{ project.id }}/controls/{{ control.id }}/response"
         hx-target="#control-{{ control.id }}" hx-swap="outerHTML swap:1s"
-        class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm mt-4">
+        class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm mt-4"
+        data-draft-persist="true">
         <div class="space-y-5">
           <!-- Grid layout for parallel fields -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -28,6 +29,7 @@
                 Finding
               </label>
               <textarea id="finding-{{ control.id }}" name="finding" rows="3"
+                data-rich-text="true" data-rich-text-min-height="10rem"
                 class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 rounded-lg hover:border-slate-300 dark:hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors sm:text-sm"
                 placeholder="What did you observe?">{{ response.finding if response else "" }}</textarea>
             </div>
@@ -39,6 +41,7 @@
                 Recommendation
               </label>
               <textarea id="recommendation-{{ control.id }}" name="recommendation" rows="3"
+                data-rich-text="true" data-rich-text-min-height="10rem"
                 class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 rounded-lg hover:border-slate-300 dark:hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors sm:text-sm"
                 placeholder="How should this be addressed?">{{ response.recommendation if response else "" }}</textarea>
             </div>
@@ -51,6 +54,7 @@
               Auditor Notes
             </label>
             <textarea id="auditor-notes-{{ control.id }}" name="auditor_notes" rows="2"
+              data-rich-text="true" data-rich-text-min-height="9rem"
               class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 rounded-lg hover:border-slate-300 dark:hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors sm:text-sm"
               placeholder="Add comments, observations, or approval notes...">{{ response.auditor_notes if response else "" }}</textarea>
           </div>
@@ -62,6 +66,7 @@
               Evidence / Response
             </label>
             <textarea id="response-text-{{ control.id }}" name="response_text" rows="3"
+              data-rich-text="true" data-rich-text-min-height="12rem"
               class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 rounded-lg hover:border-slate-300 dark:hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors sm:text-sm"
               placeholder="How does your organization address this control?">{{ response.response_text if response else "" }}</textarea>
           </div>

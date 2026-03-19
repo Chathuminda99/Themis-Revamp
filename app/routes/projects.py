@@ -1,11 +1,12 @@
 """Project management routes."""
 
+import json
 import uuid
 import os
 import shutil
 from pathlib import Path
 from fastapi import APIRouter, Request, Depends, UploadFile, File
-from fastapi.responses import HTMLResponse, RedirectResponse, FileResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, FileResponse, JSONResponse
 
 from sqlalchemy.orm import Session
 
@@ -18,6 +19,7 @@ from app.repositories import (
     ProjectRepository,
     ClientRepository,
     FrameworkRepository,
+    FormDraftRepository,
     ProjectResponseRepository,
     WorkflowExecutionRepository,
     UserRepository,
@@ -30,6 +32,9 @@ from app.services import workflow_engine
 router = APIRouter(prefix="/projects", tags=["projects"])
 from app.templates import templates
 from app.utils.htmx import htmx_toast
+
+
+SERVER_DRAFT_MAX_BYTES = 1_000_000
 
 
 def compute_review_scope_rollup(stats: dict) -> str:
@@ -214,6 +219,113 @@ async def create_project(request: Request, db: Session = Depends(get_db)):
         status_code=303,
         headers=htmx_toast("Project created successfully")
     )
+
+
+@router.get("/drafts", response_class=JSONResponse)
+async def get_form_draft(
+    request: Request,
+    draft_key: str,
+    db: Session = Depends(get_db),
+):
+    """Return a persisted server-side draft for the current user."""
+    user = getattr(request.state, "user", None)
+    if not user:
+        return JSONResponse({"detail": "Unauthorized"}, status_code=401)
+
+    repo = FormDraftRepository(db)
+    draft = repo.get_by_key(user.tenant_id, user.id, draft_key.strip())
+    if not draft:
+        return JSONResponse({"draft": None})
+
+    try:
+        payload = json.loads(draft.payload_json)
+    except json.JSONDecodeError:
+        payload = None
+
+    return JSONResponse(
+        {
+            "draft": {
+                "draft_key": draft.draft_key,
+                "path": draft.path,
+                "form_action": draft.form_action,
+                "payload": payload,
+                "updated_at": draft.updated_at.isoformat() if draft.updated_at else None,
+            }
+        }
+    )
+
+
+@router.post("/drafts/autosave", response_class=JSONResponse)
+async def autosave_form_draft(
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    """Persist a draft snapshot for recovery after crashes or restarts."""
+    user = getattr(request.state, "user", None)
+    if not user:
+        return JSONResponse({"detail": "Unauthorized"}, status_code=401)
+
+    try:
+        body = await request.json()
+    except Exception:
+        return JSONResponse({"detail": "Invalid JSON payload"}, status_code=400)
+
+    draft_key = (body.get("draft_key") or "").strip()
+    payload = body.get("payload")
+    path = body.get("path")
+    form_action = body.get("form_action")
+
+    if not draft_key:
+        return JSONResponse({"detail": "draft_key is required"}, status_code=400)
+    if not isinstance(payload, dict):
+        return JSONResponse({"detail": "payload must be an object"}, status_code=400)
+
+    payload_json = json.dumps(payload)
+    if len(payload_json.encode("utf-8")) > SERVER_DRAFT_MAX_BYTES:
+        return JSONResponse({"detail": "Draft payload is too large"}, status_code=413)
+
+    repo = FormDraftRepository(db)
+    draft = repo.upsert(
+        tenant_id=user.tenant_id,
+        user_id=user.id,
+        draft_key=draft_key,
+        payload_json=payload_json,
+        path=path.strip() if isinstance(path, str) and path.strip() else None,
+        form_action=form_action.strip()
+        if isinstance(form_action, str) and form_action.strip()
+        else None,
+    )
+
+    return JSONResponse(
+        {
+            "ok": True,
+            "updated_at": draft.updated_at.isoformat() if draft.updated_at else None,
+        }
+    )
+
+
+@router.post("/drafts/clear", response_class=JSONResponse)
+async def clear_form_draft(
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    """Remove a persisted draft after a successful save."""
+    user = getattr(request.state, "user", None)
+    if not user:
+        return JSONResponse({"detail": "Unauthorized"}, status_code=401)
+
+    try:
+        body = await request.json()
+    except Exception:
+        return JSONResponse({"detail": "Invalid JSON payload"}, status_code=400)
+
+    draft_key = (body.get("draft_key") or "").strip()
+    if not draft_key:
+        return JSONResponse({"detail": "draft_key is required"}, status_code=400)
+
+    repo = FormDraftRepository(db)
+    repo.clear_by_key(user.tenant_id, user.id, draft_key)
+    return JSONResponse({"ok": True})
 
 
 @router.get("/{project_id}/edit", response_class=HTMLResponse)

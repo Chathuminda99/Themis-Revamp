@@ -52,7 +52,8 @@
       <!-- Free-text Response Form -->
       <form hx-post="/projects/{{ project.id }}/controls/{{ control.id }}/response"
         hx-target="#control-{{ control.id }}" hx-swap="outerHTML"
-        class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+        class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm"
+        data-draft-persist="true">
         <div class="space-y-5">
           <div>
             <label for="response-text-{{ control.id }}"
@@ -60,6 +61,7 @@
               Evidence / Response
             </label>
             <textarea id="response-text-{{ control.id }}" name="response_text" rows="4"
+              data-rich-text="true" data-rich-text-min-height="12rem"
               class="w-full px-4 py-3 bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 rounded-lg hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-colors sm:text-sm"
               placeholder="Describe how your organization addresses this control...">{% if finding and execution.generated_finding %}{{ execution.generated_finding }}{% elif response %}{{ response.response_text or "" }}{% endif %}</textarea>
           </div>

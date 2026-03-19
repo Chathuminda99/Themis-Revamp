@@ -2,6 +2,7 @@ from app.models.base import BaseModel, TimestampMixin
 from app.models.tenant import Tenant
 from app.models.user import User, UserRole
 from app.models.client import Client
+from app.models.form_draft import FormDraft
 from app.models.framework import (
     Framework,
     FrameworkSection,
@@ -35,6 +36,7 @@ __all__ = [
     "User",
     "UserRole",
     "Client",
+    "FormDraft",
     "Framework",
     "FrameworkSection",
     "FrameworkControl",

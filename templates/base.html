@@ -20,11 +20,53 @@
             background-color: #137fec;
             color: white;
         }
+
+        .rich-text-surface:empty::before {
+            content: attr(data-placeholder);
+            color: rgb(148 163 184);
+            pointer-events: none;
+        }
+
+        .rich-text-surface p,
+        .rich-text-rendered p {
+            margin: 0.4rem 0;
+        }
+
+        .rich-text-surface p:first-child,
+        .rich-text-rendered p:first-child {
+            margin-top: 0;
+        }
+
+        .rich-text-surface p:last-child,
+        .rich-text-rendered p:last-child {
+            margin-bottom: 0;
+        }
+
+        .rich-text-surface ul,
+        .rich-text-rendered ul {
+            list-style: disc;
+            margin: 0.5rem 0 0.5rem 1.25rem;
+            padding-left: 0.5rem;
+        }
+
+        .rich-text-surface ol,
+        .rich-text-rendered ol {
+            list-style: decimal;
+            margin: 0.5rem 0 0.5rem 1.25rem;
+            padding-left: 0.5rem;
+        }
+
+        .rich-text-surface li,
+        .rich-text-rendered li {
+            margin: 0.2rem 0;
+        }
     </style>
     <link rel="stylesheet" href="{{ url_for('static', path='/css/globals.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', path='/css/output.css') }}?v=9">
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="{{ url_for('static', path='/js/rich_text_editor.js') }}" defer></script>
+    <script src="{{ url_for('static', path='/js/form_drafts.js') }}" defer></script>
 </head>
 
 {%- import "components/_icon.html" as icon_macro -%}
