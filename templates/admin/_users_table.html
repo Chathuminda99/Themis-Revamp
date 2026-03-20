@@ -32,13 +32,28 @@
           <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
             <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span> Active
           </span>
+          {% elif not u.is_active and u.auth_provider.value == 'azure_ad' %}
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800">
+            <span class="w-1.5 h-1.5 bg-amber-500 rounded-full"></span> Pending
+          </span>
           {% else %}
           <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
             Inactive
           </span>
           {% endif %}
         </td>
-        <td class="py-3 px-4 text-right">
+        <td class="py-3 px-4 text-right flex items-center justify-end gap-1">
+          {% if not u.is_active and u.auth_provider.value == 'azure_ad' %}
+          <button
+            hx-post="/admin/users/{{ u.id }}/approve"
+            hx-target="#users-table-container"
+            hx-swap="innerHTML"
+            hx-confirm="Approve {{ u.full_name }}?"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-emerald-600 hover:text-white hover:bg-emerald-600 border border-emerald-200 transition-colors rounded-lg">
+            <span class="material-symbols-outlined text-[15px]">check_circle</span>
+            Approve
+          </button>
+          {% endif %}
           <button
             hx-get="/admin/users/{{ u.id }}/edit"
             hx-target="#modal-body"

@@ -157,6 +157,26 @@ async def edit_user_form(user_id: str, request: Request, db: Session = Depends(g
     )
 
 
+@router.post("/{user_id}/approve", response_class=HTMLResponse)
+async def approve_user(user_id: str, request: Request, db: Session = Depends(get_db)):
+    """Approve a pending Azure AD user (admin only)."""
+    user = getattr(request.state, "user", None)
+    if not user:
+        return RedirectResponse(url="/auth/login", status_code=302)
+    if not _require_admin(user):
+        return RedirectResponse(url="/dashboard", status_code=302)
+
+    repo = UserRepository(db)
+    repo.update_user(tenant_id=user.tenant_id, user_id=user_id, is_active=True)
+
+    users = repo.get_all(user.tenant_id)
+    return templates.TemplateResponse(
+        "admin/_users_table.html",
+        {"request": request, "user": user, "users": users},
+        headers=htmx_toast("User approved"),
+    )
+
+
 @router.post("/{user_id}", response_class=HTMLResponse)
 async def update_user(user_id: str, request: Request, db: Session = Depends(get_db)):
     """Update a user's role, name, or active status (admin only)."""

@@ -77,6 +77,23 @@
                     </button>
                 </form>
 
+                {% if azure_ad_enabled %}
+                <div class="flex items-center gap-3 my-4">
+                    <div class="flex-1 h-px bg-slate-200"></div>
+                    <span class="text-xs text-slate-400 uppercase tracking-wider">or</span>
+                    <div class="flex-1 h-px bg-slate-200"></div>
+                </div>
+                <a href="/auth/azure/login" class="w-full flex items-center justify-center gap-3 py-3 px-4 border border-slate-200 rounded-lg bg-white hover:bg-slate-50 text-slate-700 font-semibold text-sm transition-colors shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 21 21" aria-hidden="true">
+                        <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
+                        <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
+                        <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
+                        <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
+                    </svg>
+                    Sign in with Microsoft
+                </a>
+                {% endif %}
+
                 <!-- Default credentials hint -->
                 <div class="mt-6 pt-5 border-t border-slate-100">
                     <div class="flex items-center justify-center gap-2 p-3 rounded-lg bg-slate-50 border border-slate-100 text-xs text-slate-500">

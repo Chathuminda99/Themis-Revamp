@@ -21,6 +21,15 @@ class Settings(BaseSettings):
     session_cookie_httponly: bool = True
     session_cookie_samesite: str = "Lax"
 
+    # Azure AD SSO
+    azure_ad_enabled: bool = False
+    azure_ad_tenant_id: str = ""
+    azure_ad_client_id: str = ""
+    azure_ad_client_secret: str = ""
+    azure_ad_redirect_uri: str = "http://localhost:8000/auth/azure/callback"
+    azure_ad_scopes: str = "User.Read"
+    azure_default_tenant_slug: str = ""
+
     # Logging
     log_level: str = "INFO"
     log_dir: str = "logs"

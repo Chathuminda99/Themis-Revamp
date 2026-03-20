@@ -26,6 +26,7 @@ dependencies = [
     "pydantic-settings",
     "python-dotenv",
     "Pillow",
+    "msal",
 ]
 
 [project.optional-dependencies]
