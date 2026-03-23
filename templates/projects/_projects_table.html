@@ -1,3 +1,58 @@
-{% for project in projects %}
-  {% include "projects/_row.html" %}
-{% endfor %}
+{% if projects %}
+<div class="rounded-xl bg-white dark:bg-slate-900 shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+  <div class="overflow-x-auto">
+    <table class="w-full">
+      <thead>
+        <tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+          <th class="px-6 py-4 text-left text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest">Project Name</th>
+          <th class="px-6 py-4 text-left text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest">Client</th>
+          <th class="px-6 py-4 text-left text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest">Framework</th>
+          <th class="px-6 py-4 text-left text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest">Status</th>
+          <th class="px-6 py-4 text-right text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+        {% for project in projects %}
+          {% include "projects/_row.html" %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+  {% set has_filters = active_filters is defined and (
+      active_filters.get('status') or
+      active_filters.get('client_id') or
+      active_filters.get('framework_id') or
+      active_filters.get('q')
+  ) %}
+  <div class="rounded-xl bg-white dark:bg-slate-900 shadow-sm border border-slate-200 dark:border-slate-800 py-16 flex flex-col items-center gap-4">
+    {% if has_filters %}
+      <div class="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+        <span class="material-symbols-outlined text-3xl text-slate-400">search_off</span>
+      </div>
+      <div class="text-center">
+        <p class="text-base font-semibold text-slate-700 dark:text-slate-300">No projects match your filters</p>
+        <p class="text-sm text-slate-400 dark:text-slate-500 mt-1">Try adjusting or clearing your search criteria.</p>
+      </div>
+      <a href="/projects"
+        class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+        <span class="material-symbols-outlined text-[16px]">filter_list_off</span>
+        Clear filters
+      </a>
+    {% else %}
+      <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+        <span class="material-symbols-outlined text-3xl text-primary">assignment</span>
+      </div>
+      <div class="text-center">
+        <p class="text-base font-semibold text-slate-700 dark:text-slate-300">No projects yet</p>
+        <p class="text-sm text-slate-400 dark:text-slate-500 mt-1">Create your first project to get started.</p>
+      </div>
+      <a href="/projects/new"
+        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-white text-sm font-semibold shadow-sm shadow-primary/25 hover:bg-primary/90 transition-colors">
+        <span class="material-symbols-outlined text-[18px]">add</span>
+        New Project
+      </a>
+    {% endif %}
+  </div>
+{% endif %}

@@ -450,6 +450,8 @@
             saveDraft(form);
             if (!form.hasAttribute("hx-post")) {
                 markPendingClear(form);
+                // Clear the dirty flag so beforeunload doesn't prompt on normal form submission
+                form.dataset.draftDirty = "false";
             }
         });
     }

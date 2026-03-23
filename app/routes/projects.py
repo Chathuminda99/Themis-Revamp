@@ -104,6 +104,12 @@ async def list_projects(
                 "request": request,
                 "user": user,
                 "projects": projects,
+                "active_filters": {
+                    "status": status or "",
+                    "client_id": client_id or "",
+                    "framework_id": framework_id or "",
+                    "q": q or "",
+                },
             },
         )
 
