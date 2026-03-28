@@ -96,3 +96,4 @@ static/uploads/
 sample_docs/*
 
 .playwright-mcp/*
+.claude/settings.local.json
