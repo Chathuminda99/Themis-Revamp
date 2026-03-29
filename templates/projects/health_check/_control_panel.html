@@ -528,14 +528,24 @@
                                                                 <span class="material-symbols-outlined text-[20px]">send</span>
                                                             </button>
                                                         </form>
-                                                        <form action="/projects/{{ project.id }}/review-scopes/{{ review_scope.id }}/sessions/{{ session.id }}/observations/{{ obs.id }}/evidence/image"
-                                                            enctype="multipart/form-data">
-                                                            <label class="p-2 rounded-lg text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer flex-shrink-0 block" title="Attach file">
-                                                                <span class="material-symbols-outlined text-[20px]">attach_file</span>
-                                                                <input type="file" name="file" accept="image/*,.pdf" class="hidden"
-                                                                    @change="htmx.ajax('POST', htmx.closest(this, 'form').action, {values: new FormData(htmx.closest(this, 'form'))}); this.value = ''">
-                                                            </label>
+                                                        <form class="hidden" id="file-upload-form-{{ obs.id }}">
+                                                            <input type="file" name="file" accept="image/*,.pdf" class="hidden" id="file-input-{{ obs.id }}">
                                                         </form>
+                                                        <label class="p-2 rounded-lg text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer flex-shrink-0 block" title="Attach file"
+                                                            @click="document.getElementById('file-input-{{ obs.id }}').click()">
+                                                            <span class="material-symbols-outlined text-[20px]">attach_file</span>
+                                                        </label>
+                                                        <script>
+                                                            document.getElementById('file-input-{{ obs.id }}').addEventListener('change', function(e) {
+                                                                const form = document.getElementById('file-upload-form-{{ obs.id }}');
+                                                                htmx.ajax('POST', '/projects/{{ project.id }}/review-scopes/{{ review_scope.id }}/sessions/{{ session.id }}/observations/{{ obs.id }}/evidence/image', {
+                                                                    values: new FormData(form),
+                                                                    target: '#control-panel',
+                                                                    swap: 'innerHTML'
+                                                                });
+                                                                this.value = '';
+                                                            });
+                                                        </script>
                                                     </div>
                                                 </div>
                                             </div>
