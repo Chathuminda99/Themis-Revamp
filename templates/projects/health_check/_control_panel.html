@@ -497,22 +497,6 @@
                                                     </div>
                                                     {% endif %}
 
-                                                    <!-- Quick Add Text Note -->
-                                                    <form hx-post="/projects/{{ project.id }}/review-scopes/{{ review_scope.id }}/sessions/{{ session.id }}/observations/{{ obs.id }}/evidence/text"
-                                                        hx-target="#control-panel" hx-swap="innerHTML" class="space-y-2">
-                                                        <textarea name="content" rows="3"
-                                                            data-rich-text="true" data-rich-text-min-height="6rem" data-rich-text-image="true"
-                                                            class="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-colors"
-                                                            placeholder="Add note..."></textarea>
-                                                        <div class="flex justify-end">
-                                                            <button type="submit"
-                                                                class="px-3 py-2 bg-primary text-white rounded-lg text-xs font-semibold hover:bg-primary/90 transition-colors flex items-center gap-1">
-                                                                <span class="material-symbols-outlined text-[16px]">add</span>
-                                                                Note
-                                                            </button>
-                                                        </div>
-                                                    </form>
-
                                                     <!-- File Evidence -->
                                                     {% set file_evidence = obs.evidence_files | selectattr("evidence_type", "equalto", "image") | list %}
                                                     {% if file_evidence %}
@@ -531,15 +515,28 @@
                                                     </div>
                                                     {% endif %}
 
-                                                    <!-- Quick File Upload -->
-                                                    <label class="flex items-center gap-2 p-3 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-colors">
-                                                        <span class="material-symbols-outlined text-slate-400">image</span>
-                                                        <span class="text-xs font-medium text-slate-600 dark:text-slate-400">Add image</span>
-                                                        <input type="file" name="file" accept="image/*,.pdf" class="hidden"
-                                                            hx-post="/projects/{{ project.id }}/review-scopes/{{ review_scope.id }}/sessions/{{ session.id }}/observations/{{ obs.id }}/evidence/image"
-                                                            hx-target="#control-panel" hx-swap="innerHTML"
-                                                            @change="htmx.ajax('POST', htmx.closest(this, 'form').action, {values: new FormData(htmx.closest(this, 'form'))}); this.value = ''">
-                                                    </label>
+                                                    <!-- Evidence Input Row -->
+                                                    <div class="flex items-center gap-1">
+                                                        <form class="flex-1 flex items-center gap-1"
+                                                            hx-post="/projects/{{ project.id }}/review-scopes/{{ review_scope.id }}/sessions/{{ session.id }}/observations/{{ obs.id }}/evidence/text"
+                                                            hx-target="#control-panel" hx-swap="innerHTML">
+                                                            <input type="text" name="content"
+                                                                class="flex-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-colors"
+                                                                placeholder="Add evidence note...">
+                                                            <button type="submit"
+                                                                class="p-2 rounded-lg text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors flex-shrink-0" title="Add note">
+                                                                <span class="material-symbols-outlined text-[20px]">send</span>
+                                                            </button>
+                                                        </form>
+                                                        <form action="/projects/{{ project.id }}/review-scopes/{{ review_scope.id }}/sessions/{{ session.id }}/observations/{{ obs.id }}/evidence/image"
+                                                            enctype="multipart/form-data">
+                                                            <label class="p-2 rounded-lg text-slate-400 hover:text-primary hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer flex-shrink-0 block" title="Attach file">
+                                                                <span class="material-symbols-outlined text-[20px]">attach_file</span>
+                                                                <input type="file" name="file" accept="image/*,.pdf" class="hidden"
+                                                                    @change="htmx.ajax('POST', htmx.closest(this, 'form').action, {values: new FormData(htmx.closest(this, 'form'))}); this.value = ''">
+                                                            </label>
+                                                        </form>
+                                                    </div>
                                                 </div>
                                             </div>
 
