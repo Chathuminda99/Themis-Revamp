@@ -344,11 +344,12 @@ class HealthCheckRepository(BaseRepository[ReviewScope]):
     def get_observation_by_id(
         self, observation_id: UUID
     ) -> SessionControlObservation | None:
-        """Get an observation by ID with evidence files."""
+        """Get an observation by ID with evidence files and control instance."""
         return self.db.query(SessionControlObservation).filter(
             SessionControlObservation.id == observation_id
         ).options(
-            joinedload(SessionControlObservation.evidence_files)
+            joinedload(SessionControlObservation.evidence_files),
+            joinedload(SessionControlObservation.control_instance).joinedload(SessionControlInstance.audit_session).joinedload(AuditSession.review_scope)
         ).first()
 
     def add_observation_text_note(
